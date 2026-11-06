@@ -1,0 +1,21 @@
+﻿[PASS] programs_all.json is a JSON array
+[PASS] program count >= 500 (found 667)
+[PASS] program count == 667 crawl pages (found 667)
+[PASS] program ids are unique
+[PASS] every program has all required fields
+[PASS] every program has a title
+[PASS] jobs_all.json is a JSON array
+[PASS] job count == 2034 board posts (found 2034)
+[PASS] job (boardType, id) keys are unique
+[PASS] every job has all required fields
+[PASS] job board types match ?ы쉶怨듯뿄/痍⑥뾽吏??李쎌뾽/?쇱옄由?
+[PASS] every job has a title
+[PASS] center_knowledge.json is a JSON array
+[PASS] every knowledge page has all required fields
+[PASS] knowledge chunk count >= 5 (found 7)
+
+programs: 667 (text content: 26)
+jobs: 2034 (text content: 2000)
+knowledge pages: 14 (chunks: 7)
+
+RESULT: PASS

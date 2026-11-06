@@ -81,3 +81,16 @@ status: done
 | 빌드 보정 | `scripts/postbuild-static-rsc.mjs` — 중첩 라우트 RSC 페이로드(`classic/__next.classic.__PAGE__.txt`) 미러링으로 정적 export 404 제거 |
 | 검증 | typecheck·lint·build Exit 0, 실서버 두 경로 HTTP 200·리소스 404 0건, 390/768/1280px 가로 스크롤 없음, 드로어·아코디언 29링크, 모던 5탭, 전환 왕복 PASS |
 | 증거 | `docs/evidence/dual-version-*.log`, `docs/evidence/dual-version-20261107/` |
+
+## 9. 크롤링 HTML 데이터 정제·JSON 지식 베이스 추출 (2026-11-07 05:50)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | 나스 미러(`/data_collect/web_crawling/5060do.or.kr/mirror`)의 3,521쪽 HTML에서 교육·일자리·센터 안내를 구조화 JSON으로 추출 |
+| 스크립트 | `scripts/extract_data.py` — 표준 라이브러리 `html.parser` 기반 DOM 파서, 외부 패키지 없음 |
+| 프로그램 | `src/data/programs_all.json` 667건 (상세 페이지 667쪽 전수), 필드 `id·title·category·summary·capacity·enrolled·location·fee·target·applyPeriod·eduPeriod·status·sourceUrl·content` |
+| 일자리 | `src/data/jobs_all.json` 2,034건 (사회공헌 48·취업지원 459·창업 121·일자리 1,406) |
+| 지식 청크 | `src/data/center_knowledge.json` 14쪽(센터소개 7·사업안내 4·커뮤니티 1·공유사무실 1·대관 1), 텍스트 7청크 |
+| 검증 | `scripts/verify_data.py` PASS (건수·중복·필수 필드), `npm run typecheck` Exit 0 |
+| 한계 | 프로그램 상세 641건과 일자리 34건, 센터 안내 8쪽은 본문이 이미지뿐이어서 텍스트가 비었다. OCR은 이번 범위 밖 |
+| 증거 | `docs/evidence/data-extraction-20261107/` |
