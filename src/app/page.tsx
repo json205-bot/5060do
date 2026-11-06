@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import programsData from "@/data/programs.json";
+import VersionSwitcher from "@/components/version-switcher";
 
 type Program = {
   id: number;
@@ -289,6 +290,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col pb-20 md:pb-0">
+      <VersionSwitcher current="modern" />
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-6 md:px-6">
           <a

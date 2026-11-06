@@ -68,3 +68,16 @@ status: done
 | 레이아웃 | `layout.tsx` `viewportFit: "cover"`, 콘텐츠 래퍼 `pb-20 md:pb-0` |
 | 검증 | typecheck·lint·build Exit 0, 실서버 HTTP 200·리소스 404 0건, 390px 5탭·탭 높이 72px·라벨 13px, 탭 4종 스크롤 도달, 드로어 열기/바로가기/닫기, 768·1280px `display: none` |
 | 증거 | `docs/evidence/verify-mobile-bottom-nav.log`, `docs/evidence/mobile-bottom-nav-http.log`, `docs/evidence/mobile-bottom-nav-20261106/` |
+
+## 8. 원본 반응형(Classic)·축소 모던(Modern) 듀얼 버전 (2026-11-07 05:30)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | 원본 8대 GNB·28개 세부 메뉴를 보존한 Classic 버전과 5탭 모던 버전을 동시 서빙 |
+| 구조 | Modern `/5060do/` (기존 유지), Classic `/5060do/classic/` 신설, 두 화면 최상단 버전 전환 배너 |
+| Classic PC | 로고·유틸리티(로그인/회원가입/브로슈어/통합검색) + 8대 GNB 메가드롭다운(그룹별 8·4·2·2·2·4·6·1 링크) |
+| Classic 모바일 | 우측 슬라이드 인 드로어 + 8대 대메뉴 아코디언(총 29개 세부 링크 100% 접근) |
+| 본문 | 비주얼 롤링 3종, 사업안내/교육신청/일자리정보 탭 카드, 새 소식·일자리 그리드, 바로가기, 층별 시설·상담 안내를 Flex/Grid 1열 자동 재배치 |
+| 빌드 보정 | `scripts/postbuild-static-rsc.mjs` — 중첩 라우트 RSC 페이로드(`classic/__next.classic.__PAGE__.txt`) 미러링으로 정적 export 404 제거 |
+| 검증 | typecheck·lint·build Exit 0, 실서버 두 경로 HTTP 200·리소스 404 0건, 390/768/1280px 가로 스크롤 없음, 드로어·아코디언 29링크, 모던 5탭, 전환 왕복 PASS |
+| 증거 | `docs/evidence/dual-version-*.log`, `docs/evidence/dual-version-20261107/` |

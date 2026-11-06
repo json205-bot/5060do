@@ -1,0 +1,264 @@
+{
+  "base": "http://100.83.116.15:8780/5060do/",
+  "checkedAt": "2026-11-06T20:30:48.975Z",
+  "networkFailures": [],
+  "consoleErrors": [],
+  "checks": {
+    "desktop": {
+      "modern": {
+        "href": "http://100.83.116.15:8780/5060do/",
+        "pathname": "/5060do/",
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청",
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "horizontalOverflow": false,
+        "hasSwitcher": true,
+        "switcherToClassic": "/5060do/classic/",
+        "switcherToModern": "/5060do/",
+        "hasClassicHeader": false,
+        "gnbDisplay": null,
+        "gnbVisible": false,
+        "burgerVisible": false,
+        "bottomNavDisplay": "none",
+        "bottomNavVisible": false,
+        "bottomTabCount": 5,
+        "heroTitle": null,
+        "h1": "배움으로 다시 시작하는인생 후반전"
+      },
+      "modernScreenshot": "docs\\evidence\\dual-version-20261107\\desktop-1280-modern.png",
+      "switchClick": {
+        "clicked": true,
+        "reached": true,
+        "pathname": "/5060do/classic/",
+        "href": "http://100.83.116.15:8780/5060do/classic/"
+      },
+      "classic": {
+        "href": "http://100.83.116.15:8780/5060do/classic/",
+        "pathname": "/5060do/classic/",
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청",
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "horizontalOverflow": false,
+        "hasSwitcher": true,
+        "switcherToClassic": "/5060do/classic/",
+        "switcherToModern": "/5060do/",
+        "hasClassicHeader": true,
+        "gnbDisplay": "block",
+        "gnbVisible": true,
+        "burgerVisible": false,
+        "bottomNavDisplay": null,
+        "bottomNavVisible": false,
+        "bottomTabCount": 0,
+        "heroTitle": "오륙십대가 행복한 도시, 배움으로 시작하는 인생 후반전",
+        "h1": "오륙십대가 행복한 도시, 배움으로 시작하는 인생 후반전"
+      },
+      "classicScreenshot": "docs\\evidence\\dual-version-20261107\\desktop-1280-classic.png",
+      "classicFullScreenshot": {
+        "path": "docs\\evidence\\dual-version-20261107\\desktop-1280-classic-full.png",
+        "height": 2798
+      },
+      "megaMenu": {
+        "groupCount": 8,
+        "groups": [
+          {
+            "index": 0,
+            "label": "센터소개",
+            "heading": "센터소개",
+            "links": 8
+          },
+          {
+            "index": 1,
+            "label": "사업안내",
+            "heading": "사업안내",
+            "links": 4
+          },
+          {
+            "index": 2,
+            "label": "교육프로그램",
+            "heading": "교육프로그램",
+            "links": 2
+          },
+          {
+            "index": 3,
+            "label": "커뮤니티",
+            "heading": "커뮤니티",
+            "links": 2
+          },
+          {
+            "index": 4,
+            "label": "공유사무실",
+            "heading": "공유사무실",
+            "links": 2
+          },
+          {
+            "index": 5,
+            "label": "일자리정보",
+            "heading": "일자리정보",
+            "links": 4
+          },
+          {
+            "index": 6,
+            "label": "알림마당",
+            "heading": "알림마당",
+            "links": 6
+          },
+          {
+            "index": 7,
+            "label": "이달의 추천강의",
+            "heading": "이달의 추천강의",
+            "links": 1
+          }
+        ],
+        "totalLinks": 29,
+        "panelOpen": true
+      },
+      "megaMenuScreenshot": "docs\\evidence\\dual-version-20261107\\desktop-1280-classic-megamenu.png"
+    },
+    "tablet": {
+      "classic": {
+        "href": "http://100.83.116.15:8780/5060do/classic/",
+        "pathname": "/5060do/classic/",
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청",
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "horizontalOverflow": false,
+        "hasSwitcher": true,
+        "switcherToClassic": "/5060do/classic/",
+        "switcherToModern": "/5060do/",
+        "hasClassicHeader": true,
+        "gnbDisplay": "block",
+        "gnbVisible": false,
+        "burgerVisible": true,
+        "bottomNavDisplay": null,
+        "bottomNavVisible": false,
+        "bottomTabCount": 0,
+        "heroTitle": "오륙십대가 행복한 도시, 배움으로 시작하는 인생 후반전",
+        "h1": "오륙십대가 행복한 도시, 배움으로 시작하는 인생 후반전"
+      },
+      "classicScreenshot": "docs\\evidence\\dual-version-20261107\\tablet-768-classic.png"
+    },
+    "mobile": {
+      "classic": {
+        "href": "http://100.83.116.15:8780/5060do/classic/",
+        "pathname": "/5060do/classic/",
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청",
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "horizontalOverflow": false,
+        "hasSwitcher": true,
+        "switcherToClassic": "/5060do/classic/",
+        "switcherToModern": "/5060do/",
+        "hasClassicHeader": true,
+        "gnbDisplay": "block",
+        "gnbVisible": false,
+        "burgerVisible": true,
+        "bottomNavDisplay": null,
+        "bottomNavVisible": false,
+        "bottomTabCount": 0,
+        "heroTitle": "오륙십대가 행복한 도시, 배움으로 시작하는 인생 후반전",
+        "h1": "오륙십대가 행복한 도시, 배움으로 시작하는 인생 후반전"
+      },
+      "classicScreenshot": "docs\\evidence\\dual-version-20261107\\mobile-390-classic.png",
+      "classicFullScreenshot": {
+        "path": "docs\\evidence\\dual-version-20261107\\mobile-390-classic-full.png",
+        "height": 4800
+      },
+      "drawer": {
+        "opened": true,
+        "transform": "none",
+        "width": 343,
+        "right": 0,
+        "accordionCount": 8,
+        "firstExpanded": "true",
+        "firstPanelLinks": 8,
+        "bodyOverflow": "hidden"
+      },
+      "drawerScreenshot": "docs\\evidence\\dual-version-20261107\\mobile-390-classic-drawer.png",
+      "accordion": {
+        "count": 8,
+        "states": [
+          {
+            "index": 0,
+            "label": "센터소개",
+            "expanded": "true",
+            "links": 8
+          },
+          {
+            "index": 1,
+            "label": "사업안내",
+            "expanded": "true",
+            "links": 4
+          },
+          {
+            "index": 2,
+            "label": "교육프로그램",
+            "expanded": "true",
+            "links": 2
+          },
+          {
+            "index": 3,
+            "label": "커뮤니티",
+            "expanded": "true",
+            "links": 2
+          },
+          {
+            "index": 4,
+            "label": "공유사무실",
+            "expanded": "true",
+            "links": 2
+          },
+          {
+            "index": 5,
+            "label": "일자리정보",
+            "expanded": "true",
+            "links": 4
+          },
+          {
+            "index": 6,
+            "label": "알림마당",
+            "expanded": "true",
+            "links": 6
+          },
+          {
+            "index": 7,
+            "label": "이달의 추천강의",
+            "expanded": "true",
+            "links": 1
+          }
+        ],
+        "totalLinks": 29,
+        "collapsedFirst": "true"
+      },
+      "accordionScreenshot": "docs\\evidence\\dual-version-20261107\\mobile-390-classic-accordion.png",
+      "drawerClosed": true,
+      "switchClick": {
+        "clicked": true,
+        "reached": true,
+        "pathname": "/5060do/",
+        "href": "http://100.83.116.15:8780/5060do/"
+      },
+      "modern": {
+        "href": "http://100.83.116.15:8780/5060do/",
+        "pathname": "/5060do/",
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청",
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "horizontalOverflow": false,
+        "hasSwitcher": true,
+        "switcherToClassic": "/5060do/classic/",
+        "switcherToModern": "/5060do/",
+        "hasClassicHeader": false,
+        "gnbDisplay": null,
+        "gnbVisible": false,
+        "burgerVisible": false,
+        "bottomNavDisplay": "block",
+        "bottomNavVisible": true,
+        "bottomTabCount": 5,
+        "heroTitle": null,
+        "h1": "배움으로 다시 시작하는인생 후반전"
+      },
+      "modernScreenshot": "docs\\evidence\\dual-version-20261107\\mobile-390-modern.png"
+    }
+  },
+  "currentPhase": "mobile-classic"
+}
