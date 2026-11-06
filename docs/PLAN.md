@@ -57,3 +57,14 @@ status: done
 | 주소 | `http://100.83.116.15:8780/5060do/` |
 | 검증 | typecheck·build Exit 0, 실서버 HTTP 200, 정적 리소스 404 0건, 390px E2E 전 흐름 PASS |
 | 증거 | `docs/evidence/build-deploy.log`, `docs/evidence/verify-deploy.log`, `docs/evidence/deploy-20261106/` |
+
+## 7. 모바일 하단 5탭 내비게이션 (2026-11-06 19:58)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | 28개 메뉴 구조를 모바일에서 5개 핵심 동선으로 단순화, 50~60대 터치 오조작 최소화 |
+| 구현 | `src/app/page.tsx` — 하단 고정 5탭(홈·교육신청·채용정보·공지사항·전체), 전체 메뉴 드로어, 스크롤 위치 기반 활성 탭, 헤더 메뉴는 `md` 이상에서만 노출 |
+| 스타일 | 탭 라벨 13px, 390px 기준 탭 높이 72px, 활성 `text-brand-700 font-bold` + 상단 인디케이터, 비활성 `text-slate-500`, `env(safe-area-inset-bottom)` 패딩 |
+| 레이아웃 | `layout.tsx` `viewportFit: "cover"`, 콘텐츠 래퍼 `pb-20 md:pb-0` |
+| 검증 | typecheck·lint·build Exit 0, 실서버 HTTP 200·리소스 404 0건, 390px 5탭·탭 높이 72px·라벨 13px, 탭 4종 스크롤 도달, 드로어 열기/바로가기/닫기, 768·1280px `display: none` |
+| 증거 | `docs/evidence/verify-mobile-bottom-nav.log`, `docs/evidence/mobile-bottom-nav-http.log`, `docs/evidence/mobile-bottom-nav-20261106/` |

@@ -121,6 +121,23 @@ const METRICS_EXPRESSION = `(() => {
     return direct && rect.width > 0 && rect.height > 0;
   });
   const fontSizes = textNodes.map((el) => parseFloat(getComputedStyle(el).fontSize));
+  const nav = document.querySelector('[data-testid="bottom-nav"]');
+  const navRect = nav ? nav.getBoundingClientRect() : null;
+  const tabs = nav
+    ? Array.from(nav.querySelectorAll('[data-testid^="bottom-tab-"]'))
+    : [];
+  const tabMetrics = tabs.map((tab) => {
+    const rect = tab.getBoundingClientRect();
+    const label = tab.querySelector('[data-tab-label]');
+    return {
+      key: (tab.getAttribute('data-testid') || '').replace('bottom-tab-', ''),
+      text: (tab.textContent || '').trim(),
+      height: Math.round(rect.height),
+      width: Math.round(rect.width),
+      labelFontSize: label ? parseFloat(getComputedStyle(label).fontSize) : null,
+      active: tab.getAttribute('aria-current') === 'page',
+    };
+  });
   return {
     viewport: { width: window.innerWidth, height: window.innerHeight },
     gridColumns: columns,
@@ -133,6 +150,20 @@ const METRICS_EXPRESSION = `(() => {
     horizontalOverflow: root.scrollWidth > root.clientWidth,
     smallTargets,
     minTextFontSize: fontSizes.length ? Math.min(...fontSizes) : null,
+    bottomNav: nav
+      ? {
+          display: getComputedStyle(nav).display,
+          visible: Boolean(navRect && navRect.height > 0),
+          height: navRect ? Math.round(navRect.height) : 0,
+          bottomGap: navRect ? Math.round(window.innerHeight - navRect.bottom) : null,
+          tabCount: tabMetrics.length,
+          tabs: tabMetrics,
+          minTabHeight: tabMetrics.length ? Math.min(...tabMetrics.map((t) => t.height)) : null,
+          minLabelFontSize: tabMetrics.length
+            ? Math.min(...tabMetrics.map((t) => t.labelFontSize ?? 999))
+            : null,
+        }
+      : null,
   };
 })()`;
 
@@ -209,6 +240,123 @@ async function main() {
         screenshot: shot,
       });
     }
+
+    const readNavState = `(() => {
+      const nav = document.querySelector('[data-testid="bottom-nav"]');
+      const tabs = nav ? Array.from(nav.querySelectorAll('[data-testid^="bottom-tab-"]')) : [];
+      return {
+        scrollY: Math.round(window.scrollY),
+        viewportHeight: window.innerHeight,
+        activeTabs: tabs
+          .filter((tab) => tab.getAttribute('aria-current') === 'page')
+          .map((tab) => tab.getAttribute('data-testid')),
+        drawerOpen: Boolean(document.querySelector('[data-testid="menu-drawer"]')),
+        sectionTops: Object.fromEntries(
+          ['programs', 'jobs', 'notice'].map((id) => {
+            const el = document.getElementById(id);
+            return [id, el ? Math.round(el.getBoundingClientRect().top) : null];
+          }),
+        ),
+        bodyOverflow: getComputedStyle(document.body).overflow,
+      };
+    })()`;
+
+    const clickTestId = (testId) =>
+      evaluate(
+        cdp,
+        sessionId,
+        `(() => {
+          const el = document.querySelector('[data-testid="${testId}"]');
+          if (!el) return false;
+          el.click();
+          return true;
+        })()`,
+      );
+
+    await cdp.send(
+      "Emulation.setDeviceMetricsOverride",
+      { width: 390, height: 900, deviceScaleFactor: 1, mobile: true },
+      sessionId,
+    );
+    const mobileLoaded = cdp.once("Page.loadEventFired");
+    await cdp.send("Page.navigate", { url: BASE_URL }, sessionId);
+    await mobileLoaded;
+    await sleep(1000);
+
+    results.bottomNavFlow = { initial: await evaluate(cdp, sessionId, readNavState) };
+    results.bottomNavFlow.initialScreenshot = await screenshot(
+      cdp,
+      sessionId,
+      "mobile-390-bottom-nav.png",
+    );
+
+    results.bottomNavFlow.tabs = {};
+    for (const key of ["programs", "jobs", "notice"]) {
+      const clicked = await clickTestId(`bottom-tab-${key}`);
+      await sleep(1400);
+      const state = await evaluate(cdp, sessionId, readNavState);
+      const top = state.sectionTops[key];
+      results.bottomNavFlow.tabs[key] = {
+        clicked,
+        ...state,
+        sectionTop: top,
+        sectionReached:
+          top !== null && top >= -8 && top < Math.round(state.viewportHeight * 0.8),
+        activeMatches: state.activeTabs.includes(`bottom-tab-${key}`),
+      };
+    }
+
+    const backHome = await clickTestId("bottom-tab-home");
+    await sleep(1400);
+    results.bottomNavFlow.home = {
+      clicked: backHome,
+      ...(await evaluate(cdp, sessionId, readNavState)),
+    };
+
+    await clickTestId("bottom-tab-menu");
+    await sleep(600);
+    results.bottomNavFlow.drawer = await evaluate(
+      cdp,
+      sessionId,
+      `(() => {
+        const drawer = document.querySelector('[data-testid="menu-drawer"]');
+        if (!drawer) return { open: false };
+        return {
+          open: true,
+          title: drawer.querySelector('h2')?.textContent?.trim() ?? '',
+          titleId: drawer.getAttribute('aria-labelledby'),
+          modal: drawer.getAttribute('aria-modal'),
+          shortcuts: drawer.querySelectorAll('[data-testid^="menu-shortcut-"]').length,
+          externalLinks: Array.from(drawer.querySelectorAll('a[target="_blank"]')).map((a) => a.textContent.trim()),
+          phoneHref: drawer.querySelector('[data-testid="menu-phone-link"]')?.getAttribute('href') ?? null,
+          height: Math.round(drawer.getBoundingClientRect().height),
+          bodyOverflow: getComputedStyle(document.body).overflow,
+        };
+      })()`,
+    );
+    results.bottomNavFlow.drawerScreenshot = await screenshot(
+      cdp,
+      sessionId,
+      "mobile-390-drawer.png",
+    );
+
+    await clickTestId("menu-shortcut-jobs");
+    await sleep(1400);
+    results.bottomNavFlow.drawerShortcut = await evaluate(cdp, sessionId, readNavState);
+
+    await clickTestId("bottom-tab-menu");
+    await sleep(500);
+    await clickTestId("menu-drawer-close");
+    await sleep(500);
+    results.bottomNavFlow.drawerCloseButton = await evaluate(cdp, sessionId, readNavState);
+
+    await cdp.send(
+      "Emulation.setDeviceMetricsOverride",
+      { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false },
+      sessionId,
+    );
+    await sleep(300);
+    results.bottomNavFlow.desktop = await evaluate(cdp, sessionId, METRICS_EXPRESSION);
 
     await cdp.send(
       "Emulation.setDeviceMetricsOverride",

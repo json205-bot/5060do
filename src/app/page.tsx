@@ -9,8 +9,10 @@ import {
   ChevronRight,
   Clock,
   GraduationCap,
+  Home as HomeIcon,
   MapPin,
   Megaphone,
+  Menu,
   Phone,
   Users,
   Wallet,
@@ -47,6 +49,25 @@ const navItems = [
   { label: "교육신청", href: "#programs" },
   { label: "채용정보", href: "#jobs" },
   { label: "공지사항", href: "#notice" },
+];
+
+const sectionIds = ["programs", "jobs", "notice"] as const;
+
+const bottomTabs = [
+  { key: "home", label: "홈", icon: HomeIcon },
+  { key: "programs", label: "교육신청", icon: GraduationCap },
+  { key: "jobs", label: "채용정보", icon: Briefcase },
+  { key: "notice", label: "공지사항", icon: Megaphone },
+  { key: "menu", label: "전체", icon: Menu },
+] as const;
+
+type BottomTabKey = (typeof bottomTabs)[number]["key"];
+
+const centerMenuLinks = [
+  { label: "센터 소개·인사말", href: "https://www.5060do.or.kr" },
+  { label: "신청 방법 안내", href: "https://www.5060do.or.kr/education/lifeEduWay" },
+  { label: "채용정보 게시판", href: "https://www.5060do.or.kr/board/lifeFindJob" },
+  { label: "공지사항 게시판", href: "https://www.5060do.or.kr/board/lifeNotice" },
 ];
 
 const notices = [
@@ -87,10 +108,16 @@ export default function Home() {
   const [errors, setErrors] = useState<Partial<Applicant>>({});
   const [receipt, setReceipt] = useState<string | null>(null);
   const [approvedAmount, setApprovedAmount] = useState<number | null>(null);
+  const [activeSection, setActiveSection] = useState<string>("home");
+  const [menuOpen, setMenuOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const modalPanelRef = useRef<HTMLDivElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const lastFocusedRef = useRef<Element | null>(null);
+  const menuCloseRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
+  const menuLastFocusedRef = useRef<Element | null>(null);
+  const pendingScrollRef = useRef<string | null>(null);
 
   const selected = useMemo(
     () => programs.find((program) => program.id === selectedId) ?? null,
@@ -131,6 +158,87 @@ export default function Home() {
     modalPanelRef.current?.scrollTo({ top: 0 });
     if (stage === "form") nameInputRef.current?.focus();
   }, [selected, stage]);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const offset = 140;
+      let next = "home";
+      for (const id of sectionIds) {
+        const element = document.getElementById(id);
+        if (!element) continue;
+        if (element.getBoundingClientRect().top - offset <= 0) next = id;
+      }
+      setActiveSection((current) => (current === next ? current : next));
+    };
+    const handleScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    menuLastFocusedRef.current = document.activeElement;
+    menuCloseRef.current?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      if (menuLastFocusedRef.current instanceof HTMLElement) {
+        menuLastFocusedRef.current.focus();
+      }
+    };
+  }, [menuOpen]);
+
+  const scrollToSection = useCallback((id: string) => {
+    if (id === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setActiveSection("home");
+      return;
+    }
+    const element = document.getElementById(id);
+    if (!element) return;
+    setActiveSection(id);
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  useEffect(() => {
+    if (menuOpen) return;
+    const pending = pendingScrollRef.current;
+    if (!pending) return;
+    pendingScrollRef.current = null;
+    const frame = window.requestAnimationFrame(() => scrollToSection(pending));
+    return () => window.cancelAnimationFrame(frame);
+  }, [menuOpen, scrollToSection]);
+
+  const handleTabClick = (key: BottomTabKey) => {
+    if (key === "menu") {
+      setMenuOpen(true);
+      return;
+    }
+    scrollToSection(key);
+  };
+
+  const handleMenuShortcut = (id: string) => {
+    pendingScrollRef.current = id;
+    setMenuOpen(false);
+  };
 
   const openProgram = (program: Program) => {
     setSelectedId(program.id);
@@ -180,7 +288,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col pb-20 md:pb-0">
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-6 md:px-6">
           <a
@@ -200,7 +308,7 @@ export default function Home() {
               </span>
             </span>
           </a>
-          <nav aria-label="주요 메뉴" className="w-full md:w-auto">
+          <nav aria-label="주요 메뉴" className="hidden w-full md:block md:w-auto">
             <ul className="grid grid-cols-3 gap-1 md:flex md:items-center md:gap-2">
               {navItems.map((item, index) => (
                 <li key={item.href}>
@@ -499,6 +607,183 @@ export default function Home() {
           </p>
         </div>
       </footer>
+
+      <nav
+        aria-label="모바일 하단 메뉴"
+        data-testid="bottom-nav"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
+      >
+        <ul className="grid grid-cols-5">
+          {bottomTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive =
+              tab.key === "menu" ? menuOpen : !menuOpen && activeSection === tab.key;
+            return (
+              <li key={tab.key}>
+                <button
+                  type="button"
+                  data-testid={`bottom-tab-${tab.key}`}
+                  aria-current={isActive ? "page" : undefined}
+                  aria-expanded={tab.key === "menu" ? menuOpen : undefined}
+                  aria-haspopup={tab.key === "menu" ? "dialog" : undefined}
+                  onClick={() => handleTabClick(tab.key)}
+                  className={`relative flex h-16 w-full flex-col items-center justify-center gap-1 transition-colors ${
+                    isActive
+                      ? "text-brand-700"
+                      : "text-slate-500 hover:text-brand-700"
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`absolute inset-x-3 top-0 h-1 rounded-b-full ${
+                      isActive ? "bg-brand-700" : "bg-transparent"
+                    }`}
+                  />
+                  <Icon
+                    aria-hidden
+                    className="size-6"
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
+                  <span
+                    data-tab-label=""
+                    className={`text-[13px] leading-none ${
+                      isActive ? "font-bold" : "font-semibold"
+                    }`}
+                  >
+                    {tab.label}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 md:hidden"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setMenuOpen(false);
+          }}
+        >
+          <div
+            ref={menuPanelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="menu-drawer-title"
+            data-testid="menu-drawer"
+            className="max-h-[88vh] w-full max-w-xl overflow-y-auto rounded-t-3xl bg-white p-5 pb-8 shadow-2xl"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <h2
+                id="menu-drawer-title"
+                className="text-2xl font-bold text-slate-900"
+              >
+                전체 메뉴
+              </h2>
+              <button
+                ref={menuCloseRef}
+                type="button"
+                data-testid="menu-drawer-close"
+                onClick={() => setMenuOpen(false)}
+                aria-label="전체 메뉴 닫기"
+                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
+              >
+                <X aria-hidden className="size-6" />
+              </button>
+            </div>
+
+            <p className="mt-4 text-base font-bold text-slate-500">바로가기</p>
+            <div className="mt-2 grid gap-2">
+              {[
+                { id: "programs", label: "교육신청", icon: GraduationCap },
+                { id: "jobs", label: "채용정보", icon: Briefcase },
+                { id: "notice", label: "공지사항", icon: Megaphone },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  data-testid={`menu-shortcut-${item.id}`}
+                  onClick={() => handleMenuShortcut(item.id)}
+                  className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-slate-200 px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-slate-50"
+                >
+                  <span className="flex items-center gap-3">
+                    <item.icon
+                      aria-hidden
+                      className="size-5 shrink-0 text-brand-700"
+                    />
+                    {item.label}
+                  </span>
+                  <ChevronRight aria-hidden className="size-5 text-slate-400" />
+                </button>
+              ))}
+            </div>
+
+            <p className="mt-5 text-base font-bold text-slate-500">
+              센터 안내
+            </p>
+            <div className="mt-2 grid gap-2">
+              {centerMenuLinks.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex min-h-14 items-center justify-between gap-3 rounded-2xl bg-canvas px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-brand-50"
+                >
+                  {item.label}
+                  <ArrowUpRight
+                    aria-hidden
+                    className="size-5 shrink-0 text-brand-700"
+                  />
+                </a>
+              ))}
+            </div>
+
+            <p className="mt-5 text-base font-bold text-slate-500">
+              상담·오시는 길
+            </p>
+            <dl className="mt-2 grid gap-2 rounded-2xl bg-canvas p-4 text-base">
+              <div className="flex items-center gap-3">
+                <Phone aria-hidden className="size-5 shrink-0 text-brand-700" />
+                <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                  상담전화
+                </dt>
+                <dd>
+                  <a
+                    href="tel:0510000000"
+                    data-testid="menu-phone-link"
+                    className="font-bold text-brand-700 underline underline-offset-4"
+                  >
+                    051-000-0000 (예시)
+                  </a>
+                </dd>
+              </div>
+              <div className="flex items-center gap-3">
+                <Clock aria-hidden className="size-5 shrink-0 text-brand-700" />
+                <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                  운영시간
+                </dt>
+                <dd className="font-semibold text-slate-800">
+                  평일 09:00 ~ 18:00
+                </dd>
+              </div>
+              <div className="flex items-start gap-3">
+                <MapPin
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-brand-700"
+                />
+                <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                  오시는 길
+                </dt>
+                <dd className="font-semibold text-slate-800">
+                  부산 남구 오륙도 일대 (예시)
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      )}
 
       {selected && (
         <div
