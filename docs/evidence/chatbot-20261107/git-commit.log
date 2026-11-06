@@ -1,0 +1,22 @@
+﻿[master 1b33793] feat(chatbot): build senior-friendly floating chatbot widget with preset chips
+ 21 files changed, 1419 insertions(+)
+ create mode 100644 docs/evidence/chatbot-20261107/build.log
+ create mode 100644 docs/evidence/chatbot-20261107/deploy.log
+ create mode 100644 docs/evidence/chatbot-20261107/desktop-1280-apply-answer.png
+ create mode 100644 docs/evidence/chatbot-20261107/desktop-1280-open.png
+ create mode 100644 docs/evidence/chatbot-20261107/desktop-1280-trigger.png
+ create mode 100644 docs/evidence/chatbot-20261107/fold8-412-trigger.png
+ create mode 100644 docs/evidence/chatbot-20261107/http-check.log
+ create mode 100644 docs/evidence/chatbot-20261107/lint.log
+ create mode 100644 docs/evidence/chatbot-20261107/mobile-390-closed.png
+ create mode 100644 docs/evidence/chatbot-20261107/mobile-390-free-answer.png
+ create mode 100644 docs/evidence/chatbot-20261107/mobile-390-location-answer.png
+ create mode 100644 docs/evidence/chatbot-20261107/mobile-390-open.png
+ create mode 100644 docs/evidence/chatbot-20261107/mobile-390-phone-answer.png
+ create mode 100644 docs/evidence/chatbot-20261107/mobile-390-trigger.png
+ create mode 100644 docs/evidence/chatbot-20261107/verification.json
+ create mode 100644 docs/evidence/chatbot-20261107/verify-local.log
+ create mode 100644 docs/evidence/chatbot-20261107/verify-production.log
+ create mode 100644 "docs/logs/2026 11 07 0640 \353\241\234\352\267\270 5060do \354\213\234\353\213\210\354\226\264 AI \354\261\227\353\264\207 \355\224\214\353\241\234\355\214\205 UI \354\204\240\354\240\234 \354\240\234\354\236\221.md"
+ create mode 100644 scripts/verify-chatbot.mjs
+ create mode 100644 src/components/ChatbotWidget.tsx

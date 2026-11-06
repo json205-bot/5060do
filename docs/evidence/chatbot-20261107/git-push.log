@@ -1,0 +1,8 @@
+﻿git : To http://100.83.116.15:3300/Jason/5060do.git
+위치 줄:1 문자:1
++ git push origin master 2>&1 | Out-File -FilePath "docs\evidence\chatb ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (To http://100.8...ason/5060do.git:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   7b97dff..1b33793  master -> master
