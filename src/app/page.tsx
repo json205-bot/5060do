@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import programsData from "@/data/programs.json";
 import VersionSwitcher from "@/components/version-switcher";
+import ChatbotWidget from "@/components/ChatbotWidget";
 
 const programStatuses = ["접수중", "접수예정", "대기접수", "마감"] as const;
 type ProgramStatus = (typeof programStatuses)[number];
@@ -1512,6 +1513,8 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      <ChatbotWidget />
     </div>
   );
 }

@@ -1,0 +1,318 @@
+{
+  "baseUrl": "http://100.83.116.15:8780/5060do/",
+  "checkedAt": "2026-11-06T21:40:11.655Z",
+  "viewports": [
+    {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 900,
+      "mobile": true,
+      "trigger": {
+        "found": true,
+        "visible": true,
+        "label": "AI 상담챗봇 열기",
+        "ariaExpanded": "false",
+        "rect": {
+          "top": 750,
+          "bottom": 810,
+          "left": 235,
+          "right": 372,
+          "width": 137,
+          "height": 60
+        },
+        "bottomNav": {
+          "top": 836,
+          "height": 64
+        },
+        "gapAboveNav": 26,
+        "overlapsNav": false,
+        "rightGap": 18,
+        "bottomGap": 90
+      },
+      "panel": {
+        "open": true,
+        "role": "dialog",
+        "modal": "true",
+        "width": 390,
+        "height": 765,
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "heightRatio": 0.85,
+        "rightGap": 0,
+        "bottomGap": 0,
+        "horizontallyContained": true,
+        "horizontalOverflow": false,
+        "bodyOverflow": "hidden",
+        "messageCount": 1,
+        "botFontSize": 18,
+        "botLineHeightRatio": 1.63,
+        "botColor": "rgb(30, 41, 59)",
+        "chips": [
+          {
+            "id": "chatbot-chip-free",
+            "label": "이달의 무료 강좌 안내",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-apply",
+            "label": "수강신청 방법",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-location",
+            "label": "주차장 및 센터 위치",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-phone",
+            "label": "상담원 전화 연결",
+            "height": 48
+          }
+        ],
+        "inputFontSize": 18,
+        "inputHeight": 52
+      },
+      "triggerScreenshot": "docs\\evidence\\chatbot-20261107\\mobile-390-trigger.png"
+    },
+    {
+      "name": "fold8-412",
+      "width": 412,
+      "height": 914,
+      "mobile": true,
+      "trigger": {
+        "found": true,
+        "visible": true,
+        "label": "AI 상담챗봇 열기",
+        "ariaExpanded": "false",
+        "rect": {
+          "top": 764,
+          "bottom": 824,
+          "left": 257,
+          "right": 394,
+          "width": 137,
+          "height": 60
+        },
+        "bottomNav": {
+          "top": 850,
+          "height": 64
+        },
+        "gapAboveNav": 26,
+        "overlapsNav": false,
+        "rightGap": 18,
+        "bottomGap": 90
+      },
+      "panel": {
+        "open": true,
+        "role": "dialog",
+        "modal": "true",
+        "width": 412,
+        "height": 777,
+        "viewport": {
+          "width": 412,
+          "height": 914
+        },
+        "heightRatio": 0.85,
+        "rightGap": 0,
+        "bottomGap": 0,
+        "horizontallyContained": true,
+        "horizontalOverflow": false,
+        "bodyOverflow": "hidden",
+        "messageCount": 1,
+        "botFontSize": 18,
+        "botLineHeightRatio": 1.63,
+        "botColor": "rgb(30, 41, 59)",
+        "chips": [
+          {
+            "id": "chatbot-chip-free",
+            "label": "이달의 무료 강좌 안내",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-apply",
+            "label": "수강신청 방법",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-location",
+            "label": "주차장 및 센터 위치",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-phone",
+            "label": "상담원 전화 연결",
+            "height": 48
+          }
+        ],
+        "inputFontSize": 18,
+        "inputHeight": 52
+      },
+      "triggerScreenshot": "docs\\evidence\\chatbot-20261107\\fold8-412-trigger.png"
+    },
+    {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 900,
+      "mobile": false,
+      "trigger": {
+        "found": true,
+        "visible": true,
+        "label": "AI 상담챗봇 열기",
+        "ariaExpanded": "false",
+        "rect": {
+          "top": 813,
+          "bottom": 873,
+          "left": 1116,
+          "right": 1253,
+          "width": 137,
+          "height": 60
+        },
+        "bottomNav": null,
+        "gapAboveNav": null,
+        "overlapsNav": false,
+        "rightGap": 27,
+        "bottomGap": 27
+      },
+      "panel": {
+        "open": true,
+        "role": "dialog",
+        "modal": "true",
+        "width": 400,
+        "height": 580,
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "heightRatio": 0.644,
+        "rightGap": 27,
+        "bottomGap": 27,
+        "horizontallyContained": true,
+        "horizontalOverflow": false,
+        "bodyOverflow": "hidden",
+        "messageCount": 1,
+        "botFontSize": 18,
+        "botLineHeightRatio": 1.63,
+        "botColor": "rgb(30, 41, 59)",
+        "chips": [
+          {
+            "id": "chatbot-chip-free",
+            "label": "이달의 무료 강좌 안내",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-apply",
+            "label": "수강신청 방법",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-location",
+            "label": "주차장 및 센터 위치",
+            "height": 48
+          },
+          {
+            "id": "chatbot-chip-phone",
+            "label": "상담원 전화 연결",
+            "height": 48
+          }
+        ],
+        "inputFontSize": 18,
+        "inputHeight": 52
+      },
+      "triggerScreenshot": "docs\\evidence\\chatbot-20261107\\desktop-1280-trigger.png"
+    }
+  ],
+  "interactions": {
+    "openedScreenshot": "docs\\evidence\\chatbot-20261107\\mobile-390-open.png",
+    "chipClicked": true,
+    "typingShown": true,
+    "freeReply": {
+      "text": "이달의 무료 강좌 2개를 안내합니다. 1. [특강] '굿모닝성모안과'와 함께하는 신중년 안건강 교육(50~99세) (접수중) 신청 2026-11-06 ~ 2026-11-21 · 교육 2026-11-24 ~ 2026-11-24 2. [특강] AI시대 가짜정보 판별하기(50~99세) (접수중) 신청 2026-10-30 ~ 2026-11-09 · 교육 2026-11-11 ~ 2026-11-11 무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다.",
+      "linkLabel": null,
+      "linkHref": null,
+      "linkTestId": null
+    },
+    "typingCleared": true,
+    "freeScreenshot": "docs\\evidence\\chatbot-20261107\\mobile-390-free-answer.png",
+    "phoneReply": {
+      "text": "상담원 연결 전화번호는 051-628-5060입니다. 운영시간은 평일 09:00 ~ 18:00, 점심시간은 12:00 ~ 13:00입니다. 아래 버튼을 누르면 바로 전화가 연결됩니다.",
+      "linkLabel": "051-628-5060 전화 연결",
+      "linkHref": "tel:0516285060",
+      "linkTestId": "chatbot-phone-link"
+    },
+    "phoneScreenshot": "docs\\evidence\\chatbot-20261107\\mobile-390-phone-answer.png",
+    "locationReply": {
+      "text": "센터 주소는 부산광역시 남구 이기대공원로 18입니다. 건물 주차장을 이용하실 수 있습니다. 1층은 56do 카페, 3층은 안내데스크와 56do 강당, 4층은 강의실, 5층은 공유사무실과 요리실로 쓰고 있습니다. 전화 문의: 051-628-5060",
+      "linkLabel": "오시는 길 자세히 보기",
+      "linkHref": "https://www.5060do.or.kr/subLifeTwist/location",
+      "linkTestId": "chatbot-link"
+    },
+    "locationScreenshot": "docs\\evidence\\chatbot-20261107\\mobile-390-location-answer.png",
+    "freeTextReply": {
+      "text": "'바리스타' 관련 강좌를 찾았습니다. 바리스타 심화 분야: 일활동 교육기간: 2026-11-30 ~ 2026-12-04 장소: 오륙도인생후반전지원센터 수강료: 37,500원 신청기간: 2026-11-27 ~ 2026-11-27 정원 10명 · 신청 0명 · 상태 접수예정 '교육신청'에서 이 강좌를 누르면 상세 내용과 신청 버튼을 보실 수 있습니다.",
+      "linkLabel": "센터 홈페이지에서 보기",
+      "linkHref": "https://www.5060do.or.kr/education/lifeEduProgram?idx=932",
+      "linkTestId": "chatbot-link"
+    },
+    "closed": {
+      "panelGone": true,
+      "bodyOverflow": "visible",
+      "ariaExpanded": "false"
+    },
+    "closedScreenshot": "docs\\evidence\\chatbot-20261107\\mobile-390-closed.png",
+    "desktopPanel": {
+      "open": true,
+      "role": "dialog",
+      "modal": "true",
+      "width": 400,
+      "height": 580,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "heightRatio": 0.644,
+      "rightGap": 27,
+      "bottomGap": 27,
+      "horizontallyContained": true,
+      "horizontalOverflow": false,
+      "bodyOverflow": "hidden",
+      "messageCount": 1,
+      "botFontSize": 18,
+      "botLineHeightRatio": 1.63,
+      "botColor": "rgb(30, 41, 59)",
+      "chips": [
+        {
+          "id": "chatbot-chip-free",
+          "label": "이달의 무료 강좌 안내",
+          "height": 48
+        },
+        {
+          "id": "chatbot-chip-apply",
+          "label": "수강신청 방법",
+          "height": 48
+        },
+        {
+          "id": "chatbot-chip-location",
+          "label": "주차장 및 센터 위치",
+          "height": 48
+        },
+        {
+          "id": "chatbot-chip-phone",
+          "label": "상담원 전화 연결",
+          "height": 48
+        }
+      ],
+      "inputFontSize": 18,
+      "inputHeight": 52
+    },
+    "desktopScreenshot": "docs\\evidence\\chatbot-20261107\\desktop-1280-open.png",
+    "desktopApplyReply": {
+      "text": "수강신청은 이 화면에서 바로 하실 수 있습니다. 1. '교육신청'에서 원하는 강좌를 누릅니다. 2. 상세 내용을 확인하고 '수강신청'을 누릅니다. 3. 성명과 연락처를 입력하고 결제 버튼을 누릅니다. 무료 강좌는 결제 없이 신청됩니다. 지금 접수 중인 강좌는 7개입니다.",
+      "linkLabel": "신청 방법 안내 보기",
+      "linkHref": "https://www.5060do.or.kr/education/lifeEduWay",
+      "linkTestId": "chatbot-link"
+    },
+    "desktopApplyScreenshot": "docs\\evidence\\chatbot-20261107\\desktop-1280-apply-answer.png"
+  },
+  "console": []
+}
