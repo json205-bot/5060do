@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -412,17 +413,22 @@ export default function Home() {
             className="flex items-center gap-3"
             aria-label="오륙도인생후반전지원센터 홈으로 이동"
           >
-            <span className="flex size-[44px] items-center justify-center rounded-2xl bg-brand-700 text-white">
-              <GraduationCap aria-hidden className="size-6" />
-            </span>
-            <span className="flex flex-col">
-              <span className="text-lg font-bold leading-tight text-brand-900 md:text-xl">
-                오륙도인생후반전지원센터
-              </span>
-              <span className="text-sm font-semibold text-slate-900">
-                5060 배움과 일자리
-              </span>
-            </span>
+            <Image
+              src="/5060do/assets/logo_pc.png"
+              alt="오륙도인생후반전지원센터"
+              width={394}
+              height={73}
+              priority
+              className="hidden h-10 w-auto md:block"
+            />
+            <Image
+              src="/5060do/assets/logo_mobile.png"
+              alt="오륙도인생후반전지원센터"
+              width={394}
+              height={73}
+              priority
+              className="h-9 w-auto md:hidden"
+            />
           </a>
           <nav aria-label="주요 메뉴" className="hidden w-full md:block md:w-auto">
             <ul className="grid grid-cols-3 gap-1 md:flex md:items-center md:gap-2">
@@ -978,6 +984,13 @@ export default function Home() {
 
       <footer className="border-t border-slate-200 bg-brand-900 text-brand-100">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-8 md:px-6">
+          <Image
+            src="/5060do/assets/logo_footer.png"
+            alt="오륙도인생후반전지원센터"
+            width={194}
+            height={36}
+            className="h-9 w-auto self-start"
+          />
           <p className="text-lg font-bold text-white">
             오륙도인생후반전지원센터
           </p>

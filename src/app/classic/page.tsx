@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import Image from "next/image";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -167,17 +168,22 @@ export default function ClassicPage() {
             className="flex min-w-0 shrink-0 items-center gap-3"
             aria-label="원본 메뉴형 홈으로 이동"
           >
-            <span className="flex size-11 items-center justify-center rounded-lg bg-[#0f3b66] text-lg font-black tracking-tight text-white">
-              56
-            </span>
-            <span className="flex min-w-0 flex-col">
-              <span className="whitespace-nowrap text-[17px] font-bold leading-tight text-[#0f3b66] md:text-xl">
-                {CLASSIC_CENTER.name}
-              </span>
-              <span className="text-[14px] font-medium text-slate-500">
-                원본 메뉴 반응형 버전
-              </span>
-            </span>
+            <Image
+              src="/5060do/assets/logo_pc.png"
+              alt="오륙도인생후반전지원센터"
+              width={394}
+              height={73}
+              priority
+              className="hidden h-10 w-auto md:block"
+            />
+            <Image
+              src="/5060do/assets/logo_mobile.png"
+              alt="오륙도인생후반전지원센터"
+              width={394}
+              height={73}
+              priority
+              className="h-9 w-auto md:hidden"
+            />
           </a>
 
           <div className="hidden items-center gap-5 text-[15px] font-medium text-slate-500 lg:flex">
@@ -697,6 +703,13 @@ export default function ClassicPage() {
 
       <footer className="border-t border-slate-200 bg-[#0b2239] text-sky-100">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-8 md:px-6">
+          <Image
+            src="/5060do/assets/logo_footer.png"
+            alt="오륙도인생후반전지원센터"
+            width={194}
+            height={36}
+            className="h-9 w-auto self-start"
+          />
           <p className="text-lg font-bold text-white">{CLASSIC_CENTER.name}</p>
           <p className="text-[15px]">
             대표전화 {CLASSIC_CENTER.phone} · {CLASSIC_CENTER.hours}

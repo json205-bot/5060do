@@ -1,0 +1,483 @@
+{
+  "baseUrl": "http://100.83.116.15:8780/5060do/",
+  "checkedAt": "2026-11-06T21:55:23.690Z",
+  "assets": [
+    {
+      "url": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 32173
+    },
+    {
+      "url": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 32173
+    },
+    {
+      "url": "http://100.83.116.15:8780/5060do/assets/logo_footer.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 16148
+    }
+  ],
+  "pages": [
+    {
+      "key": "modern",
+      "url": "http://100.83.116.15:8780/5060do/",
+      "name": "mobile-390",
+      "width": 390,
+      "height": 900,
+      "mobile": true,
+      "top": {
+        "totalImages": 3,
+        "brokenImages": [],
+        "logos": [
+          {
+            "src": "/5060do/assets/logo_pc.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": false,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_mobile.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": true,
+            "rect": {
+              "x": 18,
+              "y": 105,
+              "w": 219,
+              "h": 41
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_footer.png",
+            "currentSrc": "",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": false,
+            "naturalWidth": 0,
+            "naturalHeight": 0,
+            "visible": true,
+            "rect": {
+              "x": 18,
+              "y": 23520,
+              "w": 218,
+              "h": 41
+            }
+          }
+        ],
+        "headerHeight": 72
+      },
+      "bottom": {
+        "totalImages": 3,
+        "brokenImages": [],
+        "logos": [
+          {
+            "src": "/5060do/assets/logo_pc.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": false,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_mobile.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": true,
+            "rect": {
+              "x": 18,
+              "y": 9,
+              "w": 219,
+              "h": 41
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_footer.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_footer.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 194,
+            "naturalHeight": 36,
+            "visible": true,
+            "rect": {
+              "x": 18,
+              "y": 572,
+              "w": 218,
+              "h": 41
+            }
+          }
+        ],
+        "headerHeight": 72
+      },
+      "topScreenshot": "docs\\evidence\\logos-20261107\\modern-mobile-390-header.png",
+      "bottomScreenshot": "docs\\evidence\\logos-20261107\\modern-mobile-390-footer.png"
+    },
+    {
+      "key": "modern",
+      "url": "http://100.83.116.15:8780/5060do/",
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 900,
+      "mobile": false,
+      "top": {
+        "totalImages": 3,
+        "brokenImages": [],
+        "logos": [
+          {
+            "src": "/5060do/assets/logo_pc.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": true,
+            "rect": {
+              "x": 27,
+              "y": 77,
+              "w": 243,
+              "h": 45
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_mobile.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": false,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_footer.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_footer.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 194,
+            "naturalHeight": 36,
+            "visible": true,
+            "rect": {
+              "x": 27,
+              "y": 9152,
+              "w": 218,
+              "h": 41
+            }
+          }
+        ],
+        "headerHeight": 72
+      },
+      "bottom": {
+        "totalImages": 3,
+        "brokenImages": [],
+        "logos": [
+          {
+            "src": "/5060do/assets/logo_pc.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": true,
+            "rect": {
+              "x": 27,
+              "y": 13,
+              "w": 243,
+              "h": 45
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_mobile.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": false,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_footer.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_footer.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 194,
+            "naturalHeight": 36,
+            "visible": true,
+            "rect": {
+              "x": 27,
+              "y": 711,
+              "w": 218,
+              "h": 41
+            }
+          }
+        ],
+        "headerHeight": 72
+      },
+      "topScreenshot": "docs\\evidence\\logos-20261107\\modern-desktop-1280-header.png",
+      "bottomScreenshot": "docs\\evidence\\logos-20261107\\modern-desktop-1280-footer.png"
+    },
+    {
+      "key": "classic",
+      "url": "http://100.83.116.15:8780/5060do/classic/",
+      "name": "mobile-390",
+      "width": 390,
+      "height": 900,
+      "mobile": true,
+      "top": {
+        "totalImages": 3,
+        "brokenImages": [],
+        "logos": [
+          {
+            "src": "/5060do/assets/logo_pc.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": false,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_mobile.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": true,
+            "rect": {
+              "x": 18,
+              "y": 116,
+              "w": 219,
+              "h": 41
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_footer.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_footer.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 194,
+            "naturalHeight": 36,
+            "visible": true,
+            "rect": {
+              "x": 18,
+              "y": 4565,
+              "w": 218,
+              "h": 41
+            }
+          }
+        ],
+        "headerHeight": 82
+      },
+      "bottom": {
+        "totalImages": 3,
+        "brokenImages": [],
+        "logos": [
+          {
+            "src": "/5060do/assets/logo_pc.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": false,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_mobile.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": true,
+            "rect": {
+              "x": 18,
+              "y": 20,
+              "w": 219,
+              "h": 41
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_footer.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_footer.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 194,
+            "naturalHeight": 36,
+            "visible": true,
+            "rect": {
+              "x": 18,
+              "y": 651,
+              "w": 218,
+              "h": 41
+            }
+          }
+        ],
+        "headerHeight": 82
+      },
+      "topScreenshot": "docs\\evidence\\logos-20261107\\classic-mobile-390-header.png",
+      "bottomScreenshot": "docs\\evidence\\logos-20261107\\classic-mobile-390-footer.png"
+    },
+    {
+      "key": "classic",
+      "url": "http://100.83.116.15:8780/5060do/classic/",
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 900,
+      "mobile": false,
+      "top": {
+        "totalImages": 3,
+        "brokenImages": [],
+        "logos": [
+          {
+            "src": "/5060do/assets/logo_pc.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": true,
+            "rect": {
+              "x": 27,
+              "y": 141,
+              "w": 243,
+              "h": 45
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_mobile.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": false,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_footer.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_footer.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 194,
+            "naturalHeight": 36,
+            "visible": true,
+            "rect": {
+              "x": 27,
+              "y": 2623,
+              "w": 218,
+              "h": 41
+            }
+          }
+        ],
+        "headerHeight": 190
+      },
+      "bottom": {
+        "totalImages": 3,
+        "brokenImages": [],
+        "logos": [
+          {
+            "src": "/5060do/assets/logo_pc.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_pc.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": true,
+            "rect": {
+              "x": 27,
+              "y": 77,
+              "w": 243,
+              "h": 45
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_mobile.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_mobile.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 394,
+            "naturalHeight": 73,
+            "visible": false,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "src": "/5060do/assets/logo_footer.png",
+            "currentSrc": "http://100.83.116.15:8780/5060do/assets/logo_footer.png",
+            "alt": "오륙도인생후반전지원센터",
+            "complete": true,
+            "naturalWidth": 194,
+            "naturalHeight": 36,
+            "visible": true,
+            "rect": {
+              "x": 27,
+              "y": 693,
+              "w": 218,
+              "h": 41
+            }
+          }
+        ],
+        "headerHeight": 190
+      },
+      "topScreenshot": "docs\\evidence\\logos-20261107\\classic-desktop-1280-header.png",
+      "bottomScreenshot": "docs\\evidence\\logos-20261107\\classic-desktop-1280-footer.png"
+    }
+  ],
+  "console": []
+}
