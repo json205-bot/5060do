@@ -1,0 +1,110 @@
+{
+  "baseUrl": "http://100.83.116.15:8780/5060do/",
+  "checkedAt": "2026-11-06T10:32:01.657Z",
+  "viewports": [
+    {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 900,
+      "expectedColumns": 1,
+      "metrics": {
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "gridColumns": 1,
+        "cardCount": 4,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "horizontalOverflow": false,
+        "smallTargets": [],
+        "minTextFontSize": 18
+      },
+      "columnsMatch": true,
+      "screenshot": "docs\\evidence\\deploy-20261106\\mobile-390.png"
+    },
+    {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "expectedColumns": 2,
+      "metrics": {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "gridColumns": 2,
+        "cardCount": 4,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "documentScrollWidth": 768,
+        "documentClientWidth": 768,
+        "horizontalOverflow": false,
+        "smallTargets": [],
+        "minTextFontSize": 18
+      },
+      "columnsMatch": true,
+      "screenshot": "docs\\evidence\\deploy-20261106\\tablet-768.png"
+    },
+    {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 900,
+      "expectedColumns": 3,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "gridColumns": 3,
+        "cardCount": 4,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "horizontalOverflow": false,
+        "smallTargets": [],
+        "minTextFontSize": 18
+      },
+      "columnsMatch": true,
+      "screenshot": "docs\\evidence\\deploy-20261106\\desktop-1280.png"
+    }
+  ],
+  "flow": {
+    "cardsScreenshot": "docs\\evidence\\deploy-20261106\\desktop-1280-cards.png",
+    "cardOpened": true,
+    "modalVisible": {
+      "visible": true,
+      "title": "[특강] AI시대 가짜정보 판별하기(50~99세)"
+    },
+    "modalScreenshot": "docs\\evidence\\deploy-20261106\\desktop-1280-modal.png",
+    "applyStarted": true,
+    "formVisible": true,
+    "formScreenshot": "docs\\evidence\\deploy-20261106\\desktop-1280-form.png",
+    "dialogMessage": "테스트 결제 승인 완료\n\n[특강] AI시대 가짜정보 판별하기(50~99세)\n무료 강좌로 결제 금액은 0원입니다.",
+    "doneVisible": "신청이 완료되었습니다김영희님, 접수번호는 5060-61129757 입니다.강좌명[특강] AI시대 가짜정보 판별하기(50~99세)교육기간2026-11-11 (수) 1회결제 금액무료확인",
+    "doneScreenshot": "docs\\evidence\\deploy-20261106\\desktop-1280-done.png",
+    "modalClosed": true,
+    "closedProgram": {
+      "disabled": true,
+      "label": "모집 마감"
+    },
+    "mobileModal": {
+      "visible": true,
+      "horizontalOverflow": false,
+      "modalWidth": 390,
+      "screenshot": "docs\\evidence\\deploy-20261106\\mobile-390-modal.png"
+    }
+  },
+  "console": [
+    {
+      "type": "log",
+      "text": "[prototype] fake payment approved Object"
+    }
+  ]
+}

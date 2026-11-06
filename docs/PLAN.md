@@ -46,3 +46,14 @@ status: done
 - 실제 백엔드·본인인증·PG 연동은 범위 밖(프로토타입)
 - 채용정보·공지사항은 외부 링크 안내만 제공
 - 관리자용 강좌 등록 화면 미구현
+
+## 6. 나스 상시 배포 (2026-11-06 19:30)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | 화이트 PC 전원과 무관하게 테일스케일 환경에서 상시 접속 |
+| 설정 | `next.config.ts` — `output: "export"`, `basePath: "/5060do"`, `trailingSlash: true`, `images.unoptimized: true` |
+| 배포 | `deploy_www.sh /volume1/workspace/dev/5060do/out 5060do` → `/volume3/www/5060do` |
+| 주소 | `http://100.83.116.15:8780/5060do/` |
+| 검증 | typecheck·build Exit 0, 실서버 HTTP 200, 정적 리소스 404 0건, 390px E2E 전 흐름 PASS |
+| 증거 | `docs/evidence/build-deploy.log`, `docs/evidence/verify-deploy.log`, `docs/evidence/deploy-20261106/` |
