@@ -1,0 +1,1497 @@
+{
+  "baseUrl": "http://100.83.116.15:8780/5060do/",
+  "checkedAt": "2026-11-06T21:25:50.476Z",
+  "checks": [
+    {
+      "name": "390px 카드 열 수 1",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "390px 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 390,
+        "clientWidth": 390
+      }
+    },
+    {
+      "name": "390px 카드 CTA 높이 52~60px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "390px 카드 곡률 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "390px 카드 패딩 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "390px 카드 본문 18px",
+      "pass": true,
+      "detail": 20
+    },
+    {
+      "name": "390px 본문 명도비 7:1 이상",
+      "pass": true,
+      "detail": 14.5
+    },
+    {
+      "name": "390px 카드 설명 명도비 7:1 이상",
+      "pass": true,
+      "detail": 17.8
+    },
+    {
+      "name": "390px 상태 칩 높이 52~56px",
+      "pass": true,
+      "detail": 52
+    },
+    {
+      "name": "390px 상태 칩 명도비 4.5:1 이상",
+      "pass": true,
+      "detail": [
+        {
+          "key": "전체",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 9.3
+        },
+        {
+          "key": "접수중",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "접수예정",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "대기접수",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "마감",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        }
+      ]
+    },
+    {
+      "name": "390px 헤더 72px",
+      "pass": true,
+      "detail": 72
+    },
+    {
+      "name": "390px 히어로 CTA 56px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "390px 하단 탭바 64px",
+      "pass": true,
+      "detail": 64
+    },
+    {
+      "name": "390px 탭 5개",
+      "pass": true,
+      "detail": 5
+    },
+    {
+      "name": "390px 탭 터치 48x48 이상",
+      "pass": true,
+      "detail": {
+        "width": 78,
+        "height": 63
+      }
+    },
+    {
+      "name": "390px 탭 라벨 13px bold",
+      "pass": true,
+      "detail": {
+        "fontSize": 13,
+        "bold": true
+      }
+    },
+    {
+      "name": "390px 하단 탭바 표시",
+      "pass": true,
+      "detail": "block"
+    },
+    {
+      "name": "412px 카드 열 수 1",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "412px 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 412,
+        "clientWidth": 412
+      }
+    },
+    {
+      "name": "412px 카드 CTA 높이 52~60px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "412px 카드 곡률 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "412px 카드 패딩 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "412px 카드 본문 18px",
+      "pass": true,
+      "detail": 20
+    },
+    {
+      "name": "412px 본문 명도비 7:1 이상",
+      "pass": true,
+      "detail": 14.5
+    },
+    {
+      "name": "412px 카드 설명 명도비 7:1 이상",
+      "pass": true,
+      "detail": 17.8
+    },
+    {
+      "name": "412px 상태 칩 높이 52~56px",
+      "pass": true,
+      "detail": 52
+    },
+    {
+      "name": "412px 상태 칩 명도비 4.5:1 이상",
+      "pass": true,
+      "detail": [
+        {
+          "key": "전체",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 9.3
+        },
+        {
+          "key": "접수중",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "접수예정",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "대기접수",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "마감",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        }
+      ]
+    },
+    {
+      "name": "412px 헤더 72px",
+      "pass": true,
+      "detail": 72
+    },
+    {
+      "name": "412px 히어로 CTA 56px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "412px 하단 탭바 64px",
+      "pass": true,
+      "detail": 64
+    },
+    {
+      "name": "412px 탭 5개",
+      "pass": true,
+      "detail": 5
+    },
+    {
+      "name": "412px 탭 터치 48x48 이상",
+      "pass": true,
+      "detail": {
+        "width": 82.4,
+        "height": 63
+      }
+    },
+    {
+      "name": "412px 탭 라벨 13px bold",
+      "pass": true,
+      "detail": {
+        "fontSize": 13,
+        "bold": true
+      }
+    },
+    {
+      "name": "412px 하단 탭바 표시",
+      "pass": true,
+      "detail": "block"
+    },
+    {
+      "name": "768px 카드 열 수 2",
+      "pass": true,
+      "detail": 2
+    },
+    {
+      "name": "768px 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 768,
+        "clientWidth": 768
+      }
+    },
+    {
+      "name": "768px 카드 CTA 높이 52~60px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "768px 카드 곡률 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "768px 카드 패딩 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "768px 카드 본문 18px",
+      "pass": true,
+      "detail": 20
+    },
+    {
+      "name": "768px 본문 명도비 7:1 이상",
+      "pass": true,
+      "detail": 14.5
+    },
+    {
+      "name": "768px 카드 설명 명도비 7:1 이상",
+      "pass": true,
+      "detail": 17.8
+    },
+    {
+      "name": "768px 상태 칩 높이 52~56px",
+      "pass": true,
+      "detail": 52
+    },
+    {
+      "name": "768px 상태 칩 명도비 4.5:1 이상",
+      "pass": true,
+      "detail": [
+        {
+          "key": "전체",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 9.3
+        },
+        {
+          "key": "접수중",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "접수예정",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "대기접수",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "마감",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        }
+      ]
+    },
+    {
+      "name": "768px 헤더 72px",
+      "pass": true,
+      "detail": 72
+    },
+    {
+      "name": "768px 히어로 CTA 56px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "768px 하단 탭바 숨김",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "name": "820px 카드 열 수 2",
+      "pass": true,
+      "detail": 2
+    },
+    {
+      "name": "820px 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 820,
+        "clientWidth": 820
+      }
+    },
+    {
+      "name": "820px 카드 CTA 높이 52~60px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "820px 카드 곡률 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "820px 카드 패딩 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "820px 카드 본문 18px",
+      "pass": true,
+      "detail": 20
+    },
+    {
+      "name": "820px 본문 명도비 7:1 이상",
+      "pass": true,
+      "detail": 14.5
+    },
+    {
+      "name": "820px 카드 설명 명도비 7:1 이상",
+      "pass": true,
+      "detail": 17.8
+    },
+    {
+      "name": "820px 상태 칩 높이 52~56px",
+      "pass": true,
+      "detail": 52
+    },
+    {
+      "name": "820px 상태 칩 명도비 4.5:1 이상",
+      "pass": true,
+      "detail": [
+        {
+          "key": "전체",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 9.3
+        },
+        {
+          "key": "접수중",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "접수예정",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "대기접수",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "마감",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        }
+      ]
+    },
+    {
+      "name": "820px 헤더 72px",
+      "pass": true,
+      "detail": 72
+    },
+    {
+      "name": "820px 히어로 CTA 56px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "820px 하단 탭바 숨김",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "name": "1280px 카드 열 수 3",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "1280px 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "scrollWidth": 1280,
+        "clientWidth": 1280
+      }
+    },
+    {
+      "name": "1280px 카드 CTA 높이 52~60px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "1280px 카드 곡률 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "1280px 카드 패딩 24px",
+      "pass": true,
+      "detail": 24
+    },
+    {
+      "name": "1280px 카드 본문 18px",
+      "pass": true,
+      "detail": 20
+    },
+    {
+      "name": "1280px 본문 명도비 7:1 이상",
+      "pass": true,
+      "detail": 14.5
+    },
+    {
+      "name": "1280px 카드 설명 명도비 7:1 이상",
+      "pass": true,
+      "detail": 17.8
+    },
+    {
+      "name": "1280px 상태 칩 높이 52~56px",
+      "pass": true,
+      "detail": 52
+    },
+    {
+      "name": "1280px 상태 칩 명도비 4.5:1 이상",
+      "pass": true,
+      "detail": [
+        {
+          "key": "전체",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 9.3
+        },
+        {
+          "key": "접수중",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "접수예정",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "대기접수",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        },
+        {
+          "key": "마감",
+          "height": 52,
+          "fontSize": 18,
+          "contrast": 17.8
+        }
+      ]
+    },
+    {
+      "name": "1280px 헤더 72px",
+      "pass": true,
+      "detail": 72
+    },
+    {
+      "name": "1280px 히어로 CTA 56px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "1280px 하단 탭바 숨김",
+      "pass": true,
+      "detail": "none"
+    },
+    {
+      "name": "데스크톱 카드형 47개",
+      "pass": true,
+      "detail": 47
+    },
+    {
+      "name": "390px 목록형 표 숨김",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "390px 목록형 행 카드 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "390px 목록형 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "390px 상세 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "390px 모달 신청 버튼 56px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "390px 모달 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "390px 신청 폼 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "390px 성명 입력 52px",
+      "pass": true,
+      "detail": 52
+    },
+    {
+      "name": "390px 연락처 입력 52px",
+      "pass": true,
+      "detail": 52
+    },
+    {
+      "name": "390px 입력 글자 18px (자동 줌 차단)",
+      "pass": true,
+      "detail": {
+        "name": 18,
+        "phone": 18
+      }
+    },
+    {
+      "name": "390px 결제 버튼 56px",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "390px 폼 라벨 18px",
+      "pass": true,
+      "detail": 18
+    },
+    {
+      "name": "390px 폼 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "콘솔 에러 0건",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "viewports": [
+    {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 900,
+      "mobile": true,
+      "expectedColumns": 1,
+      "metrics": {
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "rootFontSize": 18,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "bodyContrast": 14.5,
+        "headerHeight": 72,
+        "gridColumns": 1,
+        "cardCount": 47,
+        "card": {
+          "box": {
+            "w": 354,
+            "h": 424
+          },
+          "radius": 24,
+          "padding": 24,
+          "titleFontSize": 20,
+          "summaryFontSize": 18,
+          "summaryContrast": 17.8,
+          "ctaHeight": 56,
+          "progressHeight": 10,
+          "progressColor": "rgb(5, 150, 105)"
+        },
+        "chipHeight": 52,
+        "chips": [
+          {
+            "key": "전체",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 9.3
+          },
+          {
+            "key": "접수중",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "접수예정",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "대기접수",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "마감",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          }
+        ],
+        "hero": {
+          "fontSize": 32,
+          "contrast": 11.7
+        },
+        "heroCtaHeight": 56,
+        "bottomNav": {
+          "display": "block",
+          "height": 64,
+          "tabCount": 5,
+          "minTabWidth": 78,
+          "minTabHeight": 63,
+          "minLabelFontSize": 13,
+          "labelsBold": true,
+          "tabs": [
+            {
+              "key": "home",
+              "box": {
+                "w": 78,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "programs",
+              "box": {
+                "w": 78,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "jobs",
+              "box": {
+                "w": 78,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "notice",
+              "box": {
+                "w": 78,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "menu",
+              "box": {
+                "w": 78,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            }
+          ]
+        },
+        "horizontalOverflow": false,
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "tableVisible": false,
+        "mobileListVisible": false,
+        "mobileRowHeight": null
+      },
+      "screenshots": [
+        "docs/evidence/styleguide-20261107/mobile-390-top.png",
+        "docs/evidence/styleguide-20261107/mobile-390-programs.png"
+      ]
+    },
+    {
+      "name": "fold8-412",
+      "width": 412,
+      "height": 915,
+      "mobile": true,
+      "expectedColumns": 1,
+      "metrics": {
+        "viewport": {
+          "width": 412,
+          "height": 915
+        },
+        "rootFontSize": 18,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "bodyContrast": 14.5,
+        "headerHeight": 72,
+        "gridColumns": 1,
+        "cardCount": 47,
+        "card": {
+          "box": {
+            "w": 376,
+            "h": 396.5
+          },
+          "radius": 24,
+          "padding": 24,
+          "titleFontSize": 20,
+          "summaryFontSize": 18,
+          "summaryContrast": 17.8,
+          "ctaHeight": 56,
+          "progressHeight": 10,
+          "progressColor": "rgb(5, 150, 105)"
+        },
+        "chipHeight": 52,
+        "chips": [
+          {
+            "key": "전체",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 9.3
+          },
+          {
+            "key": "접수중",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "접수예정",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "대기접수",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "마감",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          }
+        ],
+        "hero": {
+          "fontSize": 32,
+          "contrast": 11.7
+        },
+        "heroCtaHeight": 56,
+        "bottomNav": {
+          "display": "block",
+          "height": 64,
+          "tabCount": 5,
+          "minTabWidth": 82.4,
+          "minTabHeight": 63,
+          "minLabelFontSize": 13,
+          "labelsBold": true,
+          "tabs": [
+            {
+              "key": "home",
+              "box": {
+                "w": 82.4,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "programs",
+              "box": {
+                "w": 82.4,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "jobs",
+              "box": {
+                "w": 82.4,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "notice",
+              "box": {
+                "w": 82.4,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "menu",
+              "box": {
+                "w": 82.4,
+                "h": 63
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            }
+          ]
+        },
+        "horizontalOverflow": false,
+        "documentScrollWidth": 412,
+        "documentClientWidth": 412,
+        "tableVisible": false,
+        "mobileListVisible": false,
+        "mobileRowHeight": null
+      },
+      "screenshots": [
+        "docs/evidence/styleguide-20261107/fold8-412-top.png",
+        "docs/evidence/styleguide-20261107/fold8-412-programs.png"
+      ]
+    },
+    {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "mobile": false,
+      "expectedColumns": 2,
+      "metrics": {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "rootFontSize": 18,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "bodyContrast": 14.5,
+        "headerHeight": 72,
+        "gridColumns": 2,
+        "cardCount": 47,
+        "card": {
+          "box": {
+            "w": 345.8,
+            "h": 424
+          },
+          "radius": 24,
+          "padding": 24,
+          "titleFontSize": 20,
+          "summaryFontSize": 18,
+          "summaryContrast": 17.8,
+          "ctaHeight": 56,
+          "progressHeight": 10,
+          "progressColor": "rgb(5, 150, 105)"
+        },
+        "chipHeight": 52,
+        "chips": [
+          {
+            "key": "전체",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 9.3
+          },
+          {
+            "key": "접수중",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "접수예정",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "대기접수",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "마감",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          }
+        ],
+        "hero": {
+          "fontSize": 40.5,
+          "contrast": 11.7
+        },
+        "heroCtaHeight": 56,
+        "bottomNav": {
+          "display": "none",
+          "height": 0,
+          "tabCount": 5,
+          "minTabWidth": 0,
+          "minTabHeight": 0,
+          "minLabelFontSize": 13,
+          "labelsBold": true,
+          "tabs": [
+            {
+              "key": "home",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "programs",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "jobs",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "notice",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "menu",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            }
+          ]
+        },
+        "horizontalOverflow": false,
+        "documentScrollWidth": 768,
+        "documentClientWidth": 768,
+        "tableVisible": false,
+        "mobileListVisible": false,
+        "mobileRowHeight": null
+      },
+      "screenshots": [
+        "docs/evidence/styleguide-20261107/tablet-768-top.png",
+        "docs/evidence/styleguide-20261107/tablet-768-programs.png"
+      ]
+    },
+    {
+      "name": "fold8-820",
+      "width": 820,
+      "height": 1180,
+      "mobile": false,
+      "expectedColumns": 2,
+      "metrics": {
+        "viewport": {
+          "width": 820,
+          "height": 1180
+        },
+        "rootFontSize": 18,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "bodyContrast": 14.5,
+        "headerHeight": 72,
+        "gridColumns": 2,
+        "cardCount": 47,
+        "card": {
+          "box": {
+            "w": 371.8,
+            "h": 396.5
+          },
+          "radius": 24,
+          "padding": 24,
+          "titleFontSize": 20,
+          "summaryFontSize": 18,
+          "summaryContrast": 17.8,
+          "ctaHeight": 56,
+          "progressHeight": 10,
+          "progressColor": "rgb(5, 150, 105)"
+        },
+        "chipHeight": 52,
+        "chips": [
+          {
+            "key": "전체",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 9.3
+          },
+          {
+            "key": "접수중",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "접수예정",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "대기접수",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "마감",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          }
+        ],
+        "hero": {
+          "fontSize": 40.5,
+          "contrast": 11.7
+        },
+        "heroCtaHeight": 56,
+        "bottomNav": {
+          "display": "none",
+          "height": 0,
+          "tabCount": 5,
+          "minTabWidth": 0,
+          "minTabHeight": 0,
+          "minLabelFontSize": 13,
+          "labelsBold": true,
+          "tabs": [
+            {
+              "key": "home",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "programs",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "jobs",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "notice",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "menu",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            }
+          ]
+        },
+        "horizontalOverflow": false,
+        "documentScrollWidth": 820,
+        "documentClientWidth": 820,
+        "tableVisible": false,
+        "mobileListVisible": false,
+        "mobileRowHeight": null
+      },
+      "screenshots": [
+        "docs/evidence/styleguide-20261107/fold8-820-top.png",
+        "docs/evidence/styleguide-20261107/fold8-820-programs.png"
+      ]
+    },
+    {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 900,
+      "mobile": false,
+      "expectedColumns": 3,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "rootFontSize": 18,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "bodyContrast": 14.5,
+        "headerHeight": 72,
+        "gridColumns": 3,
+        "cardCount": 47,
+        "card": {
+          "box": {
+            "w": 393.7,
+            "h": 492.8
+          },
+          "radius": 24,
+          "padding": 24,
+          "titleFontSize": 20,
+          "summaryFontSize": 18,
+          "summaryContrast": 17.8,
+          "ctaHeight": 56,
+          "progressHeight": 10,
+          "progressColor": "rgb(5, 150, 105)"
+        },
+        "chipHeight": 52,
+        "chips": [
+          {
+            "key": "전체",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 9.3
+          },
+          {
+            "key": "접수중",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "접수예정",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "대기접수",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          },
+          {
+            "key": "마감",
+            "height": 52,
+            "fontSize": 18,
+            "contrast": 17.8
+          }
+        ],
+        "hero": {
+          "fontSize": 40.5,
+          "contrast": 11.7
+        },
+        "heroCtaHeight": 56,
+        "bottomNav": {
+          "display": "none",
+          "height": 0,
+          "tabCount": 5,
+          "minTabWidth": 0,
+          "minTabHeight": 0,
+          "minLabelFontSize": 13,
+          "labelsBold": true,
+          "tabs": [
+            {
+              "key": "home",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "programs",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "jobs",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "notice",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            },
+            {
+              "key": "menu",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "labelFontSize": 13,
+              "labelWeight": "700"
+            }
+          ]
+        },
+        "horizontalOverflow": false,
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "tableVisible": false,
+        "mobileListVisible": false,
+        "mobileRowHeight": null
+      },
+      "screenshots": [
+        "docs/evidence/styleguide-20261107/desktop-1280-top.png",
+        "docs/evidence/styleguide-20261107/desktop-1280-programs.png"
+      ]
+    }
+  ],
+  "screenshots": [
+    "docs/evidence/styleguide-20261107/mobile-390-top.png",
+    "docs/evidence/styleguide-20261107/mobile-390-programs.png",
+    "docs/evidence/styleguide-20261107/fold8-412-top.png",
+    "docs/evidence/styleguide-20261107/fold8-412-programs.png",
+    "docs/evidence/styleguide-20261107/tablet-768-top.png",
+    "docs/evidence/styleguide-20261107/tablet-768-programs.png",
+    "docs/evidence/styleguide-20261107/fold8-820-top.png",
+    "docs/evidence/styleguide-20261107/fold8-820-programs.png",
+    "docs/evidence/styleguide-20261107/desktop-1280-top.png",
+    "docs/evidence/styleguide-20261107/desktop-1280-programs.png",
+    "docs/evidence/styleguide-20261107/mobile-390-list.png",
+    "docs/evidence/styleguide-20261107/mobile-390-modal.png",
+    "docs/evidence/styleguide-20261107/mobile-390-form.png"
+  ],
+  "console": [],
+  "mobileList": {
+    "viewport": {
+      "width": 390,
+      "height": 900
+    },
+    "rootFontSize": 18,
+    "bodyFontSize": 18,
+    "bodyColor": "rgb(22, 35, 46)",
+    "bodyBackground": "rgb(246, 244, 239)",
+    "bodyContrast": 14.5,
+    "headerHeight": 72,
+    "gridColumns": 0,
+    "cardCount": 0,
+    "card": null,
+    "chipHeight": 52,
+    "chips": [
+      {
+        "key": "전체",
+        "height": 52,
+        "fontSize": 18,
+        "contrast": 9.3
+      },
+      {
+        "key": "접수중",
+        "height": 52,
+        "fontSize": 18,
+        "contrast": 17.8
+      },
+      {
+        "key": "접수예정",
+        "height": 52,
+        "fontSize": 18,
+        "contrast": 17.8
+      },
+      {
+        "key": "대기접수",
+        "height": 52,
+        "fontSize": 18,
+        "contrast": 17.8
+      },
+      {
+        "key": "마감",
+        "height": 52,
+        "fontSize": 18,
+        "contrast": 17.8
+      }
+    ],
+    "hero": {
+      "fontSize": 32,
+      "contrast": 11.7
+    },
+    "heroCtaHeight": 56,
+    "bottomNav": {
+      "display": "block",
+      "height": 64,
+      "tabCount": 5,
+      "minTabWidth": 78,
+      "minTabHeight": 63,
+      "minLabelFontSize": 13,
+      "labelsBold": true,
+      "tabs": [
+        {
+          "key": "home",
+          "box": {
+            "w": 78,
+            "h": 63
+          },
+          "labelFontSize": 13,
+          "labelWeight": "700"
+        },
+        {
+          "key": "programs",
+          "box": {
+            "w": 78,
+            "h": 63
+          },
+          "labelFontSize": 13,
+          "labelWeight": "700"
+        },
+        {
+          "key": "jobs",
+          "box": {
+            "w": 78,
+            "h": 63
+          },
+          "labelFontSize": 13,
+          "labelWeight": "700"
+        },
+        {
+          "key": "notice",
+          "box": {
+            "w": 78,
+            "h": 63
+          },
+          "labelFontSize": 13,
+          "labelWeight": "700"
+        },
+        {
+          "key": "menu",
+          "box": {
+            "w": 78,
+            "h": 63
+          },
+          "labelFontSize": 13,
+          "labelWeight": "700"
+        }
+      ]
+    },
+    "horizontalOverflow": false,
+    "documentScrollWidth": 390,
+    "documentClientWidth": 390,
+    "tableVisible": false,
+    "mobileListVisible": true,
+    "mobileRowHeight": 319.9
+  },
+  "mobileModal": {
+    "visible": true,
+    "width": 390,
+    "applyHeight": 56,
+    "horizontalOverflow": false
+  },
+  "mobileForm": {
+    "formVisible": true,
+    "name": {
+      "box": {
+        "w": 345,
+        "h": 52
+      },
+      "fontSize": 18
+    },
+    "phone": {
+      "box": {
+        "w": 345,
+        "h": 52
+      },
+      "fontSize": 18
+    },
+    "payButton": {
+      "box": {
+        "w": 345,
+        "h": 56
+      },
+      "fontSize": 20.3
+    },
+    "labelFontSize": 18,
+    "horizontalOverflow": false
+  },
+  "summary": {
+    "total": 88,
+    "passed": 88,
+    "failed": 0,
+    "verdict": "PASS"
+  }
+}

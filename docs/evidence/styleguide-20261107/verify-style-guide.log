@@ -1,0 +1,90 @@
+PASS  390px 카드 열 수 1
+PASS  390px 가로 스크롤 없음
+PASS  390px 카드 CTA 높이 52~60px
+PASS  390px 카드 곡률 24px
+PASS  390px 카드 패딩 24px
+PASS  390px 카드 본문 18px
+PASS  390px 본문 명도비 7:1 이상
+PASS  390px 카드 설명 명도비 7:1 이상
+PASS  390px 상태 칩 높이 52~56px
+PASS  390px 상태 칩 명도비 4.5:1 이상
+PASS  390px 헤더 72px
+PASS  390px 히어로 CTA 56px
+PASS  390px 하단 탭바 64px
+PASS  390px 탭 5개
+PASS  390px 탭 터치 48x48 이상
+PASS  390px 탭 라벨 13px bold
+PASS  390px 하단 탭바 표시
+PASS  412px 카드 열 수 1
+PASS  412px 가로 스크롤 없음
+PASS  412px 카드 CTA 높이 52~60px
+PASS  412px 카드 곡률 24px
+PASS  412px 카드 패딩 24px
+PASS  412px 카드 본문 18px
+PASS  412px 본문 명도비 7:1 이상
+PASS  412px 카드 설명 명도비 7:1 이상
+PASS  412px 상태 칩 높이 52~56px
+PASS  412px 상태 칩 명도비 4.5:1 이상
+PASS  412px 헤더 72px
+PASS  412px 히어로 CTA 56px
+PASS  412px 하단 탭바 64px
+PASS  412px 탭 5개
+PASS  412px 탭 터치 48x48 이상
+PASS  412px 탭 라벨 13px bold
+PASS  412px 하단 탭바 표시
+PASS  768px 카드 열 수 2
+PASS  768px 가로 스크롤 없음
+PASS  768px 카드 CTA 높이 52~60px
+PASS  768px 카드 곡률 24px
+PASS  768px 카드 패딩 24px
+PASS  768px 카드 본문 18px
+PASS  768px 본문 명도비 7:1 이상
+PASS  768px 카드 설명 명도비 7:1 이상
+PASS  768px 상태 칩 높이 52~56px
+PASS  768px 상태 칩 명도비 4.5:1 이상
+PASS  768px 헤더 72px
+PASS  768px 히어로 CTA 56px
+PASS  768px 하단 탭바 숨김
+PASS  820px 카드 열 수 2
+PASS  820px 가로 스크롤 없음
+PASS  820px 카드 CTA 높이 52~60px
+PASS  820px 카드 곡률 24px
+PASS  820px 카드 패딩 24px
+PASS  820px 카드 본문 18px
+PASS  820px 본문 명도비 7:1 이상
+PASS  820px 카드 설명 명도비 7:1 이상
+PASS  820px 상태 칩 높이 52~56px
+PASS  820px 상태 칩 명도비 4.5:1 이상
+PASS  820px 헤더 72px
+PASS  820px 히어로 CTA 56px
+PASS  820px 하단 탭바 숨김
+PASS  1280px 카드 열 수 3
+PASS  1280px 가로 스크롤 없음
+PASS  1280px 카드 CTA 높이 52~60px
+PASS  1280px 카드 곡률 24px
+PASS  1280px 카드 패딩 24px
+PASS  1280px 카드 본문 18px
+PASS  1280px 본문 명도비 7:1 이상
+PASS  1280px 카드 설명 명도비 7:1 이상
+PASS  1280px 상태 칩 높이 52~56px
+PASS  1280px 상태 칩 명도비 4.5:1 이상
+PASS  1280px 헤더 72px
+PASS  1280px 히어로 CTA 56px
+PASS  1280px 하단 탭바 숨김
+PASS  데스크톱 카드형 47개
+PASS  390px 목록형 표 숨김
+PASS  390px 목록형 행 카드 표시
+PASS  390px 목록형 가로 스크롤 없음
+PASS  390px 상세 모달 표시
+PASS  390px 모달 신청 버튼 56px
+PASS  390px 모달 가로 스크롤 없음
+PASS  390px 신청 폼 표시
+PASS  390px 성명 입력 52px
+PASS  390px 연락처 입력 52px
+PASS  390px 입력 글자 18px (자동 줌 차단)
+PASS  390px 결제 버튼 56px
+PASS  390px 폼 라벨 18px
+PASS  390px 폼 가로 스크롤 없음
+PASS  콘솔 에러 0건
+
+PASS (88/88)

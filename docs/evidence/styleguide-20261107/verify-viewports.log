@@ -1,0 +1,463 @@
+{
+  "baseUrl": "http://100.83.116.15:8780/5060do/",
+  "checkedAt": "2026-11-06T21:22:23.995Z",
+  "viewports": [
+    {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 900,
+      "expectedColumns": 1,
+      "metrics": {
+        "viewport": {
+          "width": 390,
+          "height": 900
+        },
+        "gridColumns": 1,
+        "cardCount": 47,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "documentScrollWidth": 390,
+        "documentClientWidth": 390,
+        "horizontalOverflow": false,
+        "smallTargets": [],
+        "minTextFontSize": 13,
+        "bottomNav": {
+          "display": "block",
+          "visible": true,
+          "height": 64,
+          "bottomGap": 0,
+          "tabCount": 5,
+          "tabs": [
+            {
+              "key": "home",
+              "text": "홈",
+              "height": 63,
+              "width": 78,
+              "labelFontSize": 13,
+              "active": true
+            },
+            {
+              "key": "programs",
+              "text": "교육신청",
+              "height": 63,
+              "width": 78,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "jobs",
+              "text": "채용정보",
+              "height": 63,
+              "width": 78,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "notice",
+              "text": "공지사항",
+              "height": 63,
+              "width": 78,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "menu",
+              "text": "전체",
+              "height": 63,
+              "width": 78,
+              "labelFontSize": 13,
+              "active": false
+            }
+          ],
+          "minTabHeight": 63,
+          "minLabelFontSize": 13
+        }
+      },
+      "columnsMatch": true,
+      "screenshot": "docs\\evidence\\styleguide-20261107\\viewports\\mobile-390.png"
+    },
+    {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "expectedColumns": 2,
+      "metrics": {
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "gridColumns": 2,
+        "cardCount": 47,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "documentScrollWidth": 768,
+        "documentClientWidth": 768,
+        "horizontalOverflow": false,
+        "smallTargets": [],
+        "minTextFontSize": 15,
+        "bottomNav": {
+          "display": "none",
+          "visible": false,
+          "height": 0,
+          "bottomGap": 1024,
+          "tabCount": 5,
+          "tabs": [
+            {
+              "key": "home",
+              "text": "홈",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": true
+            },
+            {
+              "key": "programs",
+              "text": "교육신청",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "jobs",
+              "text": "채용정보",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "notice",
+              "text": "공지사항",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "menu",
+              "text": "전체",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": false
+            }
+          ],
+          "minTabHeight": 0,
+          "minLabelFontSize": 13
+        }
+      },
+      "columnsMatch": true,
+      "screenshot": "docs\\evidence\\styleguide-20261107\\viewports\\tablet-768.png"
+    },
+    {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 900,
+      "expectedColumns": 3,
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "gridColumns": 3,
+        "cardCount": 47,
+        "bodyFontSize": 18,
+        "bodyColor": "rgb(22, 35, 46)",
+        "bodyBackground": "rgb(246, 244, 239)",
+        "documentScrollWidth": 1280,
+        "documentClientWidth": 1280,
+        "horizontalOverflow": false,
+        "smallTargets": [],
+        "minTextFontSize": 15,
+        "bottomNav": {
+          "display": "none",
+          "visible": false,
+          "height": 0,
+          "bottomGap": 900,
+          "tabCount": 5,
+          "tabs": [
+            {
+              "key": "home",
+              "text": "홈",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": true
+            },
+            {
+              "key": "programs",
+              "text": "교육신청",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "jobs",
+              "text": "채용정보",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "notice",
+              "text": "공지사항",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": false
+            },
+            {
+              "key": "menu",
+              "text": "전체",
+              "height": 0,
+              "width": 0,
+              "labelFontSize": 13,
+              "active": false
+            }
+          ],
+          "minTabHeight": 0,
+          "minLabelFontSize": 13
+        }
+      },
+      "columnsMatch": true,
+      "screenshot": "docs\\evidence\\styleguide-20261107\\viewports\\desktop-1280.png"
+    }
+  ],
+  "flow": {
+    "cardsScreenshot": "docs\\evidence\\styleguide-20261107\\viewports\\desktop-1280-cards.png",
+    "cardOpened": true,
+    "modalVisible": {
+      "visible": true,
+      "title": "프리마켓 인기 제품 만들기(손바느질)1"
+    },
+    "modalScreenshot": "docs\\evidence\\styleguide-20261107\\viewports\\desktop-1280-modal.png",
+    "applyStarted": true,
+    "formVisible": true,
+    "formScreenshot": "docs\\evidence\\styleguide-20261107\\viewports\\desktop-1280-form.png",
+    "dialogMessage": "테스트 결제 승인 완료\n\n프리마켓 인기 제품 만들기(손바느질)1\n결제 금액 5,000원\n(실제 결제가 이루어지지 않는 프로토타입입니다.)",
+    "doneVisible": "신청이 완료되었습니다김영희님, 접수번호는 5060-00162418 입니다.강좌명프리마켓 인기 제품 만들기(손바느질)1교육기간2026-11-18 ~ 2026-11-18결제 금액5,000원확인",
+    "doneScreenshot": "docs\\evidence\\styleguide-20261107\\viewports\\desktop-1280-done.png",
+    "modalClosed": true,
+    "closedProgram": {
+      "disabled": true,
+      "label": "모집 마감"
+    },
+    "mobileModal": {
+      "visible": true,
+      "horizontalOverflow": false,
+      "modalWidth": 390,
+      "screenshot": "docs\\evidence\\styleguide-20261107\\viewports\\mobile-390-modal.png"
+    }
+  },
+  "console": [
+    {
+      "type": "log",
+      "text": "[prototype] fake payment approved Object"
+    }
+  ],
+  "bottomNavFlow": {
+    "initial": {
+      "scrollY": 0,
+      "viewportHeight": 900,
+      "activeTabs": [
+        "bottom-tab-home"
+      ],
+      "drawerOpen": false,
+      "sectionTops": {
+        "programs": 1058,
+        "jobs": 22589,
+        "notice": 22936
+      },
+      "bodyOverflow": "visible"
+    },
+    "initialScreenshot": "docs\\evidence\\styleguide-20261107\\viewports\\mobile-390-bottom-nav.png",
+    "tabs": {
+      "programs": {
+        "clicked": true,
+        "scrollY": 932,
+        "viewportHeight": 900,
+        "activeTabs": [
+          "bottom-tab-programs"
+        ],
+        "drawerOpen": false,
+        "sectionTops": {
+          "programs": 126,
+          "jobs": 21657,
+          "notice": 22004
+        },
+        "bodyOverflow": "visible",
+        "sectionTop": 126,
+        "sectionReached": true,
+        "activeMatches": true
+      },
+      "jobs": {
+        "clicked": true,
+        "scrollY": 22429,
+        "viewportHeight": 900,
+        "activeTabs": [
+          "bottom-tab-programs"
+        ],
+        "drawerOpen": false,
+        "sectionTops": {
+          "programs": -21371,
+          "jobs": 160,
+          "notice": 507
+        },
+        "bodyOverflow": "visible",
+        "sectionTop": 160,
+        "sectionReached": true,
+        "activeMatches": false
+      },
+      "notice": {
+        "clicked": true,
+        "scrollY": 22810,
+        "viewportHeight": 900,
+        "activeTabs": [
+          "bottom-tab-notice"
+        ],
+        "drawerOpen": false,
+        "sectionTops": {
+          "programs": -21752,
+          "jobs": -221,
+          "notice": 126
+        },
+        "bodyOverflow": "visible",
+        "sectionTop": 126,
+        "sectionReached": true,
+        "activeMatches": true
+      }
+    },
+    "home": {
+      "clicked": true,
+      "scrollY": 24,
+      "viewportHeight": 900,
+      "activeTabs": [
+        "bottom-tab-home"
+      ],
+      "drawerOpen": false,
+      "sectionTops": {
+        "programs": 1034,
+        "jobs": 22565,
+        "notice": 22912
+      },
+      "bodyOverflow": "visible"
+    },
+    "drawer": {
+      "open": true,
+      "title": "전체 메뉴",
+      "titleId": "menu-drawer-title",
+      "modal": "true",
+      "shortcuts": 3,
+      "externalLinks": [
+        "센터 소개·인사말",
+        "신청 방법 안내",
+        "채용정보 게시판",
+        "공지사항 게시판"
+      ],
+      "phoneHref": "tel:0510000000",
+      "height": 792,
+      "bodyOverflow": "hidden"
+    },
+    "drawerScreenshot": "docs\\evidence\\styleguide-20261107\\viewports\\mobile-390-drawer.png",
+    "drawerShortcut": {
+      "scrollY": 22428,
+      "viewportHeight": 900,
+      "activeTabs": [
+        "bottom-tab-programs"
+      ],
+      "drawerOpen": false,
+      "sectionTops": {
+        "programs": -21370,
+        "jobs": 161,
+        "notice": 508
+      },
+      "bodyOverflow": "visible"
+    },
+    "drawerCloseButton": {
+      "scrollY": 22463,
+      "viewportHeight": 900,
+      "activeTabs": [
+        "bottom-tab-jobs"
+      ],
+      "drawerOpen": false,
+      "sectionTops": {
+        "programs": -21405,
+        "jobs": 126,
+        "notice": 473
+      },
+      "bodyOverflow": "visible"
+    },
+    "desktop": {
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "gridColumns": 3,
+      "cardCount": 47,
+      "bodyFontSize": 18,
+      "bodyColor": "rgb(22, 35, 46)",
+      "bodyBackground": "rgb(246, 244, 239)",
+      "documentScrollWidth": 1280,
+      "documentClientWidth": 1280,
+      "horizontalOverflow": false,
+      "smallTargets": [],
+      "minTextFontSize": 15,
+      "bottomNav": {
+        "display": "none",
+        "visible": false,
+        "height": 0,
+        "bottomGap": 900,
+        "tabCount": 5,
+        "tabs": [
+          {
+            "key": "home",
+            "text": "홈",
+            "height": 0,
+            "width": 0,
+            "labelFontSize": 13,
+            "active": false
+          },
+          {
+            "key": "programs",
+            "text": "교육신청",
+            "height": 0,
+            "width": 0,
+            "labelFontSize": 13,
+            "active": false
+          },
+          {
+            "key": "jobs",
+            "text": "채용정보",
+            "height": 0,
+            "width": 0,
+            "labelFontSize": 13,
+            "active": true
+          },
+          {
+            "key": "notice",
+            "text": "공지사항",
+            "height": 0,
+            "width": 0,
+            "labelFontSize": 13,
+            "active": false
+          },
+          {
+            "key": "menu",
+            "text": "전체",
+            "height": 0,
+            "width": 0,
+            "labelFontSize": 13,
+            "active": false
+          }
+        ],
+        "minTabHeight": 0,
+        "minLabelFontSize": 13
+      }
+    }
+  }
+}

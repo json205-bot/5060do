@@ -1,0 +1,1595 @@
+{
+  "baseUrl": "http://100.83.116.15:8780/5060do/",
+  "checkedAt": "2026-11-06T21:21:58.337Z",
+  "checks": [
+    {
+      "name": "칩 5종 렌더",
+      "pass": true,
+      "detail": [
+        {
+          "key": "전체",
+          "label": "전체",
+          "count": 47,
+          "active": true
+        },
+        {
+          "key": "접수중",
+          "label": "접수중",
+          "count": 7,
+          "active": false
+        },
+        {
+          "key": "접수예정",
+          "label": "접수예정",
+          "count": 1,
+          "active": false
+        },
+        {
+          "key": "대기접수",
+          "label": "대기접수",
+          "count": 7,
+          "active": false
+        },
+        {
+          "key": "마감",
+          "label": "마감",
+          "count": 32,
+          "active": false
+        }
+      ]
+    },
+    {
+      "name": "칩 카운트 합계 = 전체",
+      "pass": true,
+      "detail": [
+        {
+          "key": "전체",
+          "label": "전체",
+          "count": 47,
+          "active": true
+        },
+        {
+          "key": "접수중",
+          "label": "접수중",
+          "count": 7,
+          "active": false
+        },
+        {
+          "key": "접수예정",
+          "label": "접수예정",
+          "count": 1,
+          "active": false
+        },
+        {
+          "key": "대기접수",
+          "label": "대기접수",
+          "count": 7,
+          "active": false
+        },
+        {
+          "key": "마감",
+          "label": "마감",
+          "count": 32,
+          "active": false
+        }
+      ]
+    },
+    {
+      "name": "전체 카드 수 = 전체 칩",
+      "pass": true,
+      "detail": {
+        "cards": 47,
+        "chip": 47
+      }
+    },
+    {
+      "name": "스마트 정렬 상태 우선순위",
+      "pass": true,
+      "detail": [
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수예정",
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감"
+      ]
+    },
+    {
+      "name": "접수중 잔여 비율 임박순",
+      "pass": true,
+      "detail": [
+        {
+          "now": 14,
+          "max": 15,
+          "ratio": 0.06666666666666667
+        },
+        {
+          "now": 10,
+          "max": 14,
+          "ratio": 0.2857142857142857
+        },
+        {
+          "now": 7,
+          "max": 14,
+          "ratio": 0.5
+        },
+        {
+          "now": 7,
+          "max": 15,
+          "ratio": 0.5333333333333333
+        },
+        {
+          "now": 7,
+          "max": 15,
+          "ratio": 0.5333333333333333
+        },
+        {
+          "now": 9,
+          "max": 20,
+          "ratio": 0.55
+        },
+        {
+          "now": 0,
+          "max": 20,
+          "ratio": 1
+        }
+      ]
+    },
+    {
+      "name": "PC 카드 3열",
+      "pass": true,
+      "detail": 3
+    },
+    {
+      "name": "PC 가로 오버플로 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "접수중 필터 카드 수 일치",
+      "pass": true,
+      "detail": {
+        "chip": 7,
+        "cards": 7,
+        "allMatch": true
+      }
+    },
+    {
+      "name": "접수중 칩 활성 표시",
+      "pass": true,
+      "detail": {
+        "key": "접수중",
+        "label": "접수중",
+        "count": 7,
+        "active": true
+      }
+    },
+    {
+      "name": "접수예정 필터 카드 수 일치",
+      "pass": true,
+      "detail": {
+        "chip": 1,
+        "cards": 1,
+        "allMatch": true
+      }
+    },
+    {
+      "name": "접수예정 칩 활성 표시",
+      "pass": true,
+      "detail": {
+        "key": "접수예정",
+        "label": "접수예정",
+        "count": 1,
+        "active": true
+      }
+    },
+    {
+      "name": "대기접수 필터 카드 수 일치",
+      "pass": true,
+      "detail": {
+        "chip": 7,
+        "cards": 7,
+        "allMatch": true
+      }
+    },
+    {
+      "name": "대기접수 칩 활성 표시",
+      "pass": true,
+      "detail": {
+        "key": "대기접수",
+        "label": "대기접수",
+        "count": 7,
+        "active": true
+      }
+    },
+    {
+      "name": "마감 필터 카드 수 일치",
+      "pass": true,
+      "detail": {
+        "chip": 32,
+        "cards": 32,
+        "allMatch": true
+      }
+    },
+    {
+      "name": "마감 칩 활성 표시",
+      "pass": true,
+      "detail": {
+        "key": "마감",
+        "label": "마감",
+        "count": 32,
+        "active": true
+      }
+    },
+    {
+      "name": "목록형 표 노출",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "목록형 8개 컬럼",
+      "pass": true,
+      "detail": [
+        "상태",
+        "분야",
+        "강좌명",
+        "교육기간/일시",
+        "장소",
+        "정원(잔여)",
+        "수강료",
+        "신청"
+      ]
+    },
+    {
+      "name": "목록형 행 수 = 전체",
+      "pass": true,
+      "detail": {
+        "rows": 47,
+        "chip": 47
+      }
+    },
+    {
+      "name": "목록형 가로 오버플로 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "목록형 행 클릭 → 모달 연결",
+      "pass": true,
+      "detail": {
+        "firstRowTitle": "프리마켓 인기 제품 만들기(손바느질)1",
+        "modal": {
+          "visible": true,
+          "title": "프리마켓 인기 제품 만들기(손바느질)1",
+          "applyLabel": "수강신청",
+          "applyDisabled": false,
+          "formVisible": false,
+          "horizontalOverflow": false
+        }
+      }
+    },
+    {
+      "name": "접수중 모달 신청 가능",
+      "pass": true,
+      "detail": {
+        "visible": true,
+        "title": "프리마켓 인기 제품 만들기(손바느질)1",
+        "applyLabel": "수강신청",
+        "applyDisabled": false,
+        "formVisible": false,
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "신청 폼 전환",
+      "pass": true,
+      "detail": {
+        "visible": true,
+        "title": "프리마켓 인기 제품 만들기(손바느질)1",
+        "applyLabel": null,
+        "applyDisabled": null,
+        "formVisible": true,
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "대기접수 모달 대기신청",
+      "pass": true,
+      "detail": {
+        "visible": true,
+        "title": "바리스타 입문",
+        "applyLabel": "대기신청",
+        "applyDisabled": false,
+        "formVisible": false,
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "마감 모달 신청 비활성",
+      "pass": true,
+      "detail": {
+        "visible": true,
+        "title": "[활동] 아로마테라피와 함께하는 힐링요가",
+        "applyLabel": "모집 마감",
+        "applyDisabled": true,
+        "formVisible": false,
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "모바일 카드 1열",
+      "pass": true,
+      "detail": 1
+    },
+    {
+      "name": "모바일 카드 가로 오버플로 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "모바일 목록형 행 카드 노출",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "모바일 목록형 표 숨김",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "모바일 목록형 행 수 = 전체",
+      "pass": true,
+      "detail": {
+        "rows": 47,
+        "chip": 47
+      }
+    },
+    {
+      "name": "모바일 목록형 가로 오버플로 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "모바일 행 클릭 → 모달 연결",
+      "pass": true,
+      "detail": {
+        "visible": true,
+        "title": "프리마켓 인기 제품 만들기(손바느질)1",
+        "applyLabel": "수강신청",
+        "applyDisabled": false,
+        "formVisible": false,
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "name": "모바일 모달 가로 오버플로 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "태블릿 목록형 행 카드 노출",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "태블릿 목록형 가로 오버플로 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "콘솔 오류 0건",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "console": [],
+  "screenshots": [
+    "docs\\evidence\\styleguide-20261107\\regression\\desktop-1280-chips-cards.png",
+    "docs\\evidence\\styleguide-20261107\\regression\\desktop-1280-list.png",
+    "docs\\evidence\\styleguide-20261107\\regression\\desktop-1280-list-modal.png",
+    "docs\\evidence\\styleguide-20261107\\regression\\mobile-390-chips-cards.png",
+    "docs\\evidence\\styleguide-20261107\\regression\\mobile-390-list.png",
+    "docs\\evidence\\styleguide-20261107\\regression\\mobile-390-list-modal.png",
+    "docs\\evidence\\styleguide-20261107\\regression\\tablet-768-list.png"
+  ],
+  "chips": [
+    {
+      "key": "전체",
+      "label": "전체",
+      "count": 47,
+      "active": true
+    },
+    {
+      "key": "접수중",
+      "label": "접수중",
+      "count": 7,
+      "active": false
+    },
+    {
+      "key": "접수예정",
+      "label": "접수예정",
+      "count": 1,
+      "active": false
+    },
+    {
+      "key": "대기접수",
+      "label": "대기접수",
+      "count": 7,
+      "active": false
+    },
+    {
+      "key": "마감",
+      "label": "마감",
+      "count": 32,
+      "active": false
+    }
+  ],
+  "initialCards": {
+    "count": 47,
+    "statuses": [
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수예정",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감"
+    ],
+    "progress": [
+      {
+        "now": 14,
+        "max": 15,
+        "ratio": 0.06666666666666667
+      },
+      {
+        "now": 10,
+        "max": 14,
+        "ratio": 0.2857142857142857
+      },
+      {
+        "now": 7,
+        "max": 14,
+        "ratio": 0.5
+      },
+      {
+        "now": 7,
+        "max": 15,
+        "ratio": 0.5333333333333333
+      },
+      {
+        "now": 7,
+        "max": 15,
+        "ratio": 0.5333333333333333
+      },
+      {
+        "now": 9,
+        "max": 20,
+        "ratio": 0.55
+      },
+      {
+        "now": 0,
+        "max": 20,
+        "ratio": 1
+      },
+      {
+        "now": 0,
+        "max": 10,
+        "ratio": 1
+      },
+      {
+        "now": 15,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 13,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 10,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 12,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 8,
+        "max": 12,
+        "ratio": 0.3333333333333333
+      },
+      {
+        "now": 10,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 13,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 16,
+        "max": 12,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 27,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 5,
+        "max": 6,
+        "ratio": 0.16666666666666666
+      },
+      {
+        "now": 0,
+        "max": 10,
+        "ratio": 1
+      },
+      {
+        "now": 9,
+        "max": 9,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 6,
+        "max": 6,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 12,
+        "ratio": 0
+      },
+      {
+        "now": 21,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 9,
+        "max": 10,
+        "ratio": 0.1
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 15,
+        "ratio": 0
+      },
+      {
+        "now": 13,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 15,
+        "ratio": 0.06666666666666667
+      },
+      {
+        "now": 31,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 21,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 12,
+        "ratio": 0
+      },
+      {
+        "now": 25,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 15,
+        "ratio": 0
+      },
+      {
+        "now": 13,
+        "max": 15,
+        "ratio": 0.13333333333333333
+      },
+      {
+        "now": 0,
+        "max": 10,
+        "ratio": 1
+      },
+      {
+        "now": 10,
+        "max": 11,
+        "ratio": 0.09090909090909091
+      },
+      {
+        "now": 22,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 28,
+        "max": 30,
+        "ratio": 0.06666666666666667
+      }
+    ],
+    "gridColumns": 3,
+    "horizontalOverflow": false
+  },
+  "filters": {
+    "접수중": {
+      "chipCount": 7,
+      "count": 7,
+      "statuses": [
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수중",
+        "접수중"
+      ],
+      "progress": [
+        {
+          "now": 14,
+          "max": 15,
+          "ratio": 0.06666666666666667
+        },
+        {
+          "now": 10,
+          "max": 14,
+          "ratio": 0.2857142857142857
+        },
+        {
+          "now": 7,
+          "max": 14,
+          "ratio": 0.5
+        },
+        {
+          "now": 7,
+          "max": 15,
+          "ratio": 0.5333333333333333
+        },
+        {
+          "now": 7,
+          "max": 15,
+          "ratio": 0.5333333333333333
+        },
+        {
+          "now": 9,
+          "max": 20,
+          "ratio": 0.55
+        },
+        {
+          "now": 0,
+          "max": 20,
+          "ratio": 1
+        }
+      ],
+      "gridColumns": 3,
+      "horizontalOverflow": false,
+      "active": {
+        "key": "접수중",
+        "label": "접수중",
+        "count": 7,
+        "active": true
+      }
+    },
+    "접수예정": {
+      "chipCount": 1,
+      "count": 1,
+      "statuses": [
+        "접수예정"
+      ],
+      "progress": [
+        {
+          "now": 0,
+          "max": 10,
+          "ratio": 1
+        }
+      ],
+      "gridColumns": 3,
+      "horizontalOverflow": false,
+      "active": {
+        "key": "접수예정",
+        "label": "접수예정",
+        "count": 1,
+        "active": true
+      }
+    },
+    "대기접수": {
+      "chipCount": 7,
+      "count": 7,
+      "statuses": [
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "대기접수",
+        "대기접수"
+      ],
+      "progress": [
+        {
+          "now": 15,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 14,
+          "max": 14,
+          "ratio": 0
+        },
+        {
+          "now": 14,
+          "max": 14,
+          "ratio": 0
+        },
+        {
+          "now": 13,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 11,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 11,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 10,
+          "max": 10,
+          "ratio": 0
+        }
+      ],
+      "gridColumns": 3,
+      "horizontalOverflow": false,
+      "active": {
+        "key": "대기접수",
+        "label": "대기접수",
+        "count": 7,
+        "active": true
+      }
+    },
+    "마감": {
+      "chipCount": 32,
+      "count": 32,
+      "statuses": [
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감",
+        "마감"
+      ],
+      "progress": [
+        {
+          "now": 12,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 8,
+          "max": 12,
+          "ratio": 0.3333333333333333
+        },
+        {
+          "now": 10,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 11,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 13,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 16,
+          "max": 12,
+          "ratio": 0
+        },
+        {
+          "now": 15,
+          "max": 14,
+          "ratio": 0
+        },
+        {
+          "now": 11,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 27,
+          "max": 20,
+          "ratio": 0
+        },
+        {
+          "now": 5,
+          "max": 6,
+          "ratio": 0.16666666666666666
+        },
+        {
+          "now": 0,
+          "max": 10,
+          "ratio": 1
+        },
+        {
+          "now": 9,
+          "max": 9,
+          "ratio": 0
+        },
+        {
+          "now": 14,
+          "max": 14,
+          "ratio": 0
+        },
+        {
+          "now": 6,
+          "max": 6,
+          "ratio": 0
+        },
+        {
+          "now": 15,
+          "max": 12,
+          "ratio": 0
+        },
+        {
+          "now": 21,
+          "max": 14,
+          "ratio": 0
+        },
+        {
+          "now": 9,
+          "max": 10,
+          "ratio": 0.1
+        },
+        {
+          "now": 11,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 15,
+          "max": 15,
+          "ratio": 0
+        },
+        {
+          "now": 13,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 14,
+          "max": 10,
+          "ratio": 0
+        },
+        {
+          "now": 14,
+          "max": 15,
+          "ratio": 0.06666666666666667
+        },
+        {
+          "now": 31,
+          "max": 20,
+          "ratio": 0
+        },
+        {
+          "now": 21,
+          "max": 20,
+          "ratio": 0
+        },
+        {
+          "now": 15,
+          "max": 12,
+          "ratio": 0
+        },
+        {
+          "now": 25,
+          "max": 20,
+          "ratio": 0
+        },
+        {
+          "now": 15,
+          "max": 15,
+          "ratio": 0
+        },
+        {
+          "now": 13,
+          "max": 15,
+          "ratio": 0.13333333333333333
+        },
+        {
+          "now": 0,
+          "max": 10,
+          "ratio": 1
+        },
+        {
+          "now": 10,
+          "max": 11,
+          "ratio": 0.09090909090909091
+        },
+        {
+          "now": 22,
+          "max": 20,
+          "ratio": 0
+        },
+        {
+          "now": 28,
+          "max": 30,
+          "ratio": 0.06666666666666667
+        }
+      ],
+      "gridColumns": 3,
+      "horizontalOverflow": false,
+      "active": {
+        "key": "마감",
+        "label": "마감",
+        "count": 32,
+        "active": true
+      }
+    }
+  },
+  "table": {
+    "tableVisible": true,
+    "headers": [
+      "상태",
+      "분야",
+      "강좌명",
+      "교육기간/일시",
+      "장소",
+      "정원(잔여)",
+      "수강료",
+      "신청"
+    ],
+    "rowCount": 47,
+    "statuses": [
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수예정",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감"
+    ],
+    "horizontalOverflow": false
+  },
+  "rowModal": {
+    "firstRowTitle": "프리마켓 인기 제품 만들기(손바느질)1",
+    "visible": true,
+    "title": "프리마켓 인기 제품 만들기(손바느질)1",
+    "applyLabel": "수강신청",
+    "applyDisabled": false,
+    "formVisible": false,
+    "horizontalOverflow": false
+  },
+  "mobileCards": {
+    "count": 47,
+    "statuses": [
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수예정",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감"
+    ],
+    "progress": [
+      {
+        "now": 14,
+        "max": 15,
+        "ratio": 0.06666666666666667
+      },
+      {
+        "now": 10,
+        "max": 14,
+        "ratio": 0.2857142857142857
+      },
+      {
+        "now": 7,
+        "max": 14,
+        "ratio": 0.5
+      },
+      {
+        "now": 7,
+        "max": 15,
+        "ratio": 0.5333333333333333
+      },
+      {
+        "now": 7,
+        "max": 15,
+        "ratio": 0.5333333333333333
+      },
+      {
+        "now": 9,
+        "max": 20,
+        "ratio": 0.55
+      },
+      {
+        "now": 0,
+        "max": 20,
+        "ratio": 1
+      },
+      {
+        "now": 0,
+        "max": 10,
+        "ratio": 1
+      },
+      {
+        "now": 15,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 13,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 10,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 12,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 8,
+        "max": 12,
+        "ratio": 0.3333333333333333
+      },
+      {
+        "now": 10,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 13,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 16,
+        "max": 12,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 27,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 5,
+        "max": 6,
+        "ratio": 0.16666666666666666
+      },
+      {
+        "now": 0,
+        "max": 10,
+        "ratio": 1
+      },
+      {
+        "now": 9,
+        "max": 9,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 6,
+        "max": 6,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 12,
+        "ratio": 0
+      },
+      {
+        "now": 21,
+        "max": 14,
+        "ratio": 0
+      },
+      {
+        "now": 9,
+        "max": 10,
+        "ratio": 0.1
+      },
+      {
+        "now": 11,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 15,
+        "ratio": 0
+      },
+      {
+        "now": 13,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 10,
+        "ratio": 0
+      },
+      {
+        "now": 14,
+        "max": 15,
+        "ratio": 0.06666666666666667
+      },
+      {
+        "now": 31,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 21,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 12,
+        "ratio": 0
+      },
+      {
+        "now": 25,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 15,
+        "max": 15,
+        "ratio": 0
+      },
+      {
+        "now": 13,
+        "max": 15,
+        "ratio": 0.13333333333333333
+      },
+      {
+        "now": 0,
+        "max": 10,
+        "ratio": 1
+      },
+      {
+        "now": 10,
+        "max": 11,
+        "ratio": 0.09090909090909091
+      },
+      {
+        "now": 22,
+        "max": 20,
+        "ratio": 0
+      },
+      {
+        "now": 28,
+        "max": 30,
+        "ratio": 0.06666666666666667
+      }
+    ],
+    "gridColumns": 1,
+    "horizontalOverflow": false
+  },
+  "mobileList": {
+    "listVisible": true,
+    "rowCount": 47,
+    "statuses": [
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수예정",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감"
+    ],
+    "tableVisible": false,
+    "horizontalOverflow": false
+  },
+  "mobileModal": {
+    "visible": true,
+    "title": "프리마켓 인기 제품 만들기(손바느질)1",
+    "applyLabel": "수강신청",
+    "applyDisabled": false,
+    "formVisible": false,
+    "horizontalOverflow": false
+  },
+  "tabletList": {
+    "listVisible": true,
+    "rowCount": 47,
+    "statuses": [
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수중",
+      "접수예정",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "대기접수",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감",
+      "마감"
+    ],
+    "tableVisible": false,
+    "horizontalOverflow": false
+  },
+  "summary": {
+    "total": 35,
+    "passed": 35,
+    "failed": 0,
+    "verdict": "PASS"
+  }
+}

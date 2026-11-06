@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -59,28 +59,28 @@ const statusStyles: Record<
   { dot: string; active: string; badge: string; bar: string }
 > = {
   접수중: {
-    dot: "bg-emerald-500",
+    dot: "bg-status-open",
     active: "border-emerald-700 bg-emerald-700 text-white",
-    badge: "bg-emerald-100 text-emerald-800",
-    bar: "bg-emerald-500",
+    badge: "bg-emerald-100 text-emerald-900",
+    bar: "bg-status-open",
   },
   접수예정: {
-    dot: "bg-blue-500",
-    active: "border-blue-700 bg-blue-700 text-white",
-    badge: "bg-blue-100 text-blue-800",
-    bar: "bg-blue-500",
+    dot: "bg-status-ready",
+    active: "border-sky-700 bg-sky-700 text-white",
+    badge: "bg-sky-100 text-sky-900",
+    bar: "bg-status-ready",
   },
   대기접수: {
-    dot: "bg-amber-500",
-    active: "border-amber-600 bg-amber-500 text-brand-900",
-    badge: "bg-amber-100 text-amber-800",
-    bar: "bg-amber-500",
+    dot: "bg-status-wait",
+    active: "border-amber-700 bg-amber-700 text-white",
+    badge: "bg-amber-100 text-amber-900",
+    bar: "bg-status-wait",
   },
   마감: {
-    dot: "bg-slate-400",
+    dot: "bg-status-closed",
     active: "border-slate-700 bg-slate-700 text-white",
-    badge: "bg-slate-200 text-slate-700",
-    bar: "bg-slate-400",
+    badge: "bg-slate-200 text-slate-800",
+    bar: "bg-status-closed",
   },
 };
 
@@ -404,21 +404,21 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col pb-20 md:pb-0">
       <VersionSwitcher current="modern" />
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-6 md:px-6">
+      <header className="sticky top-0 z-40 h-[72px] border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-2 px-4 py-2 md:flex-row md:items-center md:justify-between md:gap-6 md:px-6">
           <a
             href="#top"
-            className="flex items-center gap-3 py-1"
+            className="flex items-center gap-3"
             aria-label="오륙도인생후반전지원센터 홈으로 이동"
           >
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-brand-700 text-white">
-              <GraduationCap aria-hidden className="size-7" />
+            <span className="flex size-[44px] items-center justify-center rounded-2xl bg-brand-700 text-white">
+              <GraduationCap aria-hidden className="size-6" />
             </span>
             <span className="flex flex-col">
               <span className="text-lg font-bold leading-tight text-brand-900 md:text-xl">
                 오륙도인생후반전지원센터
               </span>
-              <span className="text-sm font-medium text-slate-500">
+              <span className="text-sm font-semibold text-slate-900">
                 5060 배움과 일자리
               </span>
             </span>
@@ -430,10 +430,10 @@ export default function Home() {
                   <a
                     href={item.href}
                     aria-current={index === 0 ? "page" : undefined}
-                    className={`flex min-h-12 items-center justify-center rounded-xl px-2 text-base font-semibold transition-colors md:px-4 ${
+                    className={`flex min-h-[52px] items-center justify-center rounded-xl px-2 text-base font-semibold transition-colors md:px-4 ${
                       index === 0
                         ? "bg-brand-50 text-brand-800"
-                        : "text-slate-700 hover:bg-slate-100"
+                        : "text-slate-900 hover:bg-slate-100"
                     }`}
                   >
                     {item.label}
@@ -464,7 +464,7 @@ export default function Home() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#programs"
-                className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-6 text-lg font-bold text-brand-900 transition-colors hover:bg-accent-600"
+                className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-accent-500 px-6 text-lg font-bold text-brand-900 transition-colors hover:bg-accent-600"
               >
                 지금 수강신청 하기
                 <ChevronRight aria-hidden className="size-5" />
@@ -473,7 +473,7 @@ export default function Home() {
                 href="https://www.5060do.or.kr/education/lifeEduWay"
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border-2 border-white/40 px-6 text-lg font-semibold text-white transition-colors hover:bg-white/10"
+                className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border-2 border-white/40 px-6 text-lg font-semibold text-white transition-colors hover:bg-white/10"
               >
                 신청 방법 안내
                 <ArrowUpRight aria-hidden className="size-5" />
@@ -497,7 +497,7 @@ export default function Home() {
                   <item.icon aria-hidden className="size-5" />
                 </span>
                 <p className="flex flex-col">
-                  <span className="text-sm font-semibold text-slate-500">
+                  <span className="text-sm font-semibold text-slate-900">
                     {item.label}
                   </span>
                   <span className="text-base font-semibold text-slate-800">
@@ -531,7 +531,7 @@ export default function Home() {
                 role="status"
                 aria-live="polite"
                 data-testid="program-result-count"
-                className="text-base text-slate-600"
+                className="text-base text-slate-900"
               >
                 {statusFilter === "전체" ? "전체" : statusFilter}{" "}
                 <span className="font-bold text-brand-700">
@@ -549,10 +549,10 @@ export default function Home() {
                   data-testid="view-toggle-card"
                   aria-pressed={viewMode === "card"}
                   onClick={() => setViewMode("card")}
-                  className={`flex min-h-11 items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
+                  className={`flex min-h-[48px] items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
                     viewMode === "card"
                       ? "bg-white text-brand-800 shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
+                      : "text-slate-900 hover:text-slate-900"
                   }`}
                 >
                   <LayoutGrid aria-hidden className="size-5" />
@@ -563,10 +563,10 @@ export default function Home() {
                   data-testid="view-toggle-list"
                   aria-pressed={viewMode === "list"}
                   onClick={() => setViewMode("list")}
-                  className={`flex min-h-11 items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
+                  className={`flex min-h-[48px] items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
                     viewMode === "list"
                       ? "bg-white text-brand-800 shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
+                      : "text-slate-900 hover:text-slate-900"
                   }`}
                 >
                   <List aria-hidden className="size-5" />
@@ -592,12 +592,12 @@ export default function Home() {
                   data-testid={`status-chip-${status}`}
                   aria-pressed={active}
                   onClick={() => setStatusFilter(status)}
-                  className={`inline-flex min-h-12 items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
+                  className={`inline-flex min-h-[52px] items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
                     active
                       ? style
                         ? style.active
                         : "border-brand-700 bg-brand-700 text-white"
-                      : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+                      : "border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50"
                   }`}
                 >
                   {style && (
@@ -611,7 +611,7 @@ export default function Home() {
                   <span>{status}</span>
                   <span
                     className={`text-sm font-bold ${
-                      active ? "text-white/80" : "text-slate-500"
+                      active ? "text-white" : "text-slate-900"
                     }`}
                   >
                     [{statusCounts[status]}]
@@ -622,7 +622,7 @@ export default function Home() {
           </div>
 
           {visiblePrograms.length === 0 ? (
-            <p className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-lg font-semibold text-slate-600">
+            <p className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-lg font-semibold text-slate-900">
               해당 상태의 강좌가 없습니다.
             </p>
           ) : viewMode === "card" ? (
@@ -645,7 +645,7 @@ export default function Home() {
                       data-status={program.status}
                       onClick={() => openProgram(program)}
                       aria-haspopup="dialog"
-                      className="group flex w-full flex-col rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
+                      className="group flex w-full flex-col rounded-[24px] border border-slate-200 bg-white p-[24px] text-left shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-800">
@@ -661,12 +661,12 @@ export default function Home() {
                         {program.title}
                       </h3>
                       {program.summary && (
-                        <p className="mt-2 line-clamp-2 text-base leading-relaxed text-slate-600">
+                        <p className="mt-2 line-clamp-2 text-base leading-relaxed text-slate-900">
                           {program.summary}
                         </p>
                       )}
 
-                      <dl className="mt-4 space-y-2 text-base text-slate-700">
+                      <dl className="mt-4 space-y-2 text-base text-slate-900">
                         <div className="flex items-start gap-2">
                           <CalendarDays
                             aria-hidden
@@ -696,12 +696,20 @@ export default function Home() {
                       </dl>
 
                       <div className="mt-5">
-                        <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
+                        <div className="flex items-center justify-between gap-2 text-sm font-semibold text-slate-900">
                           <span className="inline-flex items-center gap-1">
                             <Users aria-hidden className="size-4" />
                             신청 {program.enrolled}명 / 정원 {program.capacity}명
                           </span>
-                          <span>잔여 {remainingSeats(program)}석</span>
+                          <span
+                            className={
+                              remainingSeats(program) === 0
+                                ? "font-bold text-red-700"
+                                : "font-bold text-brand-800"
+                            }
+                          >
+                            잔여 {remainingSeats(program)}석
+                          </span>
                         </div>
                         <div
                           role="progressbar"
@@ -709,7 +717,7 @@ export default function Home() {
                           aria-valuemax={program.capacity}
                           aria-valuenow={program.enrolled}
                           aria-label={`${program.title} 신청 현황`}
-                          className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"
+                          className="mt-2 h-[10px] w-full overflow-hidden rounded-full bg-slate-200"
                         >
                           <div
                             className={`h-full rounded-full ${style.bar}`}
@@ -719,10 +727,10 @@ export default function Home() {
                       </div>
 
                       <span
-                        className={`mt-5 flex min-h-12 items-center justify-center gap-1 rounded-2xl text-lg font-bold ${
+                        className={`mt-5 flex min-h-[56px] items-center justify-center gap-1 rounded-2xl text-lg font-bold ${
                           applicable
                             ? "bg-brand-700 text-white group-hover:bg-brand-800"
-                            : "bg-slate-100 text-slate-500"
+                            : "bg-slate-200 text-slate-800"
                         }`}
                       >
                         {program.status === "마감"
@@ -790,7 +798,7 @@ export default function Home() {
                             {program.status}
                           </span>
                         </td>
-                        <td className="px-3 py-4 text-slate-700">
+                        <td className="px-3 py-4 text-slate-900">
                           {program.category}
                         </td>
                         <td className="px-3 py-4">
@@ -802,13 +810,13 @@ export default function Home() {
                             {program.title}
                           </button>
                         </td>
-                        <td className="px-3 py-4 text-slate-700">
+                        <td className="px-3 py-4 text-slate-900">
                           {program.eduPeriod}
                         </td>
-                        <td className="px-3 py-4 text-slate-700">
+                        <td className="px-3 py-4 text-slate-900">
                           {program.location}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-slate-700">
+                        <td className="whitespace-nowrap px-3 py-4 text-slate-900">
                           {program.capacity}명 ({remainingSeats(program)}석)
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 font-semibold text-slate-900">
@@ -818,10 +826,10 @@ export default function Home() {
                           <button
                             type="button"
                             onClick={() => openProgram(program)}
-                            className={`flex min-h-11 w-full items-center justify-center whitespace-nowrap rounded-xl px-2 text-sm font-bold transition-colors ${
+                            className={`flex min-h-[48px] w-full items-center justify-center whitespace-nowrap rounded-xl px-2 text-sm font-bold transition-colors ${
                               isApplicable(program.status)
                                 ? "bg-brand-700 text-white hover:bg-brand-800"
-                                : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                                : "bg-slate-200 text-slate-800 hover:bg-slate-300"
                             }`}
                           >
                             {actionLabels[program.status]}
@@ -845,7 +853,7 @@ export default function Home() {
                       data-status={program.status}
                       onClick={() => openProgram(program)}
                       aria-haspopup="dialog"
-                      className="flex w-full flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-brand-300 hover:shadow-md"
+                      className="flex w-full flex-col gap-2.5 rounded-[20px] border border-slate-200 bg-white p-[18px] text-left shadow-sm transition hover:border-brand-300 hover:shadow-md"
                     >
                       <span className="flex items-center justify-between gap-2">
                         <span
@@ -853,14 +861,14 @@ export default function Home() {
                         >
                           {program.status}
                         </span>
-                        <span className="text-sm font-semibold text-slate-500">
+                        <span className="text-sm font-semibold text-slate-900">
                           {program.category}
                         </span>
                       </span>
                       <span className="text-lg font-bold leading-snug text-slate-900">
                         {program.title}
                       </span>
-                      <span className="flex flex-wrap gap-x-3 gap-y-1 text-base text-slate-700">
+                      <span className="flex flex-wrap gap-x-3 gap-y-1 text-base text-slate-900">
                         <span className="inline-flex items-center gap-1">
                           <CalendarDays
                             aria-hidden
@@ -877,7 +885,7 @@ export default function Home() {
                         </span>
                       </span>
                       <span className="flex items-center justify-between gap-2 text-base">
-                        <span className="font-semibold text-slate-700">
+                        <span className="font-semibold text-slate-900">
                           정원 {program.capacity}명 · 잔여{" "}
                           {remainingSeats(program)}석
                         </span>
@@ -886,10 +894,10 @@ export default function Home() {
                         </span>
                       </span>
                       <span
-                        className={`mt-1 flex min-h-12 items-center justify-center rounded-xl text-base font-bold ${
+                        className={`mt-1 flex min-h-[52px] items-center justify-center rounded-xl text-base font-bold ${
                           isApplicable(program.status)
                             ? "bg-brand-700 text-white"
-                            : "bg-slate-100 text-slate-500"
+                            : "bg-slate-200 text-slate-800"
                         }`}
                       >
                         {actionLabels[program.status]}
@@ -911,7 +919,7 @@ export default function Home() {
                 </span>
                 <div>
                   <h2 className="text-2xl font-bold text-brand-900">채용정보</h2>
-                  <p className="mt-1 text-base text-slate-700">
+                  <p className="mt-1 text-base text-slate-900">
                     신중년 맞춤 일자리와 구인 정보를 센터 게시판에서 확인하세요.
                   </p>
                 </div>
@@ -920,7 +928,7 @@ export default function Home() {
                 href="https://www.5060do.or.kr/board/lifeFindJob"
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-brand-700 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-800"
+                className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-brand-700 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-800"
               >
                 채용정보 보기
                 <ArrowUpRight aria-hidden className="size-5" />
@@ -957,7 +965,7 @@ export default function Home() {
                       {notice.title}
                     </span>
                   </span>
-                  <span className="text-base text-slate-500">
+                  <span className="text-base text-slate-900">
                     {notice.date}
                   </span>
                 </a>
@@ -983,9 +991,9 @@ export default function Home() {
       <nav
         aria-label="모바일 하단 메뉴"
         data-testid="bottom-nav"
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
+        className="fixed bottom-0 left-0 right-0 z-40 h-[64px] border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
       >
-        <ul className="grid grid-cols-5">
+        <ul className="grid h-full grid-cols-5">
           {bottomTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive =
@@ -999,10 +1007,10 @@ export default function Home() {
                   aria-expanded={tab.key === "menu" ? menuOpen : undefined}
                   aria-haspopup={tab.key === "menu" ? "dialog" : undefined}
                   onClick={() => handleTabClick(tab.key)}
-                  className={`relative flex h-16 w-full flex-col items-center justify-center gap-1 transition-colors ${
+                  className={`relative flex h-full min-h-[48px] min-w-[48px] w-full flex-col items-center justify-center gap-1 transition-colors ${
                     isActive
                       ? "text-brand-700"
-                      : "text-slate-500 hover:text-brand-700"
+                      : "text-slate-900 hover:text-brand-700"
                   }`}
                 >
                   <span
@@ -1018,9 +1026,7 @@ export default function Home() {
                   />
                   <span
                     data-tab-label=""
-                    className={`text-[13px] leading-none ${
-                      isActive ? "font-bold" : "font-semibold"
-                    }`}
+                    className="text-[13px] font-bold leading-none"
                   >
                     {tab.label}
                   </span>
@@ -1059,13 +1065,13 @@ export default function Home() {
                 data-testid="menu-drawer-close"
                 onClick={() => setMenuOpen(false)}
                 aria-label="전체 메뉴 닫기"
-                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
+                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200"
               >
                 <X aria-hidden className="size-6" />
               </button>
             </div>
 
-            <p className="mt-4 text-base font-bold text-slate-500">바로가기</p>
+            <p className="mt-4 text-base font-bold text-slate-900">바로가기</p>
             <div className="mt-2 grid gap-2">
               {[
                 { id: "programs", label: "교육신청", icon: GraduationCap },
@@ -1077,7 +1083,7 @@ export default function Home() {
                   type="button"
                   data-testid={`menu-shortcut-${item.id}`}
                   onClick={() => handleMenuShortcut(item.id)}
-                  className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-slate-200 px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-slate-50"
+                  className="flex min-h-[56px] items-center justify-between gap-3 rounded-2xl border border-slate-200 px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-slate-50"
                 >
                   <span className="flex items-center gap-3">
                     <item.icon
@@ -1086,12 +1092,12 @@ export default function Home() {
                     />
                     {item.label}
                   </span>
-                  <ChevronRight aria-hidden className="size-5 text-slate-400" />
+                  <ChevronRight aria-hidden className="size-5 text-slate-600" />
                 </button>
               ))}
             </div>
 
-            <p className="mt-5 text-base font-bold text-slate-500">
+            <p className="mt-5 text-base font-bold text-slate-900">
               센터 안내
             </p>
             <div className="mt-2 grid gap-2">
@@ -1101,7 +1107,7 @@ export default function Home() {
                   href={item.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex min-h-14 items-center justify-between gap-3 rounded-2xl bg-canvas px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-brand-50"
+                  className="flex min-h-[56px] items-center justify-between gap-3 rounded-2xl bg-canvas px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-brand-50"
                 >
                   {item.label}
                   <ArrowUpRight
@@ -1112,13 +1118,13 @@ export default function Home() {
               ))}
             </div>
 
-            <p className="mt-5 text-base font-bold text-slate-500">
+            <p className="mt-5 text-base font-bold text-slate-900">
               상담·오시는 길
             </p>
             <dl className="mt-2 grid gap-2 rounded-2xl bg-canvas p-4 text-base">
               <div className="flex items-center gap-3">
                 <Phone aria-hidden className="size-5 shrink-0 text-brand-700" />
-                <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                <dt className="w-20 shrink-0 font-semibold text-slate-900">
                   상담전화
                 </dt>
                 <dd>
@@ -1133,7 +1139,7 @@ export default function Home() {
               </div>
               <div className="flex items-center gap-3">
                 <Clock aria-hidden className="size-5 shrink-0 text-brand-700" />
-                <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                <dt className="w-20 shrink-0 font-semibold text-slate-900">
                   운영시간
                 </dt>
                 <dd className="font-semibold text-slate-800">
@@ -1145,7 +1151,7 @@ export default function Home() {
                   aria-hidden
                   className="mt-0.5 size-5 shrink-0 text-brand-700"
                 />
-                <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                <dt className="w-20 shrink-0 font-semibold text-slate-900">
                   오시는 길
                 </dt>
                 <dd className="font-semibold text-slate-800">
@@ -1196,7 +1202,7 @@ export default function Home() {
                 type="button"
                 onClick={closeModal}
                 aria-label="상세 창 닫기"
-                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
+                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200"
               >
                 <X aria-hidden className="size-6" />
               </button>
@@ -1211,26 +1217,26 @@ export default function Home() {
                 <h3 className="mt-4 text-2xl font-bold text-slate-900">
                   신청이 완료되었습니다
                 </h3>
-                <p className="mt-2 text-lg text-slate-700">
+                <p className="mt-2 text-lg text-slate-900">
                   {applicant.name}님, 접수번호는{" "}
                   <span className="font-bold text-brand-700">{receipt}</span>{" "}
                   입니다.
                 </p>
                 <dl className="mt-6 space-y-2 rounded-2xl bg-canvas p-4 text-left text-base">
                   <div className="flex justify-between gap-4">
-                    <dt className="text-slate-600">강좌명</dt>
+                    <dt className="text-slate-900">강좌명</dt>
                     <dd className="text-right font-semibold text-slate-900">
                       {selected.title}
                     </dd>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-slate-600">교육기간</dt>
+                    <dt className="text-slate-900">교육기간</dt>
                     <dd className="text-right font-semibold text-slate-900">
                       {selected.eduPeriod}
                     </dd>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-slate-600">결제 금액</dt>
+                    <dt className="text-slate-900">결제 금액</dt>
                     <dd className="text-right font-semibold text-slate-900">
                       {formatFee(approvedAmount ?? selected.fee)}
                     </dd>
@@ -1239,7 +1245,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="mt-6 flex min-h-14 w-full items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800"
+                  className="mt-6 flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800"
                 >
                   확인
                 </button>
@@ -1255,7 +1261,7 @@ export default function Home() {
                       className="mt-0.5 size-5 shrink-0 text-brand-600"
                     />
                     <div>
-                      <dt className="text-sm font-semibold text-slate-500">
+                      <dt className="text-sm font-semibold text-slate-900">
                         신청기간
                       </dt>
                       <dd className="font-semibold text-slate-800">
@@ -1269,7 +1275,7 @@ export default function Home() {
                       className="mt-0.5 size-5 shrink-0 text-brand-600"
                     />
                     <div>
-                      <dt className="text-sm font-semibold text-slate-500">
+                      <dt className="text-sm font-semibold text-slate-900">
                         교육기간
                       </dt>
                       <dd className="font-semibold text-slate-800">
@@ -1283,7 +1289,7 @@ export default function Home() {
                       className="mt-0.5 size-5 shrink-0 text-brand-600"
                     />
                     <div>
-                      <dt className="text-sm font-semibold text-slate-500">
+                      <dt className="text-sm font-semibold text-slate-900">
                         교육장소
                       </dt>
                       <dd className="font-semibold text-slate-800">
@@ -1297,7 +1303,7 @@ export default function Home() {
                       className="mt-0.5 size-5 shrink-0 text-brand-600"
                     />
                     <div>
-                      <dt className="text-sm font-semibold text-slate-500">
+                      <dt className="text-sm font-semibold text-slate-900">
                         정원 / 신청
                       </dt>
                       <dd className="font-semibold text-slate-800">
@@ -1311,7 +1317,7 @@ export default function Home() {
                       className="mt-0.5 size-5 shrink-0 text-brand-600"
                     />
                     <div>
-                      <dt className="text-sm font-semibold text-slate-500">
+                      <dt className="text-sm font-semibold text-slate-900">
                         신청 대상
                       </dt>
                       <dd className="font-semibold text-slate-800">
@@ -1325,7 +1331,7 @@ export default function Home() {
                       className="mt-0.5 size-5 shrink-0 text-brand-600"
                     />
                     <div>
-                      <dt className="text-sm font-semibold text-slate-500">
+                      <dt className="text-sm font-semibold text-slate-900">
                         수강료
                       </dt>
                       <dd className="font-semibold text-slate-900">
@@ -1335,7 +1341,7 @@ export default function Home() {
                   </div>
                 </dl>
 
-                <p className="mt-4 text-base leading-relaxed text-slate-700">
+                <p className="mt-4 text-base leading-relaxed text-slate-900">
                   {selected.summary}
                 </p>
                   </>
@@ -1344,7 +1350,7 @@ export default function Home() {
                 {stage === "form" && (
                   <dl className="mt-5 grid gap-2 rounded-2xl bg-canvas p-4 text-base">
                     <div className="flex gap-2">
-                      <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                      <dt className="w-20 shrink-0 font-semibold text-slate-900">
                         교육기간
                       </dt>
                       <dd className="font-semibold text-slate-800">
@@ -1352,7 +1358,7 @@ export default function Home() {
                       </dd>
                     </div>
                     <div className="flex gap-2">
-                      <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                      <dt className="w-20 shrink-0 font-semibold text-slate-900">
                         교육장소
                       </dt>
                       <dd className="font-semibold text-slate-800">
@@ -1360,7 +1366,7 @@ export default function Home() {
                       </dd>
                     </div>
                     <div className="flex gap-2">
-                      <dt className="w-20 shrink-0 font-semibold text-slate-500">
+                      <dt className="w-20 shrink-0 font-semibold text-slate-900">
                         수강료
                       </dt>
                       <dd className="font-semibold text-slate-900">
@@ -1376,14 +1382,14 @@ export default function Home() {
                       type="button"
                       onClick={() => setStage("form")}
                       disabled={!isApplicable(selected.status)}
-                      className="flex min-h-14 flex-1 items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-600"
+                      className="flex min-h-[56px] flex-1 items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-900"
                     >
                       {actionLabels[selected.status]}
                     </button>
                     <button
                       type="button"
                       onClick={closeModal}
-                      className="flex min-h-14 items-center justify-center rounded-2xl border-2 border-slate-300 px-6 text-lg font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                      className="flex min-h-[56px] items-center justify-center rounded-2xl border-2 border-slate-300 px-6 text-lg font-semibold text-slate-900 transition-colors hover:bg-slate-50"
                     >
                       닫기
                     </button>
@@ -1419,7 +1425,7 @@ export default function Home() {
                         placeholder="신청자 성명"
                         aria-invalid={Boolean(errors.name)}
                         aria-describedby={errors.name ? "name-error" : undefined}
-                        className="mt-2 min-h-14 w-full rounded-2xl border-2 border-slate-300 px-4 text-lg text-slate-900 placeholder:text-slate-400 focus:border-brand-600 focus:outline-none"
+                        className="mt-2 min-h-[52px] w-full rounded-xl border-2 border-slate-300 px-4 text-[18px] text-slate-900 placeholder:text-slate-600 focus:border-brand-600 focus:outline-none"
                       />
                       {errors.name && (
                         <p
@@ -1456,7 +1462,7 @@ export default function Home() {
                         aria-describedby={
                           errors.phone ? "phone-error" : undefined
                         }
-                        className="mt-2 min-h-14 w-full rounded-2xl border-2 border-slate-300 px-4 text-lg text-slate-900 placeholder:text-slate-400 focus:border-brand-600 focus:outline-none"
+                        className="mt-2 min-h-[52px] w-full rounded-xl border-2 border-slate-300 px-4 text-[18px] text-slate-900 placeholder:text-slate-600 focus:border-brand-600 focus:outline-none"
                       />
                       {errors.phone && (
                         <p
@@ -1470,14 +1476,14 @@ export default function Home() {
 
                     <div className="rounded-2xl bg-canvas p-4 text-base">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-slate-600">
+                        <span className="font-semibold text-slate-900">
                           결제 금액
                         </span>
                         <span className="text-xl font-bold text-slate-900">
                           {formatFee(selected.fee)}
                         </span>
                       </div>
-                      <p className="mt-2 text-sm text-slate-500">
+                      <p className="mt-2 text-sm text-slate-900">
                         프로토타입 화면으로 실제 결제는 이루어지지 않습니다.
                       </p>
                     </div>
@@ -1487,14 +1493,14 @@ export default function Home() {
                         type="button"
                         data-testid="pay-button"
                         onClick={handlePayment}
-                        className="flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-accent-500 text-lg font-bold text-brand-900 transition-colors hover:bg-accent-600"
+                        className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-2xl bg-accent-500 text-lg font-bold text-brand-900 transition-colors hover:bg-accent-600"
                       >
                         {selected.fee > 0 ? "결제하기" : "무료로 신청하기"}
                       </button>
                       <button
                         type="button"
                         onClick={() => setStage("detail")}
-                        className="flex min-h-14 items-center justify-center rounded-2xl border-2 border-slate-300 px-6 text-lg font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                        className="flex min-h-[56px] items-center justify-center rounded-2xl border-2 border-slate-300 px-6 text-lg font-semibold text-slate-900 transition-colors hover:bg-slate-50"
                       >
                         이전
                       </button>

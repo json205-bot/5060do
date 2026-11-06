@@ -107,3 +107,16 @@ status: done
 | 모달 | 카드·목록 양쪽에서 상세 모달 연결. 접수중 수강신청, 대기접수 대기신청, 접수예정·마감 비활성 |
 | 검증 | typecheck·lint·build Exit 0, 실서버 HTTP 200·리소스 404 0건, `verify-programs.mjs` 35/35 PASS, `verify-viewports.mjs` 회귀 PASS |
 | 증거 | `docs/evidence/programs-20261107/` |
+
+## 11. 스타일 가이드 기반 메인 화면 단일 통합 리팩토링 및 나스 배포 (2026-11-07 06:10)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | `docs/STYLE_GUIDE.md`의 고대비 4.5:1(본문 7:1)·18px 본문·48px 이상 터치 영역을 메인 화면과 모달에 일괄 적용 |
+| 전역 토큰 | `globals.css`에 강좌 4대 상태 색(`--color-status-open/ready/wait/closed`)과 시니어 타이포 스케일(`--text-xs`~`--text-3xl`) 추가. `html` 18px·`--color-ink` 7:1 유지 |
+| 헤더·탭바 | 헤더 72px 고정, 로고 44px. 모바일 하단 탭바 64px·5탭 48×48px 이상·라벨 13px bold. 본문 `pb-20` 유지 |
+| 카드 | 곡률 24px·패딩 24px·CTA 56px, 잔여석 고대비(브랜드/적색), 진행 막대 10px. 상태 배지 4색 토큰 정합 |
+| 목록 | PC 8컬럼 고대비 표, 1024px 미만 행 카드. 390·412·768·820px 가로 스크롤 0 |
+| 모달·폼 | 입력 52px·18px(모바일 자동 확대 차단), 확인/결제 버튼 56px, 중간 톤 회색 본문 제거 |
+| 검증 | typecheck·lint·build Exit 0, 실서버 HTTP 200·리소스 404 0건, `verify-style-guide.mjs` 88/88 PASS, `verify-programs.mjs` 35/35, `verify-viewports.mjs` 회귀 PASS |
+| 증거 | `docs/evidence/styleguide-20261107/` |
