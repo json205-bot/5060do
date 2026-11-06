@@ -45,3 +45,6 @@ next-env.d.ts
 
 # session memory (shared via NAS, not git)
 /.memory/
+
+# graphify knowledge graph output
+/graphify-out/
