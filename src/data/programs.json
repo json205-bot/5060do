@@ -1,0 +1,62 @@
+[
+  {
+    "id": 935,
+    "title": "[특강] AI시대 가짜정보 판별하기(50~99세)",
+    "category": "인생설계",
+    "summary": "생성형 AI 시대에 늘어나는 가짜 뉴스와 조작된 이미지를 직접 확인하며 구별하는 실습형 특강입니다.",
+    "capacity": 20,
+    "enrolled": 9,
+    "location": "오륙도인생후반전지원센터 2층 배움실",
+    "fee": 0,
+    "target": "50세 ~ 99세",
+    "applyPeriod": "2026-10-30 ~ 2026-11-09",
+    "eduPeriod": "2026-11-11 (수) 1회",
+    "status": "접수중",
+    "sourceUrl": "https://www.5060do.or.kr/education/lifeEduProgram?idx=935"
+  },
+  {
+    "id": 934,
+    "title": "디자인은 미리캔버스로(야간)",
+    "category": "일활동",
+    "summary": "무료 디자인 도구 미리캔버스로 전단지와 카드뉴스를 만드는 야간 과정입니다. 스마트폰과 PC를 함께 사용합니다.",
+    "capacity": 14,
+    "enrolled": 7,
+    "location": "오륙도인생후반전지원센터 3층 디지털배움실",
+    "fee": 20000,
+    "target": "50세 ~ 69세",
+    "applyPeriod": "2026-10-08 ~ 2026-11-15",
+    "eduPeriod": "2026-11-18 ~ 2026-12-09 (매주 수 19:00~21:00)",
+    "status": "접수중",
+    "sourceUrl": "https://www.5060do.or.kr/education/lifeEduProgram?idx=934"
+  },
+  {
+    "id": 930,
+    "title": "프리마켓 인기 제품 만들기(손바느질)3",
+    "category": "일활동",
+    "summary": "프리마켓에서 잘 팔리는 소품을 손바느질로 완성하는 하루 완성 과정입니다. 재료비는 수강료에 포함되어 있습니다.",
+    "capacity": 15,
+    "enrolled": 7,
+    "location": "오륙도인생후반전지원센터 1층 공작실",
+    "fee": 5000,
+    "target": "50세 ~ 69세",
+    "applyPeriod": "2026-10-08 ~ 2026-11-17",
+    "eduPeriod": "2026-11-20 (금) 1회",
+    "status": "접수중",
+    "sourceUrl": "https://www.5060do.or.kr/education/lifeEduProgram?idx=930"
+  },
+  {
+    "id": 936,
+    "title": "용돈지갑 만들기",
+    "category": "일활동",
+    "summary": "가죽 공예로 실용적인 용돈지갑을 만드는 하루 완성 과정입니다. 정원이 차서 지금은 신청을 받지 않습니다.",
+    "capacity": 10,
+    "enrolled": 13,
+    "location": "오륙도인생후반전지원센터 1층 공작실",
+    "fee": 5000,
+    "target": "50세 ~ 69세",
+    "applyPeriod": "2026-10-30 ~ 2026-11-08",
+    "eduPeriod": "2026-11-11 (수) 1회",
+    "status": "마감",
+    "sourceUrl": "https://www.5060do.or.kr/education/lifeEduProgram?idx=936"
+  }
+]
