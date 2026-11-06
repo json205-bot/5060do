@@ -94,3 +94,16 @@ status: done
 | 검증 | `scripts/verify_data.py` PASS (건수·중복·필수 필드), `npm run typecheck` Exit 0 |
 | 한계 | 프로그램 상세 641건과 일자리 34건, 센터 안내 8쪽은 본문이 이미지뿐이어서 텍스트가 비었다. OCR은 이번 범위 밖 |
 | 증거 | `docs/evidence/data-extraction-20261107/` |
+
+## 10. 교육신청 상태 요약 칩·스마트 정렬·카드/목록 보기 전환 (2026-11-07 06:00)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | 50~60대 신청자가 접수 상태를 한눈에 파악하고 신청 가능한 강좌를 먼저 보도록 교육신청 화면 개편 |
+| 데이터 | `scripts/build_programs_dataset.mjs` — `programs_all.json`의 비종료 47건을 `programs.json`으로 정규화. 접수중 7·접수예정 1·대기접수 7·마감 32 |
+| 상태 칩 | `전체·접수중·접수예정·대기접수·마감` 카운터 칩. 터치 시 즉시 필터, 활성 칩 고대비, `aria-pressed`·`role=status` |
+| 스마트 정렬 | 접수중(잔여 비율 임박순) → 접수예정(시작일 임박순) → 대기접수 → 마감 순 자동 정렬 |
+| 보기 전환 | 카드형(기본, 1/2/3열) ↔ 목록형. PC는 8컬럼 표(상태·분야·강좌명·교육기간·장소·정원(잔여)·수강료·신청), 1024px 미만은 컴팩트 행 카드 |
+| 모달 | 카드·목록 양쪽에서 상세 모달 연결. 접수중 수강신청, 대기접수 대기신청, 접수예정·마감 비활성 |
+| 검증 | typecheck·lint·build Exit 0, 실서버 HTTP 200·리소스 404 0건, `verify-programs.mjs` 35/35 PASS, `verify-viewports.mjs` 회귀 PASS |
+| 증거 | `docs/evidence/programs-20261107/` |

@@ -1,0 +1,593 @@
+import { spawn } from "node:child_process";
+import { mkdir, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
+const CHROME =
+  process.env.CHROME_PATH ??
+  "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3100/";
+const OUT_DIR = path.resolve(
+  process.env.OUT_DIR ?? path.join("docs", "evidence", "programs-20261107"),
+);
+const DEBUG_PORT = Number(process.env.DEBUG_PORT ?? 9334);
+const PROFILE_DIR = path.join(tmpdir(), `5060do-programs-${Date.now()}`);
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+class Cdp {
+  constructor(socket) {
+    this.socket = socket;
+    this.nextId = 1;
+    this.pending = new Map();
+    this.listeners = new Map();
+    socket.addEventListener("message", (event) => {
+      const message = JSON.parse(event.data);
+      if (message.id) {
+        const entry = this.pending.get(message.id);
+        if (!entry) return;
+        this.pending.delete(message.id);
+        if (message.error) entry.reject(new Error(JSON.stringify(message.error)));
+        else entry.resolve(message.result);
+        return;
+      }
+      const handlers = this.listeners.get(message.method) ?? [];
+      for (const handler of handlers) handler(message.params, message.sessionId);
+    });
+  }
+
+  send(method, params = {}, sessionId) {
+    const id = this.nextId++;
+    const payload = { id, method, params };
+    if (sessionId) payload.sessionId = sessionId;
+    this.socket.send(JSON.stringify(payload));
+    return new Promise((resolve, reject) => {
+      this.pending.set(id, { resolve, reject });
+    });
+  }
+
+  on(method, handler) {
+    const handlers = this.listeners.get(method) ?? [];
+    handlers.push(handler);
+    this.listeners.set(method, handlers);
+  }
+
+  once(method, timeoutMs = 20000) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error(`${method} timeout`)), timeoutMs);
+      const handler = (params) => {
+        clearTimeout(timer);
+        const handlers = this.listeners.get(method) ?? [];
+        this.listeners.set(
+          method,
+          handlers.filter((entry) => entry !== handler),
+        );
+        resolve(params);
+      };
+      this.on(method, handler);
+    });
+  }
+}
+
+async function waitForEndpoint(url, timeoutMs = 25000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) return response.json();
+    } catch {
+      await sleep(250);
+    }
+  }
+  throw new Error(`endpoint not ready: ${url}`);
+}
+
+const evaluate = async (cdp, sessionId, expression) => {
+  const result = await cdp.send(
+    "Runtime.evaluate",
+    { expression, returnByValue: true, awaitPromise: true },
+    sessionId,
+  );
+  if (result.exceptionDetails) {
+    throw new Error(
+      `evaluate failed: ${result.exceptionDetails.text} ${JSON.stringify(
+        result.exceptionDetails.exception?.description ?? "",
+      )}`,
+    );
+  }
+  return result.result.value;
+};
+
+const screenshot = async (cdp, sessionId, fileName) => {
+  const { data } = await cdp.send(
+    "Page.captureScreenshot",
+    { format: "png", captureBeyondViewport: false },
+    sessionId,
+  );
+  const filePath = path.join(OUT_DIR, fileName);
+  await writeFile(filePath, Buffer.from(data, "base64"));
+  return path.relative(process.cwd(), filePath);
+};
+
+const CHIP_STATE = `(() => {
+  const chips = Array.from(document.querySelectorAll('[data-testid^="status-chip-"]'));
+  return chips.map((chip) => {
+    const text = (chip.textContent || '').replace(/\\s+/g, ' ').trim();
+    const match = text.match(/\\[(\\d+)\\]/);
+    return {
+      key: (chip.getAttribute('data-testid') || '').replace('status-chip-', ''),
+      label: text.replace(/\\[\\d+\\]/, '').trim(),
+      count: match ? Number(match[1]) : null,
+      active: chip.getAttribute('aria-pressed') === 'true',
+    };
+  });
+})()`;
+
+const CARD_STATE = `(() => {
+  const cards = Array.from(document.querySelectorAll('[data-testid="program-card"]'));
+  return {
+    count: cards.length,
+    statuses: cards.map((card) => card.dataset.status || ''),
+    progress: cards.map((card) => {
+      const bar = card.querySelector('[role="progressbar"]');
+      const now = bar ? Number(bar.getAttribute('aria-valuenow')) : 0;
+      const max = bar ? Number(bar.getAttribute('aria-valuemax')) : 0;
+      return { now, max, ratio: max > 0 ? Math.max(0, max - now) / max : 1 };
+    }),
+    gridColumns: (() => {
+      const grid = document.querySelector('[data-testid="program-grid"]');
+      return grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length : 0;
+    })(),
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+const TABLE_STATE = `(() => {
+  const table = document.querySelector('[data-testid="program-table"]');
+  const rows = Array.from(document.querySelectorAll('[data-testid="program-row"]'));
+  const headers = table
+    ? Array.from(table.querySelectorAll('thead th')).map((th) => th.textContent.trim())
+    : [];
+  return {
+    tableVisible: table ? getComputedStyle(table).display !== 'none' : false,
+    headers,
+    rowCount: rows.length,
+    statuses: rows.map((row) => row.dataset.status || ''),
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+const MOBILE_STATE = `(() => {
+  const list = document.querySelector('[data-testid="program-list-mobile"]');
+  const rows = Array.from(document.querySelectorAll('[data-testid="program-row-mobile"]'));
+  const table = document.querySelector('[data-testid="program-table"]');
+  return {
+    listVisible: list ? getComputedStyle(list).display !== 'none' : false,
+    rowCount: rows.length,
+    statuses: rows.map((row) => row.dataset.status || ''),
+    tableVisible: table ? getComputedStyle(table).display !== 'none' : false,
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+const MODAL_STATE = `(() => {
+  const modal = document.querySelector('[data-testid="detail-modal"]');
+  if (!modal) return { visible: false };
+  const title = modal.querySelector('#program-dialog-title')?.textContent?.trim() ?? '';
+  const buttons = Array.from(modal.querySelectorAll('button'));
+  const apply = buttons.find((el) =>
+    ['수강신청', '대기신청', '접수예정', '모집 마감'].includes(el.textContent.trim()),
+  );
+  return {
+    visible: true,
+    title,
+    applyLabel: apply ? apply.textContent.trim() : null,
+    applyDisabled: apply ? apply.disabled : null,
+    formVisible: Boolean(modal.querySelector('[data-testid="apply-form"]')),
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+const click = (testId) =>
+  `(() => {
+    const el = document.querySelector('[data-testid="${testId}"]');
+    if (!el) return false;
+    el.click();
+    return true;
+  })()`;
+
+const clickFirstCardOfStatus = (status) =>
+  `(() => {
+    const card = document.querySelector('[data-testid="program-card"][data-status="${status}"]');
+    if (!card) return false;
+    card.click();
+    return true;
+  })()`;
+
+const closeModal = `(() => {
+  const modal = document.querySelector('[data-testid="detail-modal"]');
+  if (!modal) return false;
+  const close = Array.from(modal.querySelectorAll('button')).find(
+    (el) => el.getAttribute('aria-label') === '상세 창 닫기',
+  );
+  if (!close) return false;
+  close.click();
+  return true;
+})()`;
+
+const STATUS_ORDER = ["접수중", "접수예정", "대기접수", "마감"];
+const rank = (status) => STATUS_ORDER.indexOf(status);
+
+function isSortedByStatus(statuses) {
+  return statuses.every(
+    (status, index) => index === 0 || rank(statuses[index - 1]) <= rank(status),
+  );
+}
+
+function isRatioAscending(items) {
+  return items.every(
+    (item, index) => index === 0 || items[index - 1].ratio <= item.ratio + 1e-9,
+  );
+}
+
+async function main() {
+  await mkdir(OUT_DIR, { recursive: true });
+  const chrome = spawn(
+    CHROME,
+    [
+      "--headless=new",
+      "--disable-gpu",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--hide-scrollbars",
+      `--remote-debugging-port=${DEBUG_PORT}`,
+      `--user-data-dir=${PROFILE_DIR}`,
+      "about:blank",
+    ],
+    { stdio: "ignore" },
+  );
+
+  const results = {
+    baseUrl: BASE_URL,
+    checkedAt: new Date().toISOString(),
+    checks: [],
+    console: [],
+    screenshots: [],
+  };
+  const check = (name, pass, detail) => {
+    results.checks.push({ name, pass: Boolean(pass), detail });
+  };
+
+  try {
+    const version = await waitForEndpoint(
+      `http://127.0.0.1:${DEBUG_PORT}/json/version`,
+    );
+    const socket = new WebSocket(version.webSocketDebuggerUrl);
+    await new Promise((resolve, reject) => {
+      socket.addEventListener("open", resolve);
+      socket.addEventListener("error", reject);
+    });
+    const cdp = new Cdp(socket);
+
+    const { targetId } = await cdp.send("Target.createTarget", {
+      url: "about:blank",
+    });
+    const { sessionId } = await cdp.send("Target.attachToTarget", {
+      targetId,
+      flatten: true,
+    });
+
+    cdp.on("Runtime.consoleAPICalled", (params) => {
+      if (params.type === "error") {
+        results.console.push({
+          type: params.type,
+          text: params.args
+            .map((arg) => arg.value ?? arg.description ?? arg.type)
+            .join(" "),
+        });
+      }
+    });
+
+    await cdp.send("Page.enable", {}, sessionId);
+    await cdp.send("Runtime.enable", {}, sessionId);
+
+    const loadAt = async (width, height, mobile) => {
+      await cdp.send(
+        "Emulation.setDeviceMetricsOverride",
+        { width, height, deviceScaleFactor: 1, mobile },
+        sessionId,
+      );
+      const loaded = cdp.once("Page.loadEventFired");
+      await cdp.send("Page.navigate", { url: BASE_URL }, sessionId);
+      await loaded;
+      await sleep(1500);
+    };
+
+    await loadAt(1280, 900, false);
+    const initialChips = await evaluate(cdp, sessionId, CHIP_STATE);
+    results.chips = initialChips;
+    const totalChip = initialChips.find((chip) => chip.key === "전체");
+    check("칩 5종 렌더", initialChips.length === 5, initialChips);
+    check(
+      "칩 카운트 합계 = 전체",
+      initialChips
+        .filter((chip) => chip.key !== "전체")
+        .reduce((sum, chip) => sum + (chip.count ?? 0), 0) ===
+        (totalChip?.count ?? -1),
+      initialChips,
+    );
+
+    const allCards = await evaluate(cdp, sessionId, CARD_STATE);
+    results.initialCards = allCards;
+    check(
+      "전체 카드 수 = 전체 칩",
+      allCards.count === (totalChip?.count ?? -1),
+      { cards: allCards.count, chip: totalChip?.count },
+    );
+    check("스마트 정렬 상태 우선순위", isSortedByStatus(allCards.statuses), allCards.statuses);
+    const firstGroup = allCards.progress.slice(
+      0,
+      allCards.statuses.filter((status) => status === "접수중").length,
+    );
+    check("접수중 잔여 비율 임박순", isRatioAscending(firstGroup), firstGroup);
+    check("PC 카드 3열", allCards.gridColumns === 3, allCards.gridColumns);
+    check("PC 가로 오버플로 없음", !allCards.horizontalOverflow, allCards.horizontalOverflow);
+
+    results.screenshots.push(
+      await (async () => {
+        await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelector('#programs').scrollIntoView({ block: 'start' })`,
+        );
+        await sleep(400);
+        const shot = await screenshot(cdp, sessionId, "desktop-1280-chips-cards.png");
+        await evaluate(cdp, sessionId, `window.scrollTo(0, 0)`);
+        await sleep(200);
+        return shot;
+      })(),
+    );
+
+    results.filters = {};
+    for (const status of STATUS_ORDER) {
+      const chip = initialChips.find((item) => item.key === status);
+      await evaluate(cdp, sessionId, click(`status-chip-${status}`));
+      await sleep(400);
+      const state = await evaluate(cdp, sessionId, CARD_STATE);
+      const active = (await evaluate(cdp, sessionId, CHIP_STATE)).find(
+        (item) => item.key === status,
+      );
+      const allMatch = state.statuses.every((item) => item === status);
+      results.filters[status] = { chipCount: chip?.count, ...state, active };
+      check(
+        `${status} 필터 카드 수 일치`,
+        state.count === (chip?.count ?? -1) && allMatch,
+        { chip: chip?.count, cards: state.count, allMatch },
+      );
+      check(`${status} 칩 활성 표시`, active?.active === true, active);
+    }
+
+    await evaluate(cdp, sessionId, click("status-chip-전체"));
+    await sleep(400);
+    await evaluate(cdp, sessionId, click("view-toggle-list"));
+    await sleep(500);
+    const tableState = await evaluate(cdp, sessionId, TABLE_STATE);
+    results.table = tableState;
+    check("목록형 표 노출", tableState.tableVisible, tableState.tableVisible);
+    check(
+      "목록형 8개 컬럼",
+      tableState.headers.length === 8,
+      tableState.headers,
+    );
+    check(
+      "목록형 행 수 = 전체",
+      tableState.rowCount === (totalChip?.count ?? -1),
+      { rows: tableState.rowCount, chip: totalChip?.count },
+    );
+    check("목록형 가로 오버플로 없음", !tableState.horizontalOverflow, tableState.horizontalOverflow);
+
+    results.screenshots.push(
+      await (async () => {
+        await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelector('#programs').scrollIntoView({ block: 'start' })`,
+        );
+        await sleep(400);
+        const shot = await screenshot(cdp, sessionId, "desktop-1280-list.png");
+        await evaluate(cdp, sessionId, `window.scrollTo(0, 0)`);
+        await sleep(200);
+        return shot;
+      })(),
+    );
+
+    const firstRowTitle = await evaluate(
+      cdp,
+      sessionId,
+      `document.querySelector('[data-testid="program-row"] button')?.textContent?.trim() ?? ''`,
+    );
+    await evaluate(
+      cdp,
+      sessionId,
+      `document.querySelector('[data-testid="program-row"] button')?.click()`,
+    );
+    await sleep(500);
+    const rowModal = await evaluate(cdp, sessionId, MODAL_STATE);
+    results.rowModal = { firstRowTitle, ...rowModal };
+    check(
+      "목록형 행 클릭 → 모달 연결",
+      rowModal.visible && rowModal.title === firstRowTitle,
+      { firstRowTitle, modal: rowModal },
+    );
+    results.screenshots.push(
+      await screenshot(cdp, sessionId, "desktop-1280-list-modal.png"),
+    );
+    await evaluate(cdp, sessionId, closeModal);
+    await sleep(300);
+
+    await evaluate(cdp, sessionId, click("view-toggle-card"));
+    await sleep(400);
+
+    await evaluate(cdp, sessionId, clickFirstCardOfStatus("접수중"));
+    await sleep(400);
+    const openModal = await evaluate(cdp, sessionId, MODAL_STATE);
+    check(
+      "접수중 모달 신청 가능",
+      openModal.visible && openModal.applyLabel === "수강신청" && openModal.applyDisabled === false,
+      openModal,
+    );
+    await evaluate(
+      cdp,
+      sessionId,
+      `(() => {
+        const modal = document.querySelector('[data-testid="detail-modal"]');
+        const apply = Array.from(modal.querySelectorAll('button')).find(
+          (el) => el.textContent.trim() === '수강신청',
+        );
+        apply?.click();
+        return Boolean(apply);
+      })()`,
+    );
+    await sleep(400);
+    const formState = await evaluate(cdp, sessionId, MODAL_STATE);
+    check("신청 폼 전환", formState.formVisible === true, formState);
+    await evaluate(cdp, sessionId, closeModal);
+    await sleep(300);
+
+    await evaluate(cdp, sessionId, clickFirstCardOfStatus("대기접수"));
+    await sleep(400);
+    const waitModal = await evaluate(cdp, sessionId, MODAL_STATE);
+    check(
+      "대기접수 모달 대기신청",
+      waitModal.visible && waitModal.applyLabel === "대기신청" && waitModal.applyDisabled === false,
+      waitModal,
+    );
+    await evaluate(cdp, sessionId, closeModal);
+    await sleep(300);
+
+    await evaluate(cdp, sessionId, clickFirstCardOfStatus("마감"));
+    await sleep(400);
+    const closedModal = await evaluate(cdp, sessionId, MODAL_STATE);
+    check(
+      "마감 모달 신청 비활성",
+      closedModal.visible && closedModal.applyLabel === "모집 마감" && closedModal.applyDisabled === true,
+      closedModal,
+    );
+    await evaluate(cdp, sessionId, closeModal);
+    await sleep(300);
+
+    await loadAt(390, 900, true);
+    const mobileCards = await evaluate(cdp, sessionId, CARD_STATE);
+    results.mobileCards = mobileCards;
+    check("모바일 카드 1열", mobileCards.gridColumns === 1, mobileCards.gridColumns);
+    check("모바일 카드 가로 오버플로 없음", !mobileCards.horizontalOverflow, mobileCards.horizontalOverflow);
+    results.screenshots.push(
+      await (async () => {
+        await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelector('#programs').scrollIntoView({ block: 'start' })`,
+        );
+        await sleep(400);
+        const shot = await screenshot(cdp, sessionId, "mobile-390-chips-cards.png");
+        await evaluate(cdp, sessionId, `window.scrollTo(0, 0)`);
+        await sleep(200);
+        return shot;
+      })(),
+    );
+
+    await evaluate(cdp, sessionId, click("view-toggle-list"));
+    await sleep(500);
+    const mobileList = await evaluate(cdp, sessionId, MOBILE_STATE);
+    results.mobileList = mobileList;
+    check("모바일 목록형 행 카드 노출", mobileList.listVisible, mobileList.listVisible);
+    check("모바일 목록형 표 숨김", mobileList.tableVisible === false, mobileList.tableVisible);
+    check(
+      "모바일 목록형 행 수 = 전체",
+      mobileList.rowCount === (totalChip?.count ?? -1),
+      { rows: mobileList.rowCount, chip: totalChip?.count },
+    );
+    check("모바일 목록형 가로 오버플로 없음", !mobileList.horizontalOverflow, mobileList.horizontalOverflow);
+    results.screenshots.push(
+      await (async () => {
+        await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelector('#programs').scrollIntoView({ block: 'start' })`,
+        );
+        await sleep(400);
+        const shot = await screenshot(cdp, sessionId, "mobile-390-list.png");
+        await evaluate(cdp, sessionId, `window.scrollTo(0, 0)`);
+        await sleep(200);
+        return shot;
+      })(),
+    );
+
+    await evaluate(
+      cdp,
+      sessionId,
+      `document.querySelector('[data-testid="program-row-mobile"]')?.click()`,
+    );
+    await sleep(500);
+    const mobileModal = await evaluate(cdp, sessionId, MODAL_STATE);
+    results.mobileModal = mobileModal;
+    check("모바일 행 클릭 → 모달 연결", mobileModal.visible === true, mobileModal);
+    check("모바일 모달 가로 오버플로 없음", !mobileModal.horizontalOverflow, mobileModal.horizontalOverflow);
+    results.screenshots.push(
+      await screenshot(cdp, sessionId, "mobile-390-list-modal.png"),
+    );
+    await evaluate(cdp, sessionId, closeModal);
+    await sleep(300);
+
+    await loadAt(768, 1024, false);
+    await evaluate(cdp, sessionId, click("view-toggle-list"));
+    await sleep(500);
+    const tabletList = await evaluate(cdp, sessionId, MOBILE_STATE);
+    results.tabletList = tabletList;
+    check("태블릿 목록형 행 카드 노출", tabletList.listVisible, tabletList.listVisible);
+    check("태블릿 목록형 가로 오버플로 없음", !tabletList.horizontalOverflow, tabletList.horizontalOverflow);
+    results.screenshots.push(
+      await (async () => {
+        await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelector('#programs').scrollIntoView({ block: 'start' })`,
+        );
+        await sleep(400);
+        const shot = await screenshot(cdp, sessionId, "tablet-768-list.png");
+        await evaluate(cdp, sessionId, `window.scrollTo(0, 0)`);
+        await sleep(200);
+        return shot;
+      })(),
+    );
+
+    check("콘솔 오류 0건", results.console.length === 0, results.console);
+  } finally {
+    chrome.kill();
+  }
+
+  const failed = results.checks.filter((item) => !item.pass);
+  results.summary = {
+    total: results.checks.length,
+    passed: results.checks.length - failed.length,
+    failed: failed.length,
+    verdict: failed.length === 0 ? "PASS" : "FAIL",
+  };
+
+  await writeFile(
+    path.join(OUT_DIR, "verification.json"),
+    JSON.stringify(results, null, 2),
+    "utf8",
+  );
+
+  for (const item of results.checks) {
+    console.log(`${item.pass ? "PASS" : "FAIL"}  ${item.name}`);
+  }
+  console.log(`\n${results.summary.verdict} (${results.summary.passed}/${results.summary.total})`);
+  if (failed.length > 0) process.exit(1);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

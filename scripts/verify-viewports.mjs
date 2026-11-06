@@ -7,7 +7,9 @@ const CHROME =
   process.env.CHROME_PATH ??
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3100/";
-const OUT_DIR = path.resolve("docs", "evidence");
+const OUT_DIR = path.resolve(
+  process.env.OUT_DIR ?? path.join("docs", "evidence"),
+);
 const DEBUG_PORT = Number(process.env.DEBUG_PORT ?? 9333);
 const PROFILE_DIR = path.join(tmpdir(), `5060do-cdp-${Date.now()}`);
 
@@ -478,7 +480,7 @@ async function main() {
     await evaluate(
       cdp,
       sessionId,
-      `document.querySelectorAll('[data-testid="program-card"]')[3].click()`,
+      `document.querySelector('[data-testid="program-card"][data-status="마감"]').click()`,
     );
     await sleep(400);
     results.flow.closedProgram = await evaluate(

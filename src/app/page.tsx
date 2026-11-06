@@ -10,6 +10,8 @@ import {
   Clock,
   GraduationCap,
   Home as HomeIcon,
+  LayoutGrid,
+  List,
   MapPin,
   Megaphone,
   Menu,
@@ -20,6 +22,10 @@ import {
 } from "lucide-react";
 import programsData from "@/data/programs.json";
 import VersionSwitcher from "@/components/version-switcher";
+
+const programStatuses = ["접수중", "접수예정", "대기접수", "마감"] as const;
+type ProgramStatus = (typeof programStatuses)[number];
+type StatusFilter = "전체" | ProgramStatus;
 
 type Program = {
   id: number;
@@ -33,7 +39,7 @@ type Program = {
   target: string;
   applyPeriod: string;
   eduPeriod: string;
-  status: string;
+  status: ProgramStatus;
   sourceUrl: string;
 };
 
@@ -44,7 +50,104 @@ type Applicant = {
 
 type ModalStage = "detail" | "form" | "done";
 
+type ViewMode = "card" | "list";
+
 const programs = programsData as Program[];
+
+const statusStyles: Record<
+  ProgramStatus,
+  { dot: string; active: string; badge: string; bar: string }
+> = {
+  접수중: {
+    dot: "bg-emerald-500",
+    active: "border-emerald-700 bg-emerald-700 text-white",
+    badge: "bg-emerald-100 text-emerald-800",
+    bar: "bg-emerald-500",
+  },
+  접수예정: {
+    dot: "bg-blue-500",
+    active: "border-blue-700 bg-blue-700 text-white",
+    badge: "bg-blue-100 text-blue-800",
+    bar: "bg-blue-500",
+  },
+  대기접수: {
+    dot: "bg-amber-500",
+    active: "border-amber-600 bg-amber-500 text-brand-900",
+    badge: "bg-amber-100 text-amber-800",
+    bar: "bg-amber-500",
+  },
+  마감: {
+    dot: "bg-slate-400",
+    active: "border-slate-700 bg-slate-700 text-white",
+    badge: "bg-slate-200 text-slate-700",
+    bar: "bg-slate-400",
+  },
+};
+
+const statusRank: Record<ProgramStatus, number> = {
+  접수중: 0,
+  접수예정: 1,
+  대기접수: 2,
+  마감: 3,
+};
+
+const actionLabels: Record<ProgramStatus, string> = {
+  접수중: "수강신청",
+  접수예정: "접수예정",
+  대기접수: "대기신청",
+  마감: "모집 마감",
+};
+
+const parseApplyStart = (period: string) =>
+  (period.split("~")[0] ?? "").trim();
+const parseApplyEnd = (period: string) => {
+  const end = (period.split("~")[1] ?? "").trim();
+  return end || parseApplyStart(period);
+};
+const remainingSeats = (program: Program) =>
+  Math.max(0, program.capacity - program.enrolled);
+const remainingRatio = (program: Program) =>
+  program.capacity > 0
+    ? Math.max(0, program.capacity - program.enrolled) / program.capacity
+    : 1;
+const isApplicable = (status: ProgramStatus) =>
+  status === "접수중" || status === "대기접수";
+
+function comparePrograms(a: Program, b: Program) {
+  const rank = statusRank[a.status] - statusRank[b.status];
+  if (rank !== 0) return rank;
+  switch (a.status) {
+    case "접수중":
+      return (
+        remainingRatio(a) - remainingRatio(b) ||
+        parseApplyEnd(a.applyPeriod).localeCompare(parseApplyEnd(b.applyPeriod))
+      );
+    case "접수예정":
+      return parseApplyStart(a.applyPeriod).localeCompare(
+        parseApplyStart(b.applyPeriod),
+      );
+    case "대기접수":
+      return (
+        b.enrolled - a.enrolled ||
+        parseApplyEnd(a.applyPeriod).localeCompare(parseApplyEnd(b.applyPeriod))
+      );
+    default:
+      return parseApplyEnd(b.applyPeriod).localeCompare(
+        parseApplyEnd(a.applyPeriod),
+      );
+  }
+}
+
+const statusCounts: Record<StatusFilter, number> = {
+  전체: programs.length,
+  접수중: 0,
+  접수예정: 0,
+  대기접수: 0,
+  마감: 0,
+};
+for (const program of programs) {
+  statusCounts[program.status] += 1;
+}
 
 const navItems = [
   { label: "교육신청", href: "#programs" },
@@ -111,6 +214,8 @@ export default function Home() {
   const [approvedAmount, setApprovedAmount] = useState<number | null>(null);
   const [activeSection, setActiveSection] = useState<string>("home");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("전체");
+  const [viewMode, setViewMode] = useState<ViewMode>("card");
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const modalPanelRef = useRef<HTMLDivElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -124,6 +229,14 @@ export default function Home() {
     () => programs.find((program) => program.id === selectedId) ?? null,
     [selectedId],
   );
+
+  const visiblePrograms = useMemo(() => {
+    const filtered =
+      statusFilter === "전체"
+        ? programs
+        : programs.filter((program) => program.status === statusFilter);
+    return [...filtered].sort(comparePrograms);
+  }, [statusFilter]);
 
   const closeModal = useCallback(() => {
     setSelectedId(null);
@@ -401,7 +514,7 @@ export default function Home() {
           aria-labelledby="programs-heading"
           className="mx-auto w-full max-w-6xl px-4 py-10 md:px-6 md:py-14"
         >
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-base font-semibold text-brand-700">
                 교육 프로그램
@@ -413,123 +526,380 @@ export default function Home() {
                 지금 신청할 수 있는 강좌
               </h2>
             </div>
-            <p className="text-base text-slate-600">
-              총 <span className="font-bold text-brand-700">{programs.length}개</span>
-              의 강좌가 열려 있습니다.
-            </p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between md:justify-end">
+              <p
+                role="status"
+                aria-live="polite"
+                data-testid="program-result-count"
+                className="text-base text-slate-600"
+              >
+                {statusFilter === "전체" ? "전체" : statusFilter}{" "}
+                <span className="font-bold text-brand-700">
+                  {visiblePrograms.length}개
+                </span>{" "}
+                강좌
+              </p>
+              <div
+                role="group"
+                aria-label="보기 방식"
+                className="flex items-center gap-1 rounded-2xl bg-slate-100 p-1"
+              >
+                <button
+                  type="button"
+                  data-testid="view-toggle-card"
+                  aria-pressed={viewMode === "card"}
+                  onClick={() => setViewMode("card")}
+                  className={`flex min-h-11 items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
+                    viewMode === "card"
+                      ? "bg-white text-brand-800 shadow-sm"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  <LayoutGrid aria-hidden className="size-5" />
+                  카드형
+                </button>
+                <button
+                  type="button"
+                  data-testid="view-toggle-list"
+                  aria-pressed={viewMode === "list"}
+                  onClick={() => setViewMode("list")}
+                  className={`flex min-h-11 items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
+                    viewMode === "list"
+                      ? "bg-white text-brand-800 shadow-sm"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  <List aria-hidden className="size-5" />
+                  목록형
+                </button>
+              </div>
+            </div>
           </div>
 
-          <ul
-            data-testid="program-grid"
-            className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
+          <div
+            role="group"
+            aria-label="접수 상태 필터"
+            data-testid="status-chips"
+            className="mt-6 flex flex-wrap items-center gap-2"
           >
-            {programs.map((program) => {
-              const isClosed = program.status === "마감";
-              const rate = Math.min(
-                100,
-                Math.round((program.enrolled / program.capacity) * 100),
-              );
+            {(["전체", ...programStatuses] as const).map((status) => {
+              const active = statusFilter === status;
+              const style = status === "전체" ? null : statusStyles[status];
               return (
-                <li key={program.id} className="flex">
-                  <button
-                    type="button"
-                    data-testid="program-card"
-                    onClick={() => openProgram(program)}
-                    aria-haspopup="dialog"
-                    className="group flex w-full flex-col rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-800">
-                        {program.category}
-                      </span>
-                      <span
-                        className={`rounded-full px-3 py-1 text-sm font-bold ${
-                          isClosed
-                            ? "bg-slate-200 text-slate-700"
-                            : "bg-emerald-100 text-emerald-800"
-                        }`}
-                      >
-                        {program.status}
-                      </span>
-                    </div>
-                    <h3 className="mt-4 text-xl font-bold leading-snug text-slate-900">
-                      {program.title}
-                    </h3>
-                    <p className="mt-2 line-clamp-2 text-base leading-relaxed text-slate-600">
-                      {program.summary}
-                    </p>
-
-                    <dl className="mt-4 space-y-2 text-base text-slate-700">
-                      <div className="flex items-start gap-2">
-                        <CalendarDays
-                          aria-hidden
-                          className="mt-0.5 size-5 shrink-0 text-brand-600"
-                        />
-                        <dt className="sr-only">교육기간</dt>
-                        <dd>{program.eduPeriod}</dd>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <MapPin
-                          aria-hidden
-                          className="mt-0.5 size-5 shrink-0 text-brand-600"
-                        />
-                        <dt className="sr-only">교육장소</dt>
-                        <dd>{program.location}</dd>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <Wallet
-                          aria-hidden
-                          className="mt-0.5 size-5 shrink-0 text-brand-600"
-                        />
-                        <dt className="sr-only">수강료</dt>
-                        <dd className="font-semibold text-slate-900">
-                          {formatFee(program.fee)}
-                        </dd>
-                      </div>
-                    </dl>
-
-                    <div className="mt-5">
-                      <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
-                        <span className="inline-flex items-center gap-1">
-                          <Users aria-hidden className="size-4" />
-                          신청 {program.enrolled}명 / 정원 {program.capacity}명
-                        </span>
-                        <span>{rate}%</span>
-                      </div>
-                      <div
-                        role="progressbar"
-                        aria-valuemin={0}
-                        aria-valuemax={program.capacity}
-                        aria-valuenow={program.enrolled}
-                        aria-label={`${program.title} 신청 현황`}
-                        className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"
-                      >
-                        <div
-                          className={`h-full rounded-full ${
-                            isClosed ? "bg-slate-400" : "bg-brand-500"
-                          }`}
-                          style={{ width: `${rate}%` }}
-                        />
-                      </div>
-                    </div>
-
+                <button
+                  key={status}
+                  type="button"
+                  data-testid={`status-chip-${status}`}
+                  aria-pressed={active}
+                  onClick={() => setStatusFilter(status)}
+                  className={`inline-flex min-h-12 items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
+                    active
+                      ? style
+                        ? style.active
+                        : "border-brand-700 bg-brand-700 text-white"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+                  }`}
+                >
+                  {style && (
                     <span
-                      className={`mt-5 flex min-h-12 items-center justify-center gap-1 rounded-2xl text-lg font-bold ${
-                        isClosed
-                          ? "bg-slate-100 text-slate-500"
-                          : "bg-brand-700 text-white group-hover:bg-brand-800"
+                      aria-hidden
+                      className={`size-2.5 rounded-full ${
+                        active ? "bg-white" : style.dot
                       }`}
-                    >
-                      {isClosed ? "모집 마감" : "상세보기"}
-                      {!isClosed && (
-                        <ChevronRight aria-hidden className="size-5" />
-                      )}
-                    </span>
-                  </button>
-                </li>
+                    />
+                  )}
+                  <span>{status}</span>
+                  <span
+                    className={`text-sm font-bold ${
+                      active ? "text-white/80" : "text-slate-500"
+                    }`}
+                  >
+                    [{statusCounts[status]}]
+                  </span>
+                </button>
               );
             })}
-          </ul>
+          </div>
+
+          {visiblePrograms.length === 0 ? (
+            <p className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-lg font-semibold text-slate-600">
+              해당 상태의 강좌가 없습니다.
+            </p>
+          ) : viewMode === "card" ? (
+            <ul
+              data-testid="program-grid"
+              className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
+            >
+              {visiblePrograms.map((program) => {
+                const style = statusStyles[program.status];
+                const applicable = isApplicable(program.status);
+                const rate = Math.min(
+                  100,
+                  Math.round((program.enrolled / program.capacity) * 100),
+                );
+                return (
+                  <li key={program.id} className="flex">
+                    <button
+                      type="button"
+                      data-testid="program-card"
+                      data-status={program.status}
+                      onClick={() => openProgram(program)}
+                      aria-haspopup="dialog"
+                      className="group flex w-full flex-col rounded-3xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-800">
+                          {program.category}
+                        </span>
+                        <span
+                          className={`rounded-full px-3 py-1 text-sm font-bold ${style.badge}`}
+                        >
+                          {program.status}
+                        </span>
+                      </div>
+                      <h3 className="mt-4 text-xl font-bold leading-snug text-slate-900">
+                        {program.title}
+                      </h3>
+                      {program.summary && (
+                        <p className="mt-2 line-clamp-2 text-base leading-relaxed text-slate-600">
+                          {program.summary}
+                        </p>
+                      )}
+
+                      <dl className="mt-4 space-y-2 text-base text-slate-700">
+                        <div className="flex items-start gap-2">
+                          <CalendarDays
+                            aria-hidden
+                            className="mt-0.5 size-5 shrink-0 text-brand-600"
+                          />
+                          <dt className="sr-only">교육기간</dt>
+                          <dd>{program.eduPeriod}</dd>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <MapPin
+                            aria-hidden
+                            className="mt-0.5 size-5 shrink-0 text-brand-600"
+                          />
+                          <dt className="sr-only">교육장소</dt>
+                          <dd>{program.location}</dd>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Wallet
+                            aria-hidden
+                            className="mt-0.5 size-5 shrink-0 text-brand-600"
+                          />
+                          <dt className="sr-only">수강료</dt>
+                          <dd className="font-semibold text-slate-900">
+                            {formatFee(program.fee)}
+                          </dd>
+                        </div>
+                      </dl>
+
+                      <div className="mt-5">
+                        <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
+                          <span className="inline-flex items-center gap-1">
+                            <Users aria-hidden className="size-4" />
+                            신청 {program.enrolled}명 / 정원 {program.capacity}명
+                          </span>
+                          <span>잔여 {remainingSeats(program)}석</span>
+                        </div>
+                        <div
+                          role="progressbar"
+                          aria-valuemin={0}
+                          aria-valuemax={program.capacity}
+                          aria-valuenow={program.enrolled}
+                          aria-label={`${program.title} 신청 현황`}
+                          className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"
+                        >
+                          <div
+                            className={`h-full rounded-full ${style.bar}`}
+                            style={{ width: `${rate}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <span
+                        className={`mt-5 flex min-h-12 items-center justify-center gap-1 rounded-2xl text-lg font-bold ${
+                          applicable
+                            ? "bg-brand-700 text-white group-hover:bg-brand-800"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {program.status === "마감"
+                          ? "모집 마감"
+                          : program.status === "접수예정"
+                            ? "접수예정"
+                            : "상세보기"}
+                        {applicable && (
+                          <ChevronRight aria-hidden className="size-5" />
+                        )}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <>
+              <div
+                data-testid="program-table"
+                className="mt-6 hidden overflow-hidden rounded-3xl border border-slate-200 bg-white lg:block"
+              >
+                <table className="w-full table-fixed border-collapse text-left">
+                  <caption className="sr-only">교육 프로그램 목록</caption>
+                  <thead>
+                    <tr className="bg-brand-50 text-sm font-bold text-brand-900">
+                      <th scope="col" className="w-[8%] px-3 py-3">
+                        상태
+                      </th>
+                      <th scope="col" className="w-[8%] px-3 py-3">
+                        분야
+                      </th>
+                      <th scope="col" className="px-3 py-3">
+                        강좌명
+                      </th>
+                      <th scope="col" className="w-[15%] px-3 py-3">
+                        교육기간/일시
+                      </th>
+                      <th scope="col" className="w-[14%] px-3 py-3">
+                        장소
+                      </th>
+                      <th scope="col" className="w-[10%] px-3 py-3">
+                        정원(잔여)
+                      </th>
+                      <th scope="col" className="w-[8%] px-3 py-3">
+                        수강료
+                      </th>
+                      <th scope="col" className="w-[10%] px-3 py-3">
+                        신청
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200">
+                    {visiblePrograms.map((program) => (
+                      <tr
+                        key={program.id}
+                        data-testid="program-row"
+                        data-status={program.status}
+                        className="align-top transition-colors hover:bg-brand-50/60"
+                      >
+                        <td className="px-3 py-4">
+                          <span
+                            className={`inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-sm font-bold ${statusStyles[program.status].badge}`}
+                          >
+                            {program.status}
+                          </span>
+                        </td>
+                        <td className="px-3 py-4 text-slate-700">
+                          {program.category}
+                        </td>
+                        <td className="px-3 py-4">
+                          <button
+                            type="button"
+                            onClick={() => openProgram(program)}
+                            className="text-left text-lg font-bold leading-snug text-slate-900 underline-offset-4 hover:text-brand-700 hover:underline"
+                          >
+                            {program.title}
+                          </button>
+                        </td>
+                        <td className="px-3 py-4 text-slate-700">
+                          {program.eduPeriod}
+                        </td>
+                        <td className="px-3 py-4 text-slate-700">
+                          {program.location}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-slate-700">
+                          {program.capacity}명 ({remainingSeats(program)}석)
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 font-semibold text-slate-900">
+                          {formatFee(program.fee)}
+                        </td>
+                        <td className="px-3 py-4">
+                          <button
+                            type="button"
+                            onClick={() => openProgram(program)}
+                            className={`flex min-h-11 w-full items-center justify-center whitespace-nowrap rounded-xl px-2 text-sm font-bold transition-colors ${
+                              isApplicable(program.status)
+                                ? "bg-brand-700 text-white hover:bg-brand-800"
+                                : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                            }`}
+                          >
+                            {actionLabels[program.status]}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <ul
+                data-testid="program-list-mobile"
+                className="mt-6 grid gap-3 lg:hidden"
+              >
+                {visiblePrograms.map((program) => (
+                  <li key={program.id}>
+                    <button
+                      type="button"
+                      data-testid="program-row-mobile"
+                      data-status={program.status}
+                      onClick={() => openProgram(program)}
+                      aria-haspopup="dialog"
+                      className="flex w-full flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-brand-300 hover:shadow-md"
+                    >
+                      <span className="flex items-center justify-between gap-2">
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-sm font-bold ${statusStyles[program.status].badge}`}
+                        >
+                          {program.status}
+                        </span>
+                        <span className="text-sm font-semibold text-slate-500">
+                          {program.category}
+                        </span>
+                      </span>
+                      <span className="text-lg font-bold leading-snug text-slate-900">
+                        {program.title}
+                      </span>
+                      <span className="flex flex-wrap gap-x-3 gap-y-1 text-base text-slate-700">
+                        <span className="inline-flex items-center gap-1">
+                          <CalendarDays
+                            aria-hidden
+                            className="size-4 text-brand-600"
+                          />
+                          {program.eduPeriod}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin
+                            aria-hidden
+                            className="size-4 text-brand-600"
+                          />
+                          {program.location}
+                        </span>
+                      </span>
+                      <span className="flex items-center justify-between gap-2 text-base">
+                        <span className="font-semibold text-slate-700">
+                          정원 {program.capacity}명 · 잔여{" "}
+                          {remainingSeats(program)}석
+                        </span>
+                        <span className="font-bold text-slate-900">
+                          {formatFee(program.fee)}
+                        </span>
+                      </span>
+                      <span
+                        className={`mt-1 flex min-h-12 items-center justify-center rounded-xl text-base font-bold ${
+                          isApplicable(program.status)
+                            ? "bg-brand-700 text-white"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {actionLabels[program.status]}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </section>
 
         <section id="jobs" className="bg-white">
@@ -804,9 +1174,16 @@ export default function Home() {
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-800">
-                  {selected.category}
-                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-800">
+                    {selected.category}
+                  </span>
+                  <span
+                    className={`rounded-full px-3 py-1 text-sm font-bold ${statusStyles[selected.status].badge}`}
+                  >
+                    {selected.status}
+                  </span>
+                </div>
                 <h2
                   id="program-dialog-title"
                   className="mt-3 text-2xl font-bold leading-snug text-slate-900"
@@ -998,10 +1375,10 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setStage("form")}
-                      disabled={selected.status === "마감"}
+                      disabled={!isApplicable(selected.status)}
                       className="flex min-h-14 flex-1 items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-600"
                     >
-                      {selected.status === "마감" ? "모집 마감" : "수강신청"}
+                      {actionLabels[selected.status]}
                     </button>
                     <button
                       type="button"
