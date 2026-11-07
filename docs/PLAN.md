@@ -202,4 +202,18 @@ status: done
 | 검증 | typecheck Exit 0, lint Exit 0, unit PASS, build Exit 0, 시드 14/14 PASS, NAS E2E 80/80 PASS, 게이트웨이 `/5060do/` HTTP 200 |
 | 증거 | `docs/evidence/knowledge-complete-20261107/` |
 
+## 18. GitHub 동기화 안전 가드·Vercel 실배포 검증·센터 지식 RAG 임베딩 (2026-11-08 02:00)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | UNC 작업 경로에서도 GitHub 미러 동기화가 끊기지 않게 하고, Vercel 루트 배포를 기계 검증하며, 센터 지식 14종을 768차원 pgvector 임베딩으로 적재해 키워드 없는 자연어 질의에 답한다 |
+| 동기화 가드 | `scripts/sync-github.mjs` — 현재 위치가 `\\x4\...`(UNC)면 같은 트리의 드라이브 문자(`Z:\dev\5060do`)로 `process.chdir` 후 실행. `GIT_TERMINAL_PROMPT=0`·`GCM_INTERACTIVE=never` 유지 |
+| 배포 검증 | `scripts/verify-vercel-live.mjs` — 인자/`VERCEL_LIVE_URL`의 배포 URL 또는 로컬 프리뷰를 대상으로 `/`·`/classic/` 200, 내부 `/5060do` 누출 0건, 수파베이스 실시간 강좌 바인딩, 클래식 헤더·GNB 8개, 콘솔 오류 0건을 검사(14항목) |
+| 임베딩 | `src/lib/embedding.ts` — 14건 코퍼스에서 만든 768차원 고정 어휘 + IDF 가중, 한국어 조사·어미 제거, 동의어 개념 토큰. 외부 임베딩 API 없이 시드와 브라우저가 동일 벡터를 계산 |
+| pgvector | `docs/sql/setup_pgvector.sql` — `documents.embedding vector(768)`, HNSW 인덱스, `match_documents()` RPC. `scripts/seed-embeddings.mjs`(`npm run data:embeddings`)가 14건을 적재하고 코사인 재계산 일치·자연어 질의 16건을 검증 |
+| 챗봇 연결 | `src/lib/rag.ts` `searchKnowledgeRAG()` 상위 3건, `ChatbotWidget.tsx`가 키워드 규칙 미매칭 질문을 벡터 검색으로 안내. 점수 0.10 미만은 무응답 처리 |
+| 검증 | typecheck Exit 0, lint Exit 0, build Exit 0, Vercel 루트 E2E **80/80 PASS**, 실배포 검증 **14/14 PASS**(로컬 프리뷰), 임베딩 **14/14·질의 16/16 PASS**, 챗봇 RAG 실화면 확인 |
+| 증거 | `docs/evidence/rag-20261108/`, `docs/evidence/rag-embeddings-20261107T170228/`, `docs/evidence/vercel-live-20261107T170856/` |
+
+
 

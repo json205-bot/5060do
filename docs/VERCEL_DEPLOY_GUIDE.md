@@ -112,7 +112,19 @@ node scripts/test-vercel.mjs
 ```
 
 이 스크립트는 `VERCEL=1`, `NEXT_PUBLIC_BASE_PATH=""`로 빌드하고 3102 포트에 정적 서빙한 뒤
-`BASE_PATH=""` 기준 E2E(`scripts/verify-programs.mjs`, 77개 항목)를 자동 실행한다.
+`BASE_PATH=""` 기준 E2E(`scripts/verify-programs.mjs`, 80개 항목)를 자동 실행한다.
+
+실제 배포 도메인(또는 로컬 프리뷰)을 대상으로 라우트·경로 누출·브라우저 바인딩·콘솔 오류까지
+한 번에 확인하려면 아래 명령을 쓴다.
+
+```bash
+node scripts/verify-vercel-live.mjs https://<project>.vercel.app/
+node scripts/verify-vercel-live.mjs            # 배포 전 로컬 프리뷰 검증
+```
+
+검증 항목은 `/`·`/classic/` HTTP 200, 내부 `/5060do` 경로 누출 0건, 수파베이스 실시간 강좌
+바인딩과 카드 렌더링, 클래식 헤더·GNB 8개, 콘솔 오류 0건이다. 결과는
+`docs/evidence/vercel-live-<시각>/vercel-live-verification.json`에 저장된다.
 
 ## 7. NAS 배포와의 차이
 
@@ -136,3 +148,19 @@ NAS 배포는 NAS에서, Vercel 배포는 Vercel에서 빌드한다.
 | RSC 페이로드 404 | `postbuild-static-rsc.mjs` 미실행 | Build Command를 `npm run build`로 |
 | 강좌 목록이 더미 15건 | Supabase 환경변수 누락 | 3종 재확인 후 Redeploy |
 | 챗봇이 667건 대신 47건 | 로컬 폴백 사용 | 브라우저 콘솔의 `[supabase]` 경고 확인 |
+
+## 9. 센터 지식 RAG 검색
+
+`public.documents` 14건은 768차원 임베딩을 `embedding` 컬럼(pgvector)에 저장한다.
+챗봇은 키워드 규칙에 걸리지 않는 질문을 `searchKnowledgeRAG()`로 보내 상위 3건을 안내한다.
+
+| 항목 | 내용 |
+|---|---|
+| 스키마 | `docs/sql/setup_pgvector.sql`(`vector(768)`, HNSW 인덱스, `match_documents` RPC) |
+| 임베딩 모델 | `5060do-vocab-768-v3` — 14건 코퍼스에서 만든 768차원 고정 어휘 + IDF 가중 |
+| 적재 | `npm run data:embeddings` (로컬/NAS 전용, service role 키 사용) |
+| 검증 | 시드 스크립트가 저장 벡터 재계산 일치(코사인 0.9999 초과)와 자연어 질의 16건을 확인 |
+
+임베딩은 외부 API 없이 문서 텍스트에서 결정적으로 계산한다. 정적 내보내기에는 API 키를
+숨길 서버가 없고, 시드 스크립트와 브라우저가 같은 함수를 쓰므로 어느 쪽에서 만든 벡터도
+같은 공간에 놓인다.

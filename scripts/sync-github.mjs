@@ -1,10 +1,41 @@
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Mirrors the current branch to the `github` remote so Vercel's Git
 // integration can pick up the commit. Gitea `origin` is intentionally left
 // untouched: this script only ever pushes to the mirror remote.
 const REMOTE = "github";
 const BRANCH = process.argv[2] ?? "master";
+
+// npm and cmd.exe refuse to treat a UNC path (`\\x4\workspace\...`) as a
+// working directory, so a batch/PowerShell caller can fail before this script
+// starts. When the script does start from UNC, map the share path back to the
+// drive letter that points at the same tree so git runs from `Z:\dev\5060do`.
+function toDrivePath(uncPath) {
+  const match = uncPath.match(/^\\\\[^\\]+\\[^\\]+(\\[\s\S]*)?$/);
+  if (!match) return null;
+  const rest = (match[1] ?? "").replace(/^\\+/, "");
+  for (let code = 90; code >= 65; code -= 1) {
+    const candidate = path.join(`${String.fromCharCode(code)}:\\`, rest);
+    if (existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
+if (process.platform === "win32" && process.cwd().startsWith("\\\\")) {
+  const scriptRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const mapped = toDrivePath(process.cwd()) ?? toDrivePath(scriptRoot);
+  if (mapped) {
+    process.chdir(mapped);
+    console.log(`[정보] UNC 작업 경로를 드라이브 경로로 전환: ${mapped}`);
+  } else {
+    console.warn(
+      "[경고] UNC 경로에 대응하는 드라이브 문자를 찾지 못했습니다. 현재 경로로 계속합니다.",
+    );
+  }
+}
 
 // Missing credentials must fail fast instead of opening a hidden prompt:
 // GIT_TERMINAL_PROMPT covers terminal prompts and GCM_INTERACTIVE stops the

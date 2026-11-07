@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { MessageCircle, Phone, Send, X } from "lucide-react";
 import knowledgeData from "@/data/center_knowledge.json";
 import type { Program, ProgramCounts } from "@/lib/programs";
+import { searchKnowledgeRAG, type RagMatch } from "@/lib/rag";
 
 type KnowledgeEntry = {
   id: string;
@@ -255,6 +256,29 @@ function findProgram(
   return null;
 }
 
+// The keyword rules above answer the common questions. Anything else is passed
+// to the vector search so a paraphrase still finds the right center guide.
+function ragKnowledgeReply(question: string, matches: RagMatch[]): Reply {
+  const [top, ...rest] = matches;
+  const excerpt =
+    top.content.length > 700
+      ? `${top.content.slice(0, 700).trim()}…`
+      : top.content;
+  const related = rest
+    .map((match) => `· ${match.title}`)
+    .filter((line) => line.length > 2)
+    .join("\n");
+
+  return {
+    text: `'${question}'와 가장 가까운 센터 안내를 찾았습니다.\n\n[${top.title}] ${excerpt}${
+      related ? `\n\n함께 보면 좋은 안내:\n${related}` : ""
+    }`,
+    action: top.sourceUrl
+      ? { href: top.sourceUrl, label: "관련 안내 보기", external: true }
+      : undefined,
+  };
+}
+
 function buildReply(question: string, data: ChatData): Reply {
   const normalized = question.replace(/\s+/g, " ").trim();
   const has = (...keys: string[]) =>
@@ -282,6 +306,9 @@ function buildReply(question: string, data: ChatData): Reply {
 
   const matched = findProgram(normalized, data.programs);
   if (matched) return programReply(matched.program, matched.term);
+
+  const ragMatches = searchKnowledgeRAG(normalized, { topK: 3 });
+  if (ragMatches.length > 0) return ragKnowledgeReply(normalized, ragMatches);
 
   return {
     text: `죄송합니다. 질문을 정확히 이해하지 못했습니다.\n\n'무료 강좌', '수강신청 방법', '센터 위치', '상담원 전화'처럼 짧게 물어보시거나, 아래 전화번호로 문의해 주세요.`,
