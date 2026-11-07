@@ -204,6 +204,20 @@ const CHATBOT_LAST_BOT = `(() => {
   return last ? (last.querySelector('p')?.textContent || '').replace(/\\s+/g, ' ').trim() : '';
 })()`;
 
+const askChatbot = (question) => `(() => {
+  const input = document.querySelector('[data-testid="chatbot-input"]');
+  const send = document.querySelector('[data-testid="chatbot-send"]');
+  if (!input || !send) return false;
+  const setter = Object.getOwnPropertyDescriptor(
+    window.HTMLInputElement.prototype,
+    'value',
+  ).set;
+  setter.call(input, ${JSON.stringify(question)});
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  send.click();
+  return true;
+})()`;
+
 const MODAL_STATE = `(() => {  const modal = document.querySelector('[data-testid="detail-modal"]');
   if (!modal) return { visible: false };
   const title = modal.querySelector('#program-dialog-title')?.textContent?.trim() ?? '';
@@ -1125,6 +1139,43 @@ async function main() {
       ),
       { applyReply: chatbotApplyReply },
     );
+
+    // The expanded center knowledge now feeds free-text answers as well, so the
+    // E2E asks three of the new topics directly instead of only using chips.
+    const askKnowledge = async (question, expected) => {
+      await evaluate(cdp, sessionId, askChatbot(question));
+      const matched = await waitForCondition(
+        cdp,
+        sessionId,
+        `(${CHATBOT_LAST_BOT}).includes(${JSON.stringify(expected)})`,
+        6000,
+      );
+      const reply = await evaluate(cdp, sessionId, CHATBOT_LAST_BOT);
+      return { matched: Boolean(matched), reply };
+    };
+
+    const historyAnswer = await askKnowledge("센터 연혁 알려줘", "2023년 개관");
+    results.chatbot.historyAnswer = historyAnswer;
+    check("챗봇 연혁 지식 답변", historyAnswer.matched, historyAnswer);
+
+    const organizationAnswer = await askKnowledge(
+      "조직도와 담당 부서 안내",
+      "센터장",
+    );
+    results.chatbot.organizationAnswer = organizationAnswer;
+    check("챗봇 조직도 지식 답변", organizationAnswer.matched, organizationAnswer);
+
+    const communityAnswer = await askKnowledge(
+      "동아리 등록 방법 알려줘",
+      "동아리",
+    );
+    results.chatbot.communityAnswer = communityAnswer;
+    check(
+      "챗봇 커뮤니티 지식 답변",
+      communityAnswer.matched,
+      communityAnswer,
+    );
+
     results.screenshots.push(
       await screenshot(cdp, sessionId, "desktop-1280-chatbot-realtime.png"),
     );

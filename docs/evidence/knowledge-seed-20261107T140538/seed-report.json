@@ -1,0 +1,209 @@
+{
+  "ticket": "5060DO-20261107-2235",
+  "table": "documents",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "target": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/documents",
+  "sourceEntries": 14,
+  "documentCount": 14,
+  "skippedEntries": 0,
+  "upserted": 14,
+  "remoteCount": 14,
+  "countPass": true,
+  "contentPass": true,
+  "keywordChecks": [
+    {
+      "name": "연혁",
+      "mode": "content",
+      "keywords": [
+        "연혁",
+        "2023년"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "조직도",
+      "mode": "content",
+      "keywords": [
+        "조직도",
+        "센터장"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "생애설계",
+      "mode": "content",
+      "keywords": [
+        "생애설계",
+        "7대 영역"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "일활동",
+      "mode": "content",
+      "keywords": [
+        "일활동"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "공유사무실",
+      "mode": "content",
+      "keywords": [
+        "공유사무실",
+        "공유오피스"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "대관",
+      "mode": "content",
+      "keywords": [
+        "대관"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "층별안내",
+      "mode": "content",
+      "keywords": [
+        "층별안내"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "오시는길",
+      "mode": "content",
+      "keywords": [
+        "오시는길",
+        "주소"
+      ],
+      "missing": [],
+      "pass": true
+    }
+  ],
+  "keywordPass": true,
+  "documents": [
+    {
+      "id": 1,
+      "title": "인사말",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-greeting",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/greeting",
+      "contentChars": 421
+    },
+    {
+      "id": 2,
+      "title": "연혁",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-history",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/history",
+      "contentChars": 450
+    },
+    {
+      "id": 3,
+      "title": "비전/미션",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-vision",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/vision",
+      "contentChars": 418
+    },
+    {
+      "id": 4,
+      "title": "운영법인",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-corporate",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/corporate",
+      "contentChars": 890
+    },
+    {
+      "id": 5,
+      "title": "조직도",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-organization",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/organization",
+      "contentChars": 297
+    },
+    {
+      "id": 6,
+      "title": "시설안내",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-facility",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/facility",
+      "contentChars": 750
+    },
+    {
+      "id": 7,
+      "title": "오시는 길",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-location",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/location",
+      "contentChars": 82
+    },
+    {
+      "id": 8,
+      "title": "생애설계진단/상담",
+      "category": "사업안내",
+      "sourceId": "center-subLifeTwist-lifePlanAssay",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/lifePlanAssay",
+      "contentChars": 280
+    },
+    {
+      "id": 9,
+      "title": "인생설계",
+      "category": "사업안내",
+      "sourceId": "center-subLifeTwist-lifeTimePlan",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/lifeTimePlan",
+      "contentChars": 295
+    },
+    {
+      "id": 10,
+      "title": "일·활동",
+      "category": "사업안내",
+      "sourceId": "center-subLifeTwist-lifeTaskDo",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/lifeTaskDo",
+      "contentChars": 245
+    },
+    {
+      "id": 11,
+      "title": "커뮤니티지원",
+      "category": "사업안내",
+      "sourceId": "center-subLifeTwist-lifeSocalhelp",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/lifeSocalhelp",
+      "contentChars": 289
+    },
+    {
+      "id": 12,
+      "title": "커뮤니티 참여방법",
+      "category": "커뮤니티",
+      "sourceId": "center-subLifeTwist-lifeSocalEntry",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/lifeSocalEntry",
+      "contentChars": 304
+    },
+    {
+      "id": 13,
+      "title": "공유사무실 참여방법",
+      "category": "공유사무실",
+      "sourceId": "center-subLifeTwist-lifeOfficeEntry",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/lifeOfficeEntry",
+      "contentChars": 307
+    },
+    {
+      "id": 14,
+      "title": "대관신청",
+      "category": "대관안내",
+      "sourceId": "center-convention-index",
+      "sourceUrl": "https://www.5060do.or.kr/convention/index",
+      "contentChars": 610
+    }
+  ],
+  "startedAt": "2026-11-07T14:05:38.715Z",
+  "elapsedMs": 1526
+}

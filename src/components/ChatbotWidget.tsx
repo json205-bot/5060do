@@ -30,6 +30,7 @@ const QUICK_QUESTIONS = [
   { id: "free", label: "이달의 무료 강좌 안내" },
   { id: "apply", label: "수강신청 방법" },
   { id: "location", label: "주차장 및 센터 위치" },
+  { id: "facility", label: "시설 및 공유사무실 안내" },
   { id: "phone", label: "상담원 전화 연결" },
 ] as const;
 
@@ -159,6 +160,74 @@ function greetingReply(): Reply {
   };
 }
 
+const knowledgeText = (id: string) =>
+  (knowledgeById(id)?.chunks ?? [])
+    .filter((chunk) => chunk.trim().length > 0)
+    .join("\n\n");
+
+const knowledgeAction = (
+  id: string,
+  label: string,
+): Reply["action"] => {
+  const sourceUrl = knowledgeById(id)?.sourceUrl;
+  return sourceUrl ? { href: sourceUrl, label, external: true } : undefined;
+};
+
+function historyReply(): Reply {
+  return {
+    text: `센터 연혁을 안내합니다.\n\n${knowledgeText("center-subLifeTwist-history")}`,
+    action: knowledgeAction("center-subLifeTwist-history", "연혁 자세히 보기"),
+  };
+}
+
+function organizationReply(): Reply {
+  return {
+    text: `센터 조직과 담당 업무를 안내합니다.\n\n${knowledgeText(
+      "center-subLifeTwist-organization",
+    )}`,
+    action: knowledgeAction(
+      "center-subLifeTwist-organization",
+      "조직도 자세히 보기",
+    ),
+  };
+}
+
+function sharedOfficeReply(): Reply {
+  return {
+    text: `5층 공유사무실 안내입니다.\n\n${knowledgeText(
+      "center-subLifeTwist-lifeOfficeEntry",
+    )}`,
+    action: knowledgeAction(
+      "center-subLifeTwist-lifeOfficeEntry",
+      "공유사무실 참여방법 보기",
+    ),
+  };
+}
+
+function communityReply(): Reply {
+  return {
+    text: `커뮤니티 지원과 참여 방법을 안내합니다.\n\n${knowledgeText(
+      "center-subLifeTwist-lifeSocalhelp",
+    )}\n\n${knowledgeText("center-subLifeTwist-lifeSocalEntry")}`,
+    action: knowledgeAction(
+      "center-subLifeTwist-lifeSocalEntry",
+      "커뮤니티 참여방법 보기",
+    ),
+  };
+}
+
+function lifePlanReply(): Reply {
+  return {
+    text: `생애설계진단·상담을 안내합니다.\n\n${knowledgeText(
+      "center-subLifeTwist-lifePlanAssay",
+    )}`,
+    action: knowledgeAction(
+      "center-subLifeTwist-lifePlanAssay",
+      "생애설계진단/상담 보기",
+    ),
+  };
+}
+
 function programReply(program: Program, term: string): Reply {
   return {
     text: `'${term}' 관련 강좌를 찾았습니다.\n\n${program.title}\n분야: ${program.category}\n교육기간: ${program.eduPeriod}\n장소: ${program.location}\n수강료: ${formatFee(program.fee)}\n신청기간: ${program.applyPeriod}\n정원 ${program.capacity}명 · 신청 ${program.enrolled ?? 0}명 · 상태 ${program.status}\n\n'교육신청'에서 이 강좌를 누르면 상세 내용과 신청 버튼을 보실 수 있습니다.`,
@@ -192,6 +261,11 @@ function buildReply(question: string, data: ChatData): Reply {
     keys.some((key) => normalized.includes(key));
 
   if (has("상담원", "전화", "연락", "연결")) return phoneReply();
+  if (has("연혁", "설립", "역사")) return historyReply();
+  if (has("조직", "센터장", "부서")) return organizationReply();
+  if (has("공유사무실", "공유오피스", "5층")) return sharedOfficeReply();
+  if (has("동아리", "커뮤니티", "소모임")) return communityReply();
+  if (has("생애설계", "상담")) return lifePlanReply();
   if (has("주차", "위치", "주소", "오시는", "찾아오", "찾아가는"))
     return locationReply();
   if (has("무료")) return freeCourseReply(data);
@@ -475,7 +549,7 @@ export default function ChatbotWidget({
                     type="button"
                     data-testid={`chatbot-chip-${question.id}`}
                     onClick={() => ask(question.label)}
-                    className="flex min-h-[48px] items-center justify-center rounded-xl border-2 border-brand-200 bg-brand-50 px-2 text-center text-sm font-bold text-brand-800 transition-colors hover:border-brand-400 hover:bg-brand-100"
+                    className="flex min-h-[48px] items-center justify-center rounded-xl border-2 border-brand-200 bg-brand-50 px-2 text-center text-sm font-bold text-brand-800 transition-colors last:col-span-2 hover:border-brand-400 hover:bg-brand-100"
                   >
                     {question.label}
                   </button>

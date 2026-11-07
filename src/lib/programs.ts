@@ -231,6 +231,10 @@ export const activeProgramColumns = [
 // helpful to the chatbot and are skipped server-side.
 export const activeStatusOrderLimit = 4;
 
+// The chatbot loads every active course in one query. Keep the request bounded
+// so a future data spike cannot turn the panel into an unbounded payload.
+export const activeProgramsFetchLimit = 1000;
+
 export type ProgramPageParams = {
   status: ProgramStatus | null;
   offset: number;
@@ -274,13 +278,20 @@ export async function fetchActivePrograms(
       .lt("status_order", activeStatusOrderLimit)
       .order("status_order", { ascending: true })
       .order("id", { ascending: false })
-      .range(0, 999)
+      .range(0, activeProgramsFetchLimit - 1)
       .abortSignal(signal);
 
     if (error) throw new Error(error.message);
     if (!Array.isArray(data)) return [];
 
-    return (data as unknown as SupabaseProgramRow[]).map(mapSupabaseProgram);
+    if (data.length >= activeProgramsFetchLimit) {
+      console.warn(
+        `[WARN] Active programs reached ${activeProgramsFetchLimit} limit`,
+      );
+    }
+
+    const rows = data.slice(0, activeProgramsFetchLimit);
+    return (rows as unknown as SupabaseProgramRow[]).map(mapSupabaseProgram);
   });
 }
 

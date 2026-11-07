@@ -143,13 +143,17 @@ async function fetchTitles(config, ids) {
   return response.json();
 }
 
-// Keyword checks mirror the chatbot answer groups: greeting, facility/floor
-// guide, location/parking, and convention (use) guide.
+// Keyword checks mirror the chatbot answer groups: center history, organization,
+// life plan, work activity, shared office, convention, floor guide, and location.
 const KEYWORD_CHECKS = [
-  { name: "인사말", keywords: ["인사말"], mode: "title" },
-  { name: "층별안내", keywords: ["층별", "층 안내"], mode: "content" },
-  { name: "위치/주차", keywords: ["주소", "주차"], mode: "content" },
-  { name: "대관 이용안내", keywords: ["대관"], mode: "content" },
+  { name: "연혁", keywords: ["연혁", "2023년"], mode: "content" },
+  { name: "조직도", keywords: ["조직도", "센터장"], mode: "content" },
+  { name: "생애설계", keywords: ["생애설계", "7대 영역"], mode: "content" },
+  { name: "일활동", keywords: ["일활동"], mode: "content" },
+  { name: "공유사무실", keywords: ["공유사무실", "공유오피스"], mode: "content" },
+  { name: "대관", keywords: ["대관"], mode: "content" },
+  { name: "층별안내", keywords: ["층별안내"], mode: "content" },
+  { name: "오시는길", keywords: ["오시는길", "주소"], mode: "content" },
 ];
 
 function verifyKeywords(remoteRows) {
@@ -200,7 +204,7 @@ async function main() {
   });
 
   const report = {
-    ticket: "5060DO-20261107-1810",
+    ticket: "5060DO-20261107-2235",
     table: TABLE,
     envPath: config.envPath,
     target: `${config.url}/rest/v1/${TABLE}`,

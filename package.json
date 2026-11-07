@@ -12,7 +12,8 @@
     "verify:vercel": "node scripts/test-vercel.mjs",
     "test:unit": "node tests/unit-merge-programs.mjs",
     "data:programs": "node scripts/build_programs_dataset.mjs",
-    "data:knowledge": "node scripts/seed-supabase-knowledge.mjs"
+    "data:knowledge": "node scripts/seed-supabase-knowledge.mjs",
+    "push:github": "node scripts/sync-github.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

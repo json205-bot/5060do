@@ -188,3 +188,18 @@ status: done
 | 증거 | `docs/evidence/knowledge-chatbot-20261107/`, `docs/evidence/knowledge-seed-20261107T091521/` |
 | 한계 | 실제 Vercel 클라우드 배포는 토큰·GitHub 원격이 없어 실행하지 않았다. 활성 강좌 15건으로 30건 초과 상황은 단위 테스트로만 검증했다 |
 
+## 17. 센터 지식 14종 완결·챗봇 지식 질의 확장·GitHub 미러 동기화 (2026-11-07 22:35)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 이미지로만 제공되던 센터 안내 8종을 공식 텍스트로 보완해 지식 14종을 전량 완결하고, 챗봇이 연혁·조직·공유사무실·커뮤니티·생애설계를 1:1로 안내하며, GitHub 미러 푸시를 한 명령으로 수행 |
+| 지식 보완 | `src/data/center_knowledge.json` — 연혁, 조직도, 생애설계진단/상담, 인생설계, 일·활동, 커뮤니티지원, 커뮤니티 참여방법, 공유사무실 참여방법 8종에 구조화 청크 작성. `note`(이미지라 추출 불가) 필드 제거, 14개 전 항목 텍스트 확보 |
+| 적재 | `scripts/seed-supabase-knowledge.mjs` — 14건 전량을 `documents(id, title, category, content)`로 업서트. 키워드 검증 8종(연혁·조직도·생애설계·일활동·공유사무실·대관·층별안내·오시는길) 전수 확인 |
+| 챗봇 확장 | `src/components/ChatbotWidget.tsx` — 연혁(2023년 개관), 조직(센터장·운영팀·교육기획팀·일자리지원팀), 공유사무실(5층·입주 대상·신청 절차), 커뮤니티(동아리 등록·공간 지원), 생애설계(7대 영역 진단·1:1 상담) 핸들러 추가. 퀵 질문을 `무료 강좌·수강신청·주차/위치·시설/공유사무실·상담원 전화` 5종으로 정리 |
+| 안전 가드 | `src/lib/programs.ts` — `activeProgramsFetchLimit = 1000`. 조회 결과가 1,000건에 도달하면 `[WARN] Active programs reached 1000 limit` 경고 후 1,000건으로 슬라이스. **운영 정책: 활성 강좌가 500건을 초과하면 `fetchActivePrograms()`를 Range Loop Paging으로 전환한다** (1회 1,000건 상한 유지, 페이지 루프로 전량 수집) |
+| GitHub 미러 | `scripts/sync-github.mjs` + `npm run push:github` — `github` 원격이 있으면 `git push github master`, 없으면 `git remote add` 안내 후 무해 종료(Exit 0). Gitea `origin`은 건드리지 않음 |
+| E2E | `scripts/verify-programs.mjs` — 챗봇 무료 텍스트 질의 3종(연혁·조직도·커뮤니티) 추가, 총 **80개 항목** |
+| 검증 | typecheck Exit 0, lint Exit 0, unit PASS, build Exit 0, 시드 14/14 PASS, NAS E2E 80/80 PASS, 게이트웨이 `/5060do/` HTTP 200 |
+| 증거 | `docs/evidence/knowledge-complete-20261107/` |
+
+
