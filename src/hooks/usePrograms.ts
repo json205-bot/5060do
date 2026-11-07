@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import localProgramData from "@/data/programs.json";
 import {
   comparePrograms,
+  defaultProgramCounts,
   fetchProgramCounts,
   fetchProgramPage,
   programPageSize,
@@ -65,7 +66,9 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
   const [serverState, setServerState] = useState<ServerState>(() =>
     client ? "probing" : "failed",
   );
-  const [counts, setCounts] = useState<ProgramCounts>(countLocalPrograms);
+  const [counts, setCounts] = useState<ProgramCounts>(() =>
+    client ? { ...defaultProgramCounts } : countLocalPrograms(),
+  );
   const [page, setPage] = useState<ProgramPage>(() =>
     client
       ? { filter: statusFilter, items: [], pages: 0 }
@@ -94,6 +97,7 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
           "[programs] failed to load program counts from Supabase. Keeping local program data.",
           error,
         );
+        setCounts(countLocalPrograms());
         setServerState("failed");
       });
 
@@ -115,7 +119,7 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
         if (cancelled) return;
         setPage({
           filter: statusFilter,
-          items: [...rows].sort(comparePrograms),
+          items: rows,
           pages: 1,
         });
       })
@@ -181,13 +185,15 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
         setPage((current) => {
           if (current.filter !== statusFilter) return current;
           const seen = new Set(current.items.map((program) => program.id));
+          // Server paging already returns the final order, so append new rows
+          // instead of re-sorting to avoid cards jumping into the middle.
           const merged = [
             ...current.items,
             ...rows.filter((program) => !seen.has(program.id)),
           ];
           return {
             filter: statusFilter,
-            items: merged.sort(comparePrograms),
+            items: merged,
             pages: current.pages + 1,
           };
         });

@@ -1,0 +1,72 @@
+{
+  "ticket": "5060DO-20261107-1405",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "target": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs",
+  "sourceRows": 667,
+  "chunkSize": 100,
+  "upserted": 667,
+  "failed": 0,
+  "failedRecords": [],
+  "remoteCount": 667,
+  "countPass": true,
+  "samples": [
+    {
+      "id": "678",
+      "title": "[야간/활동] 한스텝 (한국무용 라인댄스)",
+      "edu_period": "2026-04-15 ~ 2026-06-24",
+      "status": "마감",
+      "capacity": "14명",
+      "enrolled": 8,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "852",
+      "title": "[활동] 살림의 발견 : 공과금 줄이는 스마트 절약법 & 살림 고수의 세탁·청소·정리 비법",
+      "edu_period": "2026-09-23 ~ 2026-09-23",
+      "status": "마감",
+      "capacity": "20명",
+      "enrolled": 17,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "466",
+      "title": "[특강] 내 손으로 설계하는 든든한 노후 (강사로 다시 서는 순간들)",
+      "edu_period": "2025-09-03 ~ 2025-09-03",
+      "status": "마감",
+      "capacity": "20명",
+      "enrolled": 16,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "578",
+      "title": "[활동] 연필 하나로 완성하는 정물드로잉 (연필화)",
+      "edu_period": "2026-01-06 ~ 2026-03-24",
+      "status": "마감",
+      "capacity": "14명",
+      "enrolled": 16,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "589",
+      "title": "[60세 이상] EASY 톡, 기초영어(2026년 1월~2월/8회차)",
+      "edu_period": "2026-01-09 ~ 2026-02-27",
+      "status": "마감",
+      "capacity": "30명",
+      "enrolled": 28,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    }
+  ],
+  "samplePass": true,
+  "startedAt": "2026-11-07T05:20:36.486Z",
+  "elapsedMs": 1789
+}

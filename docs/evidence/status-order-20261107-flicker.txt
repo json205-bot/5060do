@@ -1,0 +1,3 @@
+﻿static-html-total-chip=667
+contains_47=False
+htmlLength=27233

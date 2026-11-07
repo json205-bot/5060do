@@ -91,7 +91,17 @@ function formatEnrolled(enrolled) {
   return Math.trunc(value);
 }
 
+const STATUS_ORDER = {
+  접수중: 1,
+  접수예정: 2,
+  대기접수: 3,
+  마감: 4,
+};
+
+const statusOrder = (status) => STATUS_ORDER[status] ?? STATUS_ORDER["마감"];
+
 function toRow(program) {
+  const status = normalizeStatus(program);
   return {
     id: String(program.id),
     title: program.title ?? "",
@@ -103,7 +113,8 @@ function toRow(program) {
     edu_period: program.eduPeriod ?? "",
     apply_period: program.applyPeriod ?? "",
     location: program.location || CENTER_LOCATION,
-    status: normalizeStatus(program),
+    status,
+    status_order: statusOrder(status),
     summary: program.summary ?? "",
     content: program.content ?? "",
   };
@@ -190,10 +201,18 @@ async function upsertRows(config, rows) {
 }
 
 async function assertEnrolledColumn(config) {
-  const response = await request(config, `${TABLE}?select=id,enrolled&limit=1`);
+  const response = await request(config, `${TABLE}?select=id,enrolled,status_order&limit=1`);
   if (response.ok) return;
 
   const body = (await response.text()).slice(0, 400);
+  if (body.includes("status_order")) {
+    throw new Error(
+      `${TABLE}.status_order column is missing (HTTP ${response.status}). ` +
+        "Run this once in the Supabase SQL editor, then re-run the seed:\n" +
+        "ALTER TABLE public.programs ADD COLUMN IF NOT EXISTS status_order INTEGER DEFAULT 4;\n" +
+        "CREATE INDEX IF NOT EXISTS idx_programs_status_order ON public.programs (status_order, id DESC);",
+    );
+  }
   if (body.includes("42703") || body.includes("enrolled")) {
     throw new Error(
       `${TABLE}.enrolled column is missing (HTTP ${response.status}). ` +
@@ -235,7 +254,7 @@ async function verifySamples(config, samples) {
 
   return samples.map((expected) => {
     const actual = remoteById.get(expected.id);
-    const mismatches = ["title", "edu_period", "status", "category", "fee", "capacity", "enrolled"]
+    const mismatches = ["title", "edu_period", "status", "status_order", "category", "fee", "capacity", "enrolled"]
       .filter((field) => (actual?.[field] ?? null) !== expected[field])
       .map((field) => ({
         field,
@@ -275,7 +294,7 @@ async function main() {
 
   const elapsedMs = Date.now() - startedAt.getTime();
   const report = {
-    ticket: "5060DO-20261107-1305",
+    ticket: "5060DO-20261107-1405",
     envPath: config.envPath,
     target: `${config.url}/rest/v1/${TABLE}`,
     sourceRows: rows.length,

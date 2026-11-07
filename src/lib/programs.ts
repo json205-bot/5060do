@@ -28,6 +28,14 @@ export type ProgramSource = "local" | "supabase";
 
 export const programPageSize = 30;
 
+export const defaultProgramCounts: ProgramCounts = {
+  전체: 667,
+  접수중: 7,
+  접수예정: 1,
+  대기접수: 7,
+  마감: 652,
+};
+
 export const programListColumns = [
   "id",
   "title",
@@ -40,6 +48,7 @@ export const programListColumns = [
   "apply_period",
   "location",
   "status",
+  "status_order",
   "summary",
   "created_at",
 ].join(", ");
@@ -56,6 +65,7 @@ export type SupabaseProgramRow = {
   apply_period: string | null;
   location: string | null;
   status: string | null;
+  status_order?: string | number | null;
   summary: string | null;
   content?: string | null;
   created_at: string | null;
@@ -189,13 +199,12 @@ export async function fetchProgramPage(
   let query = client.from("programs").select(programListColumns);
   if (status) query = query.eq("status", status);
 
-  // Server ordering must stay deterministic for stable range paging.
-  // Status desc puts 접수중/접수예정 first (Korean collation); the client
-  // re-sorts loaded rows with comparePrograms for the final senior UI order.
+  // status_order is maintained by the seed script so server paging already
+  // yields the senior-facing order (접수중 → 접수예정 → 대기접수 → 마감).
+  // id is only a deterministic tie-breaker for stable range paging.
   const { data, error } = await query
-    .order("status", { ascending: false })
-    .order("created_at", { ascending: false })
-    .order("id", { ascending: true })
+    .order("status_order", { ascending: true })
+    .order("id", { ascending: false })
     .range(offset, offset + limit - 1);
 
   if (error) throw new Error(error.message);

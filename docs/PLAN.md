@@ -133,3 +133,17 @@ status: done
 | 검증 | typecheck·lint·build Exit 0, NAS 배포 HTTP 200, `verify-programs.mjs` 65/65 PASS. 초기 목록 GET 2,560B(gzip)·11,347B(raw) — 원본 267,043B 대비 95.8% 절감 |
 | 증거 | `docs/evidence/programs-paging-20261107/` |
 
+## 13. 상태 정렬 `status_order` 도입·칩 카운트 깜빡임 제거 (2026-11-07 14:46)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | 대기접수 7건이 전체 목록 마지막 페이지로 밀리던 문제를 서버 정렬로 해결하고, 초기 칩 카운트 47→667 깜빡임과 [더보기] 카드 중간 삽입을 제거 |
+| DB | `public.programs.status_order`(1 접수중·2 접수예정·3 대기접수·4 마감) + `idx_programs_status_order (status_order, id DESC)` 추가·667건 백필 |
+| 시드 | `scripts/seed-supabase-programs.mjs`가 `status`에서 `status_order`를 산출해 재적재. 667건 failed 0 |
+| 서버 정렬 | `fetchProgramPage()` — `order(status_order.asc, id.desc)`. 첫 30건 = 접수중7·접수예정1·대기접수7·마감15 |
+| 클라이언트 | 첫 페이지는 서버 순서 유지, [더보기]는 id 중복 제거 후 끝에 append(재정렬 제거) |
+| 깜빡임 | `defaultProgramCounts`(667/7/1/7/652)로 초기 렌더. 정적 HTML `[667]`, `[47]` 없음. 서버 실패 시에만 로컬 카운트로 복귀 |
+| Vercel | `vercel.json` — `npm run build`, 출력 `out` (실배포 미검증) |
+| 검증 | typecheck·lint·build Exit 0, NAS HTTP 200, `verify-programs.mjs` **68/68 PASS**. 초기 GET gzip 2,900B·원본 12,239B, 더보기 후 기존 30건 순서 불변 |
+| 증거 | `docs/evidence/status-order-20261107/`, `docs/evidence/seed-status-order-20261107.log`, `docs/logs/2026 11 07 1446 로그 5060do 상태 정렬 status_order 도입 및 칩 카운트 깜빡임 제거.md` |
+

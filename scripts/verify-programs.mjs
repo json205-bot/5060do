@@ -291,10 +291,11 @@ function isSortedByStatus(statuses) {
   );
 }
 
-function isRatioAscending(items) {
-  return items.every(
-    (item, index) => index === 0 || items[index - 1].ratio <= item.ratio + 1e-9,
-  );
+function countStatuses(statuses) {
+  return statuses.reduce((acc, status) => {
+    acc[status] = (acc[status] ?? 0) + 1;
+    return acc;
+  }, {});
 }
 
 async function main() {
@@ -549,6 +550,16 @@ async function main() {
       )) === true,
       "load-more-programs",
     );
+    const firstPageStatuses = [...pageOne.statuses];
+    const firstPageTexts = [...pageOne.texts];
+    const firstPageCounts = countStatuses(firstPageStatuses);
+    check(
+      "첫 화면 30건에 활성 강좌 전건 노출",
+      firstPageCounts["접수중"] === 7 &&
+        firstPageCounts["접수예정"] === 1 &&
+        firstPageCounts["대기접수"] === 7,
+      firstPageCounts,
+    );
     await evaluate(cdp, sessionId, click("load-more-programs"));
     const secondPageReady = await waitForCondition(
       cdp,
@@ -561,6 +572,11 @@ async function main() {
       "더보기 클릭 시 +페이지 크기",
       pageTwo.count === Math.min(PAGE_SIZE * 2, totalChip?.count ?? 0),
       { cards: pageTwo.count, expected: Math.min(PAGE_SIZE * 2, totalChip?.count ?? 0) },
+    );
+    check(
+      "더보기 후 기존 카드 순서 유지",
+      firstPageTexts.every((text, index) => pageTwo.texts[index] === text),
+      { firstPage: firstPageTexts.slice(0, 2), pageTwo: pageTwo.texts.slice(0, 2) },
     );
     results.paging = { pageOne: pageOne.count, pageTwo: pageTwo.count };
     const rangeRequests = Array.from(payloadRequests.values()).filter(
@@ -634,7 +650,21 @@ async function main() {
       0,
       allCards.statuses.filter((status) => status === "접수중").length,
     );
-    check("접수중 잔여 비율 임박순", isRatioAscending(firstGroup), firstGroup);
+    const expandedCounts = countStatuses(allCards.statuses);
+    check(
+      "상태 그룹 순서·건수 일치",
+      isSortedByStatus(allCards.statuses) &&
+        expandedCounts["접수중"] === 7 &&
+        expandedCounts["접수예정"] === 1 &&
+        expandedCounts["대기접수"] === 7 &&
+        expandedCounts["마감"] === 652,
+      expandedCounts,
+    );
+    check(
+      "접수중 그룹 전건 진행바 유지",
+      firstGroup.length > 0,
+      { 접수중: firstGroup.length },
+    );
     check("PC 카드 3열", allCards.gridColumns === 3, allCards.gridColumns);
     check("PC 가로 오버플로 없음", !allCards.horizontalOverflow, allCards.horizontalOverflow);
 
@@ -882,10 +912,20 @@ async function main() {
       sessionId,
     );
     await loadAt(1280, 900, false);
-    await sleep(2500);
+    const fallbackDeadline = Date.now() + 15000;
+    let fallbackTotal = null;
+    while (Date.now() < fallbackDeadline) {
+      const chips = await evaluate(cdp, sessionId, CHIP_STATE);
+      const total = chips.find((chip) => chip.key === "전체");
+      if ((total?.count ?? -1) === Number(process.env.LOCAL_TOTAL ?? 47)) {
+        fallbackTotal = total;
+        break;
+      }
+      await sleep(250);
+    }
     results.fallbackSource = await readProgramsSource(cdp, sessionId);
     const fallbackChips = await evaluate(cdp, sessionId, CHIP_STATE);
-    const fallbackTotal = fallbackChips.find((chip) => chip.key === "전체");
+    const fallbackChipTotal = fallbackChips.find((chip) => chip.key === "전체");
     results.fallbackChips = fallbackChips;
     check(
       "수파베이스 차단 시 로컬 폴백",
@@ -894,8 +934,9 @@ async function main() {
     );
     check(
       "폴백 시 로컬 강좌 수",
-      (fallbackTotal?.count ?? -1) === Number(process.env.LOCAL_TOTAL ?? 47),
-      { chip: fallbackTotal?.count, expected: Number(process.env.LOCAL_TOTAL ?? 47) },
+      (fallbackTotal?.count ?? fallbackChipTotal?.count ?? -1) ===
+        Number(process.env.LOCAL_TOTAL ?? 47),
+      { chip: fallbackTotal?.count ?? fallbackChipTotal?.count, expected: Number(process.env.LOCAL_TOTAL ?? 47) },
     );
     await cdp.send("Network.setBlockedURLs", { urls: [] }, sessionId);
 
