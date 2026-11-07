@@ -48,6 +48,13 @@ const QUALITY_CHECKS = [
   { query: "커뮤니티 활동 알려줘", expect: ["커뮤니티 참여방법", "커뮤니티지원"] },
   { query: "비전이 뭐예요?", expect: ["비전/미션"] },
   { query: "일자리 프로그램 있나요?", expect: ["일·활동"] },
+  { query: "알바 자리 있어요?", expect: ["일·활동"] },
+  { query: "시니어클럽에서 구직 상담 받을 수 있나요?", expect: ["일·활동", "생애설계진단/상담"] },
+  { query: "사회공헌 활동 참여하고 싶어요", expect: ["일·활동", "커뮤니티지원"] },
+  { query: "자격증 딸 수 있는 강의 있나요?", expect: ["인생설계"] },
+  { query: "배움터 수강 신청은 어떻게 해요?", expect: ["인생설계"] },
+  { query: "동아리방이나 모임장소를 쓰고 싶어요", expect: ["커뮤니티지원", "커뮤니티 참여방법"] },
+  { query: "회의실 빌릴 수 있나요?", expect: ["공유사무실 참여방법"] },
   { query: "헬스장 있나요?", expect: [] },
   { query: "오늘 날씨 어때요?", expect: [] },
   { query: "맛집 추천해줘", expect: [] },
@@ -265,7 +272,7 @@ async function main() {
   });
 
   const report = {
-    ticket: "5060DO-20261108-0145",
+    ticket: "5060DO-20261108-0505",
     model: EMBEDDING_MODEL,
     dimensions: EMBEDDING_DIM,
     table: TABLE,

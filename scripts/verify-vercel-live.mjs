@@ -374,6 +374,139 @@ async function main() {
       await screenshot(cdp, sessionId, "vercel-live-root-1280.png");
       results.screenshots.push("vercel-live-root-1280.png");
 
+      // 3-1. The jobs tab is a section on "/" and must bind live Supabase rows,
+      // filter by region/board type, and open a detail modal.
+      const jobsBound = await waitForCondition(
+        cdp,
+        sessionId,
+        `(() => {
+          const source = document.querySelector('[data-jobs-source]')?.dataset.jobsSource;
+          const cards = document.querySelectorAll('[data-testid="job-card"]').length;
+          return cards > 0 && source === 'supabase';
+        })()`,
+      );
+      const jobsState = await evaluate(
+        cdp,
+        sessionId,
+        `(() => {
+          const holder = document.querySelector('[data-jobs-source]');
+          const first = document.querySelector('[data-testid="job-card"]');
+          return {
+            source: holder?.dataset.jobsSource ?? null,
+            cards: document.querySelectorAll('[data-testid="job-card"]').length,
+            firstRegion: first?.dataset.region ?? null,
+            tabLink: document.querySelector('a[href="#jobs"]')?.getAttribute('href') ?? null,
+            section: Boolean(document.getElementById('jobs')),
+          };
+        })()`,
+      );
+      check(
+        "브라우저 수파베이스 채용정보 데이터 바인딩",
+        jobsBound && jobsState.cards > 0,
+        jobsState,
+      );
+      check("채용정보 실시간 소스 사용", jobsState.source === "supabase", {
+        source: jobsState.source,
+      });
+      check(
+        "채용정보 탭 링크·섹션 렌더링",
+        jobsState.section && jobsState.tabLink === "#jobs",
+        jobsState,
+      );
+
+      await evaluate(
+        cdp,
+        sessionId,
+        `document.querySelector('[data-testid="job-region-chip-부산"]')?.click()`,
+      );
+      const regionFiltered = await waitForCondition(
+        cdp,
+        sessionId,
+        `(() => {
+          const cards = [...document.querySelectorAll('[data-testid="job-card"]')];
+          return cards.length > 0 && cards.every((card) => card.dataset.region === '부산');
+        })()`,
+      );
+      check("채용정보 부산 지역 필터", regionFiltered, {
+        cards: await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelectorAll('[data-testid="job-card"]').length`,
+        ),
+      });
+
+      await evaluate(
+        cdp,
+        sessionId,
+        `document.querySelector('[data-testid="job-board-chip-취업지원"]')?.click()`,
+      );
+      const boardFiltered = await waitForCondition(
+        cdp,
+        sessionId,
+        `(() => {
+          const cards = [...document.querySelectorAll('[data-testid="job-card"]')];
+          return cards.length > 0 && cards.every((card) => card.dataset.boardType === '취업지원');
+        })()`,
+      );
+      check("채용정보 직종 필터", boardFiltered, {
+        cards: await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelectorAll('[data-testid="job-card"]').length`,
+        ),
+      });
+
+      await evaluate(
+        cdp,
+        sessionId,
+        `document.querySelector('[data-testid="job-card"]')?.click()`,
+      );
+      const modalOpened = await waitForCondition(
+        cdp,
+        sessionId,
+        `Boolean(document.querySelector('[data-testid="job-detail-modal"]'))`,
+      );
+      const modalState = await evaluate(
+        cdp,
+        sessionId,
+        `(() => ({
+          title: document.querySelector('#job-dialog-title')?.textContent?.trim() ?? "",
+          sourceUrl: document.querySelector('[data-testid="job-source-link"]')?.getAttribute('href') ?? "",
+        }))()`,
+      );
+      check(
+        "채용정보 상세 모달·원문 링크",
+        modalOpened && modalState.title.length > 0 && modalState.sourceUrl.startsWith("https://"),
+        modalState,
+      );
+      await evaluate(
+        cdp,
+        sessionId,
+        `document.querySelector('[data-testid="job-detail-close"]')?.click()`,
+      );
+      const modalClosed = await waitForCondition(
+        cdp,
+        sessionId,
+        `!document.querySelector('[data-testid="job-detail-modal"]')`,
+      );
+      check("채용정보 상세 모달 닫기", modalClosed, {});
+
+      await evaluate(
+        cdp,
+        sessionId,
+        `document.querySelector('[data-testid="job-region-chip-전체"]')?.click();
+         document.querySelector('[data-testid="job-board-chip-전체"]')?.click();
+         document.getElementById('jobs')?.scrollIntoView({ behavior: 'instant', block: 'start' });`,
+      );
+      await waitForCondition(
+        cdp,
+        sessionId,
+        `document.querySelectorAll('[data-testid="job-card"]').length > 0`,
+      );
+      await sleep(400);
+      await screenshot(cdp, sessionId, "vercel-live-jobs-1280.png");
+      results.screenshots.push("vercel-live-jobs-1280.png");
+
       results.currentPage = "/classic/";
       await load(new URL("classic/", baseUrl).toString());
       const classicState = await evaluate(

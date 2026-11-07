@@ -1,0 +1,576 @@
+{
+  "ticket": "5060DO-20261108-0505",
+  "model": "5060do-vocab-768-v4",
+  "dimensions": 768,
+  "table": "documents",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "dryRun": false,
+  "documentCount": 14,
+  "embeddedCount": 14,
+  "missing": 0,
+  "wrongDim": 0,
+  "updateFailures": [],
+  "consistencyPass": true,
+  "consistency": [
+    {
+      "id": 1,
+      "title": "인사말",
+      "dims": 768,
+      "cosine": 1.000001,
+      "pass": true
+    },
+    {
+      "id": 2,
+      "title": "연혁",
+      "dims": 768,
+      "cosine": 1.000001,
+      "pass": true
+    },
+    {
+      "id": 3,
+      "title": "비전/미션",
+      "dims": 768,
+      "cosine": 1.000001,
+      "pass": true
+    },
+    {
+      "id": 4,
+      "title": "운영법인",
+      "dims": 768,
+      "cosine": 0.999999,
+      "pass": true
+    },
+    {
+      "id": 5,
+      "title": "조직도",
+      "dims": 768,
+      "cosine": 1,
+      "pass": true
+    },
+    {
+      "id": 6,
+      "title": "시설안내",
+      "dims": 768,
+      "cosine": 0.999999,
+      "pass": true
+    },
+    {
+      "id": 7,
+      "title": "오시는 길",
+      "dims": 768,
+      "cosine": 1,
+      "pass": true
+    },
+    {
+      "id": 8,
+      "title": "생애설계진단/상담",
+      "dims": 768,
+      "cosine": 1,
+      "pass": true
+    },
+    {
+      "id": 9,
+      "title": "인생설계",
+      "dims": 768,
+      "cosine": 0.999998,
+      "pass": true
+    },
+    {
+      "id": 10,
+      "title": "일·활동",
+      "dims": 768,
+      "cosine": 0.999998,
+      "pass": true
+    },
+    {
+      "id": 11,
+      "title": "커뮤니티지원",
+      "dims": 768,
+      "cosine": 0.999999,
+      "pass": true
+    },
+    {
+      "id": 12,
+      "title": "커뮤니티 참여방법",
+      "dims": 768,
+      "cosine": 1.000001,
+      "pass": true
+    },
+    {
+      "id": 13,
+      "title": "공유사무실 참여방법",
+      "dims": 768,
+      "cosine": 1,
+      "pass": true
+    },
+    {
+      "id": 14,
+      "title": "대관신청",
+      "dims": 768,
+      "cosine": 1,
+      "pass": true
+    }
+  ],
+  "qualityPass": true,
+  "quality": [
+    {
+      "query": "차를 어디에 세워요?",
+      "expect": [
+        "오시는 길"
+      ],
+      "ranking": [
+        {
+          "id": "7",
+          "title": "오시는 길",
+          "score": 0.4296
+        },
+        {
+          "id": "6",
+          "title": "시설안내",
+          "score": 0.1077
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "동아리 모임은 어떻게 하나요?",
+      "expect": [
+        "커뮤니티지원"
+      ],
+      "ranking": [
+        {
+          "id": "11",
+          "title": "커뮤니티지원",
+          "score": 0.3402
+        },
+        {
+          "id": "12",
+          "title": "커뮤니티 참여방법",
+          "score": 0.3254
+        },
+        {
+          "id": "14",
+          "title": "대관신청",
+          "score": 0.1682
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "5층에 사무실 쓰고 싶어요",
+      "expect": [
+        "공유사무실 참여방법"
+      ],
+      "ranking": [
+        {
+          "id": "13",
+          "title": "공유사무실 참여방법",
+          "score": 0.4264
+        },
+        {
+          "id": "6",
+          "title": "시설안내",
+          "score": 0.1938
+        },
+        {
+          "id": "2",
+          "title": "연혁",
+          "score": 0.155
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "센터는 언제 문을 열었나요?",
+      "expect": [
+        "연혁"
+      ],
+      "ranking": [
+        {
+          "id": "2",
+          "title": "연혁",
+          "score": 0.4213
+        },
+        {
+          "id": "10",
+          "title": "일·활동",
+          "score": 0.1986
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "강당 빌리는 비용 알려줘",
+      "expect": [
+        "대관신청"
+      ],
+      "ranking": [
+        {
+          "id": "14",
+          "title": "대관신청",
+          "score": 0.4274
+        },
+        {
+          "id": "2",
+          "title": "연혁",
+          "score": 0.1224
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "대관료 얼마예요?",
+      "expect": [
+        "대관신청"
+      ],
+      "ranking": [
+        {
+          "id": "14",
+          "title": "대관신청",
+          "score": 0.3608
+        },
+        {
+          "id": "5",
+          "title": "조직도",
+          "score": 0.1106
+        },
+        {
+          "id": "1",
+          "title": "인사말",
+          "score": 0.1003
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "어떤 부서가 있나요?",
+      "expect": [
+        "조직도"
+      ],
+      "ranking": [
+        {
+          "id": "5",
+          "title": "조직도",
+          "score": 0.5119
+        },
+        {
+          "id": "3",
+          "title": "비전/미션",
+          "score": 0.1194
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "요리실이나 강의실은 몇 층이에요?",
+      "expect": [
+        "시설안내"
+      ],
+      "ranking": [
+        {
+          "id": "6",
+          "title": "시설안내",
+          "score": 0.1822
+        },
+        {
+          "id": "2",
+          "title": "연혁",
+          "score": 0.1514
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "전화번호와 주소가 궁금해요",
+      "expect": [
+        "오시는 길"
+      ],
+      "ranking": [
+        {
+          "id": "7",
+          "title": "오시는 길",
+          "score": 0.6138
+        },
+        {
+          "id": "1",
+          "title": "인사말",
+          "score": 0.1108
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "인생 이모작 상담 받고 싶어요",
+      "expect": [
+        "생애설계진단/상담"
+      ],
+      "ranking": [
+        {
+          "id": "8",
+          "title": "생애설계진단/상담",
+          "score": 0.4176
+        },
+        {
+          "id": "10",
+          "title": "일·활동",
+          "score": 0.1565
+        },
+        {
+          "id": "1",
+          "title": "인사말",
+          "score": 0.1279
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "커뮤니티 활동 알려줘",
+      "expect": [
+        "커뮤니티 참여방법",
+        "커뮤니티지원"
+      ],
+      "ranking": [
+        {
+          "id": "12",
+          "title": "커뮤니티 참여방법",
+          "score": 0.5461
+        },
+        {
+          "id": "11",
+          "title": "커뮤니티지원",
+          "score": 0.354
+        },
+        {
+          "id": "10",
+          "title": "일·활동",
+          "score": 0.1386
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "비전이 뭐예요?",
+      "expect": [
+        "비전/미션"
+      ],
+      "ranking": [
+        {
+          "id": "3",
+          "title": "비전/미션",
+          "score": 0.4503
+        },
+        {
+          "id": "1",
+          "title": "인사말",
+          "score": 0.1108
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "일자리 프로그램 있나요?",
+      "expect": [
+        "일·활동"
+      ],
+      "ranking": [
+        {
+          "id": "10",
+          "title": "일·활동",
+          "score": 0.2475
+        },
+        {
+          "id": "5",
+          "title": "조직도",
+          "score": 0.1603
+        },
+        {
+          "id": "3",
+          "title": "비전/미션",
+          "score": 0.1583
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "알바 자리 있어요?",
+      "expect": [
+        "일·활동"
+      ],
+      "ranking": [
+        {
+          "id": "10",
+          "title": "일·활동",
+          "score": 0.1081
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "시니어클럽에서 구직 상담 받을 수 있나요?",
+      "expect": [
+        "일·활동",
+        "생애설계진단/상담"
+      ],
+      "ranking": [
+        {
+          "id": "8",
+          "title": "생애설계진단/상담",
+          "score": 0.3358
+        },
+        {
+          "id": "10",
+          "title": "일·활동",
+          "score": 0.2553
+        },
+        {
+          "id": "5",
+          "title": "조직도",
+          "score": 0.1202
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "사회공헌 활동 참여하고 싶어요",
+      "expect": [
+        "일·활동",
+        "커뮤니티지원"
+      ],
+      "ranking": [
+        {
+          "id": "10",
+          "title": "일·활동",
+          "score": 0.2737
+        },
+        {
+          "id": "3",
+          "title": "비전/미션",
+          "score": 0.1452
+        },
+        {
+          "id": "8",
+          "title": "생애설계진단/상담",
+          "score": 0.1108
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "자격증 딸 수 있는 강의 있나요?",
+      "expect": [
+        "인생설계"
+      ],
+      "ranking": [
+        {
+          "id": "9",
+          "title": "인생설계",
+          "score": 0.3277
+        },
+        {
+          "id": "8",
+          "title": "생애설계진단/상담",
+          "score": 0.257
+        },
+        {
+          "id": "14",
+          "title": "대관신청",
+          "score": 0.1997
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "배움터 수강 신청은 어떻게 해요?",
+      "expect": [
+        "인생설계"
+      ],
+      "ranking": [
+        {
+          "id": "9",
+          "title": "인생설계",
+          "score": 0.3967
+        },
+        {
+          "id": "8",
+          "title": "생애설계진단/상담",
+          "score": 0.2773
+        },
+        {
+          "id": "5",
+          "title": "조직도",
+          "score": 0.1301
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "동아리방이나 모임장소를 쓰고 싶어요",
+      "expect": [
+        "커뮤니티지원",
+        "커뮤니티 참여방법"
+      ],
+      "ranking": [
+        {
+          "id": "11",
+          "title": "커뮤니티지원",
+          "score": 0.5214
+        },
+        {
+          "id": "12",
+          "title": "커뮤니티 참여방법",
+          "score": 0.3484
+        },
+        {
+          "id": "2",
+          "title": "연혁",
+          "score": 0.1187
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "회의실 빌릴 수 있나요?",
+      "expect": [
+        "공유사무실 참여방법"
+      ],
+      "ranking": [
+        {
+          "id": "13",
+          "title": "공유사무실 참여방법",
+          "score": 0.5429
+        },
+        {
+          "id": "2",
+          "title": "연혁",
+          "score": 0.1129
+        },
+        {
+          "id": "6",
+          "title": "시설안내",
+          "score": 0.1097
+        }
+      ],
+      "pass": true
+    },
+    {
+      "query": "헬스장 있나요?",
+      "expect": [],
+      "ranking": [],
+      "pass": true
+    },
+    {
+      "query": "오늘 날씨 어때요?",
+      "expect": [],
+      "ranking": [],
+      "pass": true
+    },
+    {
+      "query": "맛집 추천해줘",
+      "expect": [],
+      "ranking": [],
+      "pass": true
+    }
+  ],
+  "startedAt": "2026-11-07T20:13:35.369Z",
+  "elapsedMs": 831
+}

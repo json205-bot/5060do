@@ -18,14 +18,23 @@ import {
   Megaphone,
   Menu,
   Phone,
+  Search,
   Users,
   Wallet,
   X,
 } from "lucide-react";
 import VersionSwitcher from "@/components/version-switcher";
 import ChatbotWidget from "@/components/ChatbotWidget";
+import { useJobs } from "@/hooks/useJobs";
 import { usePrograms } from "@/hooks/usePrograms";
 import { withBasePath } from "@/lib/basePath";
+import {
+  JOB_BOARD_TYPES,
+  JOB_REGIONS,
+  type Job,
+  type JobBoardFilter,
+  type JobRegionFilter,
+} from "@/lib/jobs";
 import {
   programPageSize,
   programStatuses,
@@ -156,6 +165,24 @@ export default function Home() {
     loadingMore,
     loadMore,
   } = usePrograms(statusFilter);
+  const [jobBoardFilter, setJobBoardFilter] = useState<JobBoardFilter>("전체");
+  const [jobRegionFilter, setJobRegionFilter] = useState<JobRegionFilter>("전체");
+  const [jobQuery, setJobQuery] = useState("");
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+  const {
+    jobs,
+    counts: jobCounts,
+    source: jobsSource,
+    total: jobTotal,
+    hasMore: jobsHasMore,
+    loading: jobsLoading,
+    loadingMore: jobsLoadingMore,
+    loadMore: loadMoreJobs,
+  } = useJobs({
+    boardType: jobBoardFilter,
+    region: jobRegionFilter,
+    query: jobQuery,
+  });
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stage, setStage] = useState<ModalStage>("detail");
   const [applicant, setApplicant] = useState<Applicant>({ name: "", phone: "" });
@@ -179,7 +206,13 @@ export default function Home() {
     [programs, selectedId],
   );
 
+  const selectedJob = useMemo<Job | null>(
+    () => jobs.find((job) => job.id === selectedJobId) ?? null,
+    [jobs, selectedJobId],
+  );
+
   const remainingCount = Math.max(0, total - programs.length);
+  const jobRemainingCount = Math.max(0, jobTotal - jobs.length);
 
   const handleStatusFilter = (status: StatusFilter) => {
     setStatusFilter(status);
@@ -219,6 +252,15 @@ export default function Home() {
     modalPanelRef.current?.scrollTo({ top: 0 });
     if (stage === "form") nameInputRef.current?.focus();
   }, [selected, stage]);
+
+  useEffect(() => {
+    if (!selectedJob) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedJobId(null);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [selectedJob]);
 
   useEffect(() => {
     let frame = 0;
@@ -925,30 +967,224 @@ export default function Home() {
           )}
         </section>
 
-        <section id="jobs" className="bg-white">
-          <div className="mx-auto w-full max-w-6xl px-4 py-10 md:px-6">
-            <div className="flex flex-col gap-5 rounded-3xl bg-brand-50 p-6 md:flex-row md:items-center md:justify-between md:p-8">
+        <section
+          id="jobs"
+          aria-labelledby="jobs-heading"
+          data-jobs-source={jobsSource}
+          className="bg-brand-50"
+        >
+          <div className="mx-auto w-full max-w-6xl px-4 py-10 md:px-6 md:py-14">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div className="flex items-start gap-4">
                 <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-700 text-white">
                   <Briefcase aria-hidden className="size-6" />
                 </span>
                 <div>
-                  <h2 className="text-2xl font-bold text-brand-900">채용정보</h2>
+                  <p className="text-base font-semibold text-brand-700">
+                    일자리 정보
+                  </p>
+                  <h2
+                    id="jobs-heading"
+                    className="mt-1 text-2xl font-bold text-slate-900 md:text-3xl"
+                  >
+                    채용정보
+                  </h2>
                   <p className="mt-1 text-base text-slate-900">
-                    신중년 맞춤 일자리와 구인 정보를 센터 게시판에서 확인하세요.
+                    신중년 맞춤 구인·취업지원·창업·사회공헌 소식을 한곳에서
+                    확인하세요.
                   </p>
                 </div>
               </div>
-              <a
-                href="https://www.5060do.or.kr/board/lifeFindJob"
-                target="_blank"
-                rel="noreferrer"
-                className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-brand-700 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-800"
-              >
-                채용정보 보기
-                <ArrowUpRight aria-hidden className="size-5" />
-              </a>
+              <div className="flex flex-col items-start gap-2 md:items-end">
+                <p
+                  role="status"
+                  aria-live="polite"
+                  data-testid="job-result-count"
+                  className="text-base text-slate-900"
+                >
+                  {jobBoardFilter === "전체" ? "전체" : jobBoardFilter}{" "}
+                  <span className="font-bold text-brand-700">{jobTotal}건</span>
+                </p>
+                <a
+                  href="https://www.5060do.or.kr/board/lifeFindJob"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-[48px] items-center gap-1 text-base font-bold text-brand-800 underline decoration-brand-300 underline-offset-4 hover:text-brand-900"
+                >
+                  원본 게시판
+                  <ArrowUpRight aria-hidden className="size-4" />
+                </a>
+              </div>
             </div>
+
+            <label className="mt-6 flex min-h-[56px] items-center gap-3 rounded-2xl border-2 border-slate-200 bg-white px-4 focus-within:border-brand-500">
+              <Search aria-hidden className="size-5 shrink-0 text-brand-700" />
+              <span className="sr-only">채용정보 검색</span>
+              <input
+                type="search"
+                data-testid="job-search"
+                value={jobQuery}
+                onChange={(event) => setJobQuery(event.target.value)}
+                placeholder="공고 제목이나 내용으로 검색"
+                className="w-full bg-transparent py-3 text-base text-slate-900 outline-none placeholder:text-slate-500"
+              />
+            </label>
+
+            <div
+              role="group"
+              aria-label="채용정보 분류"
+              data-testid="job-board-chips"
+              className="mt-4 flex flex-wrap items-center gap-2"
+            >
+              {(["전체", ...JOB_BOARD_TYPES] as const).map((boardType) => {
+                const active = jobBoardFilter === boardType;
+                return (
+                  <button
+                    key={boardType}
+                    type="button"
+                    data-testid={`job-board-chip-${boardType}`}
+                    aria-pressed={active}
+                    onClick={() => setJobBoardFilter(boardType)}
+                    className={`inline-flex min-h-[48px] items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
+                      active
+                        ? "border-brand-700 bg-brand-700 text-white"
+                        : "border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    <span>{boardType}</span>
+                    <span
+                      className={`text-sm font-bold ${
+                        active ? "text-white" : "text-slate-700"
+                      }`}
+                    >
+                      [{jobCounts.board[boardType]}]
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div
+              role="group"
+              aria-label="지역 필터"
+              data-testid="job-region-chips"
+              className="mt-3 flex flex-wrap items-center gap-2"
+            >
+              {(["전체", ...JOB_REGIONS] as const).map((region) => {
+                const active = jobRegionFilter === region;
+                return (
+                  <button
+                    key={region}
+                    type="button"
+                    data-testid={`job-region-chip-${region}`}
+                    aria-pressed={active}
+                    onClick={() => setJobRegionFilter(region)}
+                    className={`inline-flex min-h-[48px] items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
+                      active
+                        ? "border-brand-700 bg-brand-700 text-white"
+                        : "border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    <span>{region === "기타" ? "기타 지역" : region}</span>
+                    <span
+                      className={`text-sm font-bold ${
+                        active ? "text-white" : "text-slate-700"
+                      }`}
+                    >
+                      [{jobCounts.region[region]}]
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {jobsLoading ? (
+              <p
+                role="status"
+                aria-live="polite"
+                className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-lg font-semibold text-slate-900"
+              >
+                채용정보를 불러오는 중입니다.
+              </p>
+            ) : jobs.length === 0 ? (
+              <p className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-lg font-semibold text-slate-900">
+                조건에 맞는 채용정보가 없습니다.
+              </p>
+            ) : (
+              <ul
+                data-testid="job-list"
+                className="mt-6 divide-y divide-slate-200 overflow-hidden rounded-3xl border border-slate-200 bg-white"
+              >
+                {jobs.map((job) => (
+                  <li key={job.id}>
+                    <button
+                      type="button"
+                      data-testid="job-card"
+                      data-region={job.region}
+                      data-board-type={job.boardType}
+                      aria-haspopup="dialog"
+                      onClick={() => setSelectedJobId(job.id)}
+                      className="flex w-full flex-col gap-2 px-4 py-4 text-left transition-colors hover:bg-brand-50 md:flex-row md:items-center md:justify-between md:px-6"
+                    >
+                      <span className="flex min-w-0 flex-col gap-2">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-lg bg-brand-100 px-2.5 py-1 text-sm font-bold text-brand-800">
+                            {job.boardType}
+                          </span>
+                          <span className="text-lg font-semibold text-slate-900">
+                            {job.title}
+                          </span>
+                        </span>
+                        <span className="flex flex-wrap items-center gap-3 text-base text-slate-900">
+                          <span className="inline-flex items-center gap-1">
+                            <CalendarDays
+                              aria-hidden
+                              className="size-4 text-brand-600"
+                            />
+                            {job.date}
+                          </span>
+                          <span className="inline-flex items-center gap-1">
+                            <MapPin
+                              aria-hidden
+                              className="size-4 text-brand-600"
+                            />
+                            {job.region === "부산" ? "부산" : "기타 지역"}
+                          </span>
+                        </span>
+                      </span>
+                      <ChevronRight
+                        aria-hidden
+                        className="size-5 shrink-0 text-slate-500"
+                      />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {!jobsLoading && jobsHasMore && (
+              <div className="mt-6 flex flex-col items-center gap-3">
+                <button
+                  type="button"
+                  data-testid="load-more-jobs"
+                  onClick={loadMoreJobs}
+                  disabled={jobsLoadingMore}
+                  aria-busy={jobsLoadingMore}
+                  className="flex min-h-[56px] w-full max-w-md items-center justify-center gap-2 rounded-2xl border-2 border-brand-700 bg-white px-6 text-lg font-bold text-brand-800 transition-colors hover:bg-brand-50 disabled:cursor-wait disabled:border-slate-300 disabled:text-slate-700"
+                >
+                  {jobsLoadingMore
+                    ? "채용정보를 불러오는 중입니다"
+                    : `채용정보 더 보기 (+${Math.min(12, jobRemainingCount)}건)`}
+                  <ChevronDown aria-hidden className="size-5" />
+                </button>
+                <p
+                  data-testid="jobs-shown-count"
+                  className="text-base text-slate-900"
+                >
+                  {jobs.length}건 표시 중 · 남은 채용정보 {jobRemainingCount}건
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -1536,6 +1772,109 @@ export default function Home() {
                 )}
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {selectedJob && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 p-0 sm:items-center sm:p-6"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setSelectedJobId(null);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="job-dialog-title"
+            data-testid="job-detail-modal"
+            className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-3xl sm:p-7"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-800">
+                    {selectedJob.boardType}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-800">
+                    {selectedJob.region === "부산" ? "부산" : "기타 지역"}
+                  </span>
+                </div>
+                <h2
+                  id="job-dialog-title"
+                  className="mt-3 text-2xl font-bold leading-snug text-slate-900"
+                >
+                  {selectedJob.title}
+                </h2>
+              </div>
+              <button
+                type="button"
+                data-testid="job-detail-close"
+                onClick={() => setSelectedJobId(null)}
+                aria-label="채용정보 상세 창 닫기"
+                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200"
+              >
+                <X aria-hidden className="size-6" />
+              </button>
+            </div>
+
+            <dl className="mt-5 grid grid-cols-1 gap-3 rounded-2xl bg-canvas p-4 text-base sm:grid-cols-2">
+              <div className="flex items-start gap-2">
+                <CalendarDays
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-brand-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-900">등록일</dt>
+                  <dd className="font-semibold text-slate-800">
+                    {selectedJob.date || "정보 없음"}
+                  </dd>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <MapPin
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-brand-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-900">지역</dt>
+                  <dd className="font-semibold text-slate-800">
+                    {selectedJob.region === "부산" ? "부산" : "기타 지역"}
+                  </dd>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <Users
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-brand-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-900">작성자</dt>
+                  <dd className="font-semibold text-slate-800">
+                    {selectedJob.author || "관리자"}
+                  </dd>
+                </div>
+              </div>
+            </dl>
+
+            <div className="mt-5 rounded-2xl border border-slate-200 p-4">
+              <h3 className="text-base font-bold text-slate-900">공고 내용</h3>
+              <div className="mt-2 whitespace-pre-line text-base leading-relaxed text-slate-800">
+                {selectedJob.content ||
+                  "상세 내용은 원문 게시판에서 확인하세요."}
+              </div>
+            </div>
+
+            <a
+              href={selectedJob.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              data-testid="job-source-link"
+              className="mt-5 flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-brand-700 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-800"
+            >
+              원문 게시판에서 보기
+              <ArrowUpRight aria-hidden className="size-5" />
+            </a>
           </div>
         </div>
       )}

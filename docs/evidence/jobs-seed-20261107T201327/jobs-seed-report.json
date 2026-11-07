@@ -1,0 +1,67 @@
+{
+  "ticket": "5060DO-20261108-0505",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "target": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/jobs",
+  "sourceRows": 2034,
+  "chunkSize": 100,
+  "upserted": 2034,
+  "failed": 0,
+  "failedRecords": [],
+  "expected": {
+    "total": 2034,
+    "busan": 2011,
+    "other": 23
+  },
+  "remote": {
+    "total": 2034,
+    "busan": 2011,
+    "other": 23
+  },
+  "totalPass": true,
+  "regionPass": true,
+  "samplePass": true,
+  "samples": [
+    {
+      "id": 2171,
+      "title": "(공공) 한전KPS(주) 부산사업소 '26년 3차 단기노무원 모집(~7.21)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": 1467,
+      "title": "(공공) 2026년도 환경공무직 채용 공고(~10/17)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": 448,
+      "title": "(공공)대연수목전시원 및 가야전포대로 관리 공무직 대체 기간제근로자 채용 공고(3/10~18)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": 720,
+      "title": "(공공) 2025년 산사태현장예방단 채용 공고(4/28~4/30)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": 2462,
+      "title": "(민간)(사)한국시각장애인연합회부산광역시지부부산진구지회 근로지원인(장애인근로보조) 모집(~11/7)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    }
+  ],
+  "startedAt": "2026-11-07T20:13:27.363Z",
+  "elapsedMs": 2834
+}

@@ -215,5 +215,21 @@ status: done
 | 검증 | typecheck Exit 0, lint Exit 0, build Exit 0, Vercel 루트 E2E **80/80 PASS**, 실배포 검증 **14/14 PASS**(로컬 프리뷰), 임베딩 **14/14·질의 16/16 PASS**, 챗봇 RAG 실화면 확인 |
 | 증거 | `docs/evidence/rag-20261108/`, `docs/evidence/rag-embeddings-20261107T170228/`, `docs/evidence/vercel-live-20261107T170856/` |
 
+## 19. 채용정보 2,034건 수파베이스 적재·화면 연동·RAG 동의어 사전 보강 (2026-11-08 05:05)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 게시판 2,034건을 수파베이스 `jobs`에 적재하고 메인 채용정보 섹션을 실데이터로 바꾸며, 신중년 FAQ 어휘를 RAG 동의어 사전에 추가한다 |
+| 스키마 | `docs/sql/setup_jobs.sql` — `public.jobs(id bigint PK, board_type, title, date, company, author, content, region, source_url)`, 날짜·직종·지역 인덱스, RLS 공개 읽기, anon/authenticated SELECT |
+| DDL 적용 | REST로는 불가해 NAS `postgres-common` psql → pooler(`aws-0-ap-northeast-2.pooler.supabase.com`) 경로로 1회 적용(2026-11-08) |
+| 적재 | `scripts/seed-supabase-jobs.mjs`(`npm run data:jobs`) — 100건 배치 upsert, 21배치, 총 2,034건·부산 2,011·기타 23 검증 |
+| 지역 판정 | `deriveJobRegion()` — 부산/부산 구 명시 또는 무표기면 부산, 다른 시·도 명시면 기타. 시드와 화면이 같은 함수를 쓴다 |
+| 화면 | `src/lib/jobs.ts` + `src/hooks/useJobs.ts` + `page.tsx` — 직종 칩, 지역 칩, 제목·내용 검색, 12건 페이징, 상세 모달·원문 링크. 5초 타임아웃 후 로컬 JSON 지연 청크로 폴백 |
+| RAG 사전 | `src/lib/embedding.ts` — 일자리(구직·알바·시니어클럽·사회공헌), 프로그램안내/인생설계(자격증·배움터·수강·강의), 커뮤니티지원(동아리방·모임장소), 공유사무실(회의실) 추가. 모델 `5060do-vocab-768-v4` |
+| 임베딩 검증 | `npm run data:embeddings` — 14/14 재적재, 코사인 일치, 자연어 질의 **23/23 PASS** |
+| 배포 검증 | `scripts/verify-vercel-live.mjs` — 채용정보 실데이터 바인딩·지역/직종 필터·상세 모달 검사 추가, **21/21 PASS** |
+| 검증 | typecheck Exit 0, lint Exit 0, build Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, 합계 2,034건 일치 |
+| 증거 | `docs/evidence/jobs-seed-20261107T201327/`, `docs/evidence/rag-embeddings-20261107T201335/`, `docs/evidence/vercel-live-20261107T201852/`, `docs/evidence/jobs-20261108-*.log` |
+
 
 
