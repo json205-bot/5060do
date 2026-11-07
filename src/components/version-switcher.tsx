@@ -1,14 +1,15 @@
 import type { ReactNode } from "react";
+import { withBasePath } from "@/lib/basePath";
 
 type VersionSwitcherProps = {
   current: "modern" | "classic";
 };
 
-// Hard-coded because next/navigation's basePath is inlined at build time and
-// these two entries must survive a full page load between the exported bundles.
+// Paths come from the build-time NEXT_PUBLIC_BASE_PATH so a full page load
+// keeps working on both the NAS sub-path and the Vercel root deployment.
 const versionPaths = {
-  classic: "/5060do/classic/",
-  modern: "/5060do/",
+  classic: withBasePath("/classic/"),
+  modern: withBasePath("/"),
 } as const;
 
 const options: { key: keyof typeof versionPaths; label: string; suffix: ReactNode }[] = [

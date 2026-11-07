@@ -7,6 +7,7 @@ import {
   defaultProgramCounts,
   fetchProgramCounts,
   fetchProgramPage,
+  orderOpenProgramsByImminence,
   programPageSize,
   type Program,
   type ProgramCounts,
@@ -119,7 +120,9 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
         if (cancelled) return;
         setPage({
           filter: statusFilter,
-          items: rows,
+          // Only the first page needs the imminent-seat reorder: later pages
+          // are appended below the already displayed cards.
+          items: orderOpenProgramsByImminence(rows),
           pages: 1,
         });
       })

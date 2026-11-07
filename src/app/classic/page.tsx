@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import VersionSwitcher from "@/components/version-switcher";
+import { withBasePath } from "@/lib/basePath";
 import {
   CLASSIC_CENTER,
   classicFacilities,
@@ -164,12 +165,12 @@ export default function ClassicPage() {
 
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
           <a
-            href="/5060do/classic/"
+            href={withBasePath("/classic/")}
             className="flex min-w-0 shrink-0 items-center gap-3"
             aria-label="원본 메뉴형 홈으로 이동"
           >
             <Image
-              src="/5060do/assets/logo_pc.png"
+              src={withBasePath("/assets/logo_pc.png")}
               alt="오륙도인생후반전지원센터"
               width={394}
               height={73}
@@ -177,7 +178,7 @@ export default function ClassicPage() {
               className="hidden h-10 w-auto md:block"
             />
             <Image
-              src="/5060do/assets/logo_mobile.png"
+              src={withBasePath("/assets/logo_mobile.png")}
               alt="오륙도인생후반전지원센터"
               width={394}
               height={73}
@@ -704,7 +705,7 @@ export default function ClassicPage() {
       <footer className="border-t border-slate-200 bg-[#0b2239] text-sky-100">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-8 md:px-6">
           <Image
-            src="/5060do/assets/logo_footer.png"
+            src={withBasePath("/assets/logo_footer.png")}
             alt="오륙도인생후반전지원센터"
             width={194}
             height={36}

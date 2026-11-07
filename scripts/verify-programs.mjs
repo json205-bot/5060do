@@ -560,6 +560,18 @@ async function main() {
         firstPageCounts["대기접수"] === 7,
       firstPageCounts,
     );
+    const firstPageOpenRatios = pageOne.progress
+      .filter((_, index) => pageOne.statuses[index] === "접수중")
+      .map((item) => item.ratio);
+    const firstPageOpenSorted = firstPageOpenRatios.every(
+      (ratio, index) => index === 0 || firstPageOpenRatios[index - 1] <= ratio,
+    );
+    results.firstPageOpenRatios = firstPageOpenRatios;
+    check(
+      "첫 화면 접수중 잔여석 임박순",
+      firstPageOpenRatios.length === 7 && firstPageOpenSorted,
+      { count: firstPageOpenRatios.length, ratios: firstPageOpenRatios },
+    );
     await evaluate(cdp, sessionId, click("load-more-programs"));
     const secondPageReady = await waitForCondition(
       cdp,
@@ -939,6 +951,43 @@ async function main() {
       { chip: fallbackTotal?.count ?? fallbackChipTotal?.count, expected: Number(process.env.LOCAL_TOTAL ?? 47) },
     );
     await cdp.send("Network.setBlockedURLs", { urls: [] }, sessionId);
+
+    // Hold every Supabase request open so only the 5s AbortController timeout
+    // can release the UI, then measure how long the local fallback takes.
+    const timeoutStartedAt = Date.now();
+    await cdp.send(
+      "Fetch.enable",
+      { patterns: [{ urlPattern: "*supabase.co*" }] },
+      sessionId,
+    );
+    await loadAt(1280, 900, false);
+    const timeoutDeadline = Date.now() + 12000;
+    let timeoutChipTotal = null;
+    while (Date.now() < timeoutDeadline) {
+      const chips = await evaluate(cdp, sessionId, CHIP_STATE);
+      const total = chips.find((chip) => chip.key === "전체");
+      if ((total?.count ?? -1) === Number(process.env.LOCAL_TOTAL ?? 47)) {
+        timeoutChipTotal = total;
+        break;
+      }
+      await sleep(250);
+    }
+    const timeoutElapsedMs = Date.now() - timeoutStartedAt;
+    const timeoutSource = await readProgramsSource(cdp, sessionId);
+    await cdp.send("Fetch.disable", {}, sessionId);
+    results.timeoutGuard = {
+      elapsedMs: timeoutElapsedMs,
+      source: timeoutSource,
+      chipTotal: timeoutChipTotal?.count ?? null,
+    };
+    check(
+      "수파베이스 응답 지연 시 5초 타임아웃 폴백",
+      timeoutSource === "local" &&
+        (timeoutChipTotal?.count ?? -1) === Number(process.env.LOCAL_TOTAL ?? 47) &&
+        timeoutElapsedMs >= 4500 &&
+        timeoutElapsedMs <= 11000,
+      results.timeoutGuard,
+    );
 
     check(
       "콘솔 오류 0건(실시간 구간)",

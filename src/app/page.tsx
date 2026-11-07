@@ -25,6 +25,7 @@ import {
 import VersionSwitcher from "@/components/version-switcher";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import { usePrograms } from "@/hooks/usePrograms";
+import { withBasePath } from "@/lib/basePath";
 import {
   programPageSize,
   programStatuses,
@@ -355,7 +356,7 @@ export default function Home() {
             aria-label="오륙도인생후반전지원센터 홈으로 이동"
           >
             <Image
-              src="/5060do/assets/logo_pc.png"
+              src={withBasePath("/assets/logo_pc.png")}
               alt="오륙도인생후반전지원센터"
               width={394}
               height={73}
@@ -363,7 +364,7 @@ export default function Home() {
               className="hidden h-10 w-auto md:block"
             />
             <Image
-              src="/5060do/assets/logo_mobile.png"
+              src={withBasePath("/assets/logo_mobile.png")}
               alt="오륙도인생후반전지원센터"
               width={394}
               height={73}
@@ -989,7 +990,7 @@ export default function Home() {
       <footer className="border-t border-slate-200 bg-brand-900 text-brand-100">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-8 md:px-6">
           <Image
-            src="/5060do/assets/logo_footer.png"
+            src={withBasePath("/assets/logo_footer.png")}
             alt="오륙도인생후반전지원센터"
             width={194}
             height={36}

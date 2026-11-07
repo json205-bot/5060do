@@ -28,6 +28,10 @@ export type ProgramSource = "local" | "supabase";
 
 export const programPageSize = 30;
 
+// A stalled Supabase call must not block the first paint, so every request is
+// aborted after this window and the hook falls back to the local dataset.
+export const programRequestTimeoutMs = 5000;
+
 export const defaultProgramCounts: ProgramCounts = {
   전체: 667,
   접수중: 7,
@@ -158,32 +162,54 @@ export function comparePrograms(a: Program, b: Program) {
 async function countPrograms(
   client: SupabaseClient,
   status: ProgramStatus | null,
+  signal: AbortSignal,
 ): Promise<number> {
   let query = client
     .from("programs")
     .select("id", { count: "exact", head: true });
   if (status) query = query.eq("status", status);
 
-  const { count, error } = await query;
+  const { count, error } = await query.abortSignal(signal);
   if (error) throw new Error(error.message);
   return count ?? 0;
 }
 
+const withRequestTimeout = async <T>(
+  run: (signal: AbortSignal) => Promise<T>,
+): Promise<T> => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), programRequestTimeoutMs);
+  try {
+    return await run(controller.signal);
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error(
+        `Supabase request aborted after ${programRequestTimeoutMs}ms timeout`,
+      );
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
 export async function fetchProgramCounts(
   client: SupabaseClient,
 ): Promise<ProgramCounts> {
-  const [total, ...byStatus] = await Promise.all([
-    countPrograms(client, null),
-    ...programStatuses.map((status) => countPrograms(client, status)),
-  ]);
+  return withRequestTimeout(async (signal) => {
+    const [total, ...byStatus] = await Promise.all([
+      countPrograms(client, null, signal),
+      ...programStatuses.map((status) => countPrograms(client, status, signal)),
+    ]);
 
-  return {
-    전체: total,
-    접수중: byStatus[0],
-    접수예정: byStatus[1],
-    대기접수: byStatus[2],
-    마감: byStatus[3],
-  };
+    return {
+      전체: total,
+      접수중: byStatus[0],
+      접수예정: byStatus[1],
+      대기접수: byStatus[2],
+      마감: byStatus[3],
+    };
+  });
 }
 
 export type ProgramPageParams = {
@@ -196,19 +222,43 @@ export async function fetchProgramPage(
   client: SupabaseClient,
   { status, offset, limit = programPageSize }: ProgramPageParams,
 ): Promise<Program[]> {
-  let query = client.from("programs").select(programListColumns);
-  if (status) query = query.eq("status", status);
+  return withRequestTimeout(async (signal) => {
+    let query = client.from("programs").select(programListColumns);
+    if (status) query = query.eq("status", status);
 
-  // status_order is maintained by the seed script so server paging already
-  // yields the senior-facing order (접수중 → 접수예정 → 대기접수 → 마감).
-  // id is only a deterministic tie-breaker for stable range paging.
-  const { data, error } = await query
-    .order("status_order", { ascending: true })
-    .order("id", { ascending: false })
-    .range(offset, offset + limit - 1);
+    // status_order is maintained by the seed script so server paging already
+    // yields the senior-facing order (접수중 → 접수예정 → 대기접수 → 마감).
+    // id is only a deterministic tie-breaker for stable range paging.
+    const { data, error } = await query
+      .order("status_order", { ascending: true })
+      .order("id", { ascending: false })
+      .range(offset, offset + limit - 1)
+      .abortSignal(signal);
 
-  if (error) throw new Error(error.message);
-  if (!Array.isArray(data)) return [];
+    if (error) throw new Error(error.message);
+    if (!Array.isArray(data)) return [];
 
-  return (data as unknown as SupabaseProgramRow[]).map(mapSupabaseProgram);
+    return (data as unknown as SupabaseProgramRow[]).map(mapSupabaseProgram);
+  });
+}
+
+// Server paging only knows status_order, so open courses arrive as
+// "newest first". Reorder the 접수중 group of a page by remaining seats so the
+// classes closest to closing are shown first; other groups keep server order
+// and blob the appended [더보기] pages untouched.
+export function orderOpenProgramsByImminence(programs: Program[]): Program[] {
+  const open = programs.filter((program) => program.status === "접수중");
+  if (open.length < 2) return programs;
+
+  const ordered = [...open].sort(
+    (a, b) =>
+      remainingRatio(a) - remainingRatio(b) ||
+      parseApplyEnd(a.applyPeriod).localeCompare(parseApplyEnd(b.applyPeriod)) ||
+      b.id - a.id,
+  );
+
+  let cursor = 0;
+  return programs.map((program) =>
+    program.status === "접수중" ? ordered[cursor++] : program,
+  );
 }

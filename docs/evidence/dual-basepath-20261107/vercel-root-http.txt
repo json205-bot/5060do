@@ -1,0 +1,4 @@
+﻿root=200
+classic=200
+asset=200 size=32173
+js=/_next/static/chunks/1xnjc-cpp52r1.js status=200

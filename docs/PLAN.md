@@ -147,3 +147,15 @@ status: done
 | 검증 | typecheck·lint·build Exit 0, NAS HTTP 200, `verify-programs.mjs` **68/68 PASS**. 초기 GET gzip 2,900B·원본 12,239B, 더보기 후 기존 30건 순서 불변 |
 | 증거 | `docs/evidence/status-order-20261107/`, `docs/evidence/seed-status-order-20261107.log`, `docs/logs/2026 11 07 1446 로그 5060do 상태 정렬 status_order 도입 및 칩 카운트 깜빡임 제거.md` |
 
+## 14. Vercel·NAS 듀얼 basePath·접수중 임박순·5초 타임아웃 가드 (2026-11-07 15:20)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | Vercel 루트 배포와 NAS `/5060do` 배포를 한 코드베이스로 지원하고, 첫 페이지 접수중 강좌를 마감 임박순으로 보여주며, 수파베이스 무응답 시 5초 안에 로컬 폴백 |
+| basePath | `next.config.ts` — `NEXT_PUBLIC_BASE_PATH ?? (VERCEL ? "" : "/5060do")`, 해석값을 `env`로 클라이언트에 인라인. `src/lib/basePath.ts`의 `withBasePath()`로 로고·클래식 홈·버전 전환 링크 통일 |
+| 정렬 | `orderOpenProgramsByImminence()` — 첫 페이지의 접수중 그룹만 잔여 비율 오름차순(동률은 신청 마감일·id). [더보기]는 서버 순서 append 유지 |
+| 타임아웃 | `programRequestTimeoutMs = 5000` + `withRequestTimeout()` AbortController. 카운트 5건은 공유 signal, 페이지 조회는 개별 signal |
+| Vercel 검증 | `VERCEL=1 npm run build` Exit 0, `out/index.html`에 `/5060do` 0건, 루트 정적 서버에서 `/`·`/classic/`·로고·JS 200 (실배포는 미실시) |
+| NAS 검증 | NAS 모드 빌드 Exit 0, 배포 37파일, `/5060do/`·`/classic/`·로고 HTTP 200, `verify-programs.mjs` **70/70 PASS**, 타임아웃 폴백 5,230ms 실측 |
+| 증거 | `docs/evidence/dual-basepath-20261107/` |
+
