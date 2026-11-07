@@ -120,3 +120,16 @@ status: done
 | 모달·폼 | 입력 52px·18px(모바일 자동 확대 차단), 확인/결제 버튼 56px, 중간 톤 회색 본문 제거 |
 | 검증 | typecheck·lint·build Exit 0, 실서버 HTTP 200·리소스 404 0건, `verify-style-guide.mjs` 88/88 PASS, `verify-programs.mjs` 35/35, `verify-viewports.mjs` 회귀 PASS |
 | 증거 | `docs/evidence/styleguide-20261107/` |
+
+## 12. 수파베이스 서버 사이드 페이징(Range Query)·상태별 카운트 분리 (2026-11-07 13:35)
+
+| 구분 | 내용 |
+|---|---|
+| 목표 | 667건 전체(267KB 원본)를 한 번에 내려받던 구조를 초기 30건 범위 조회로 바꿔 초기 전송량 90% 이상 절감 |
+| 카운트 쿼리 | `src/lib/programs.ts` `fetchProgramCounts()` — `select("id", {count:"exact", head:true})` 5회(전체+4상태)로 본문 없이 건수만 조회. 칩 카운터에 즉시 반영 |
+| 페이징 조회 | `fetchProgramPage()` — 선별 컬럼 + `order(status.desc, created_at.desc, id.asc)` + `.range(offset, offset+29)`. 서버 정렬은 페이징 결정성만 보장하고 최종 표시 순서는 `comparePrograms()`로 클라이언트 재정렬 |
+| 더보기 | `src/hooks/usePrograms.ts` — 30건씩 증분 페칭·id 중복 제거 후 병합, 총 건수 도달 시 버튼 자동 숨김. 상태 칩 전환 시 1페이지부터 재조회 |
+| 폴백 | 수파베이스 카운트/목록 실패 시 로컬 `programs.json` 47건을 같은 30건 페이징 규칙으로 사용 |
+| 검증 | typecheck·lint·build Exit 0, NAS 배포 HTTP 200, `verify-programs.mjs` 65/65 PASS. 초기 목록 GET 2,560B(gzip)·11,347B(raw) — 원본 267,043B 대비 95.8% 절감 |
+| 증거 | `docs/evidence/programs-paging-20261107/` |
+

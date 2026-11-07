@@ -26,12 +26,12 @@ import VersionSwitcher from "@/components/version-switcher";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import { usePrograms } from "@/hooks/usePrograms";
 import {
+  programPageSize,
   programStatuses,
   type Program,
   type ProgramStatus,
+  type StatusFilter,
 } from "@/lib/programs";
-
-type StatusFilter = "전체" | ProgramStatus;
 
 type Applicant = {
   name: string;
@@ -41,8 +41,6 @@ type Applicant = {
 type ModalStage = "detail" | "form" | "done";
 
 type ViewMode = "card" | "list";
-
-const PAGE_SIZE = 30;
 
 const statusStyles: Record<
   ProgramStatus,
@@ -74,13 +72,6 @@ const statusStyles: Record<
   },
 };
 
-const statusRank: Record<ProgramStatus, number> = {
-  접수중: 0,
-  접수예정: 1,
-  대기접수: 2,
-  마감: 3,
-};
-
 const actionLabels: Record<ProgramStatus, string> = {
   접수중: "수강신청",
   접수예정: "접수예정",
@@ -88,45 +79,10 @@ const actionLabels: Record<ProgramStatus, string> = {
   마감: "모집 마감",
 };
 
-const parseApplyStart = (period: string) =>
-  (period.split("~")[0] ?? "").trim();
-const parseApplyEnd = (period: string) => {
-  const end = (period.split("~")[1] ?? "").trim();
-  return end || parseApplyStart(period);
-};
 const remainingSeats = (program: Program) =>
   Math.max(0, program.capacity - (program.enrolled ?? 0));
-const remainingRatio = (program: Program) =>
-  program.capacity > 0
-    ? Math.max(0, program.capacity - (program.enrolled ?? 0)) / program.capacity
-    : 1;
 const isApplicable = (status: ProgramStatus) =>
   status === "접수중" || status === "대기접수";
-
-function comparePrograms(a: Program, b: Program) {
-  const rank = statusRank[a.status] - statusRank[b.status];
-  if (rank !== 0) return rank;
-  switch (a.status) {
-    case "접수중":
-      return (
-        remainingRatio(a) - remainingRatio(b) ||
-        parseApplyEnd(a.applyPeriod).localeCompare(parseApplyEnd(b.applyPeriod))
-      );
-    case "접수예정":
-      return parseApplyStart(a.applyPeriod).localeCompare(
-        parseApplyStart(b.applyPeriod),
-      );
-    case "대기접수":
-      return (
-        (b.enrolled ?? 0) - (a.enrolled ?? 0) ||
-        parseApplyEnd(a.applyPeriod).localeCompare(parseApplyEnd(b.applyPeriod))
-      );
-    default:
-      return parseApplyEnd(b.applyPeriod).localeCompare(
-        parseApplyEnd(a.applyPeriod),
-      );
-  }
-}
 
 const navItems = [
   { label: "교육신청", href: "#programs" },
@@ -185,7 +141,17 @@ const formatPhone = (value: string) => {
 };
 
 export default function Home() {
-  const { programs, source: programsSource } = usePrograms();
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("전체");
+  const {
+    programs,
+    counts,
+    source: programsSource,
+    total,
+    hasMore,
+    loading,
+    loadingMore,
+    loadMore,
+  } = usePrograms(statusFilter);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stage, setStage] = useState<ModalStage>("detail");
   const [applicant, setApplicant] = useState<Applicant>({ name: "", phone: "" });
@@ -194,9 +160,7 @@ export default function Home() {
   const [approvedAmount, setApprovedAmount] = useState<number | null>(null);
   const [activeSection, setActiveSection] = useState<string>("home");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("전체");
   const [viewMode, setViewMode] = useState<ViewMode>("card");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const modalPanelRef = useRef<HTMLDivElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -211,37 +175,10 @@ export default function Home() {
     [programs, selectedId],
   );
 
-  const statusCounts = useMemo<Record<StatusFilter, number>>(() => {
-    const counts: Record<StatusFilter, number> = {
-      전체: programs.length,
-      접수중: 0,
-      접수예정: 0,
-      대기접수: 0,
-      마감: 0,
-    };
-    for (const program of programs) {
-      counts[program.status] += 1;
-    }
-    return counts;
-  }, [programs]);
-
-  const visiblePrograms = useMemo(() => {
-    const filtered =
-      statusFilter === "전체"
-        ? programs
-        : programs.filter((program) => program.status === statusFilter);
-    return [...filtered].sort(comparePrograms);
-  }, [programs, statusFilter]);
-
-  const shownPrograms = useMemo(
-    () => visiblePrograms.slice(0, visibleCount),
-    [visiblePrograms, visibleCount],
-  );
-  const remainingCount = Math.max(0, visiblePrograms.length - shownPrograms.length);
+  const remainingCount = Math.max(0, total - programs.length);
 
   const handleStatusFilter = (status: StatusFilter) => {
     setStatusFilter(status);
-    setVisibleCount(PAGE_SIZE);
   };
 
   const closeModal = useCallback(() => {
@@ -547,7 +484,7 @@ export default function Home() {
               >
                 {statusFilter === "전체" ? "전체" : statusFilter}{" "}
                 <span className="font-bold text-brand-700">
-                  {visiblePrograms.length}개
+                  {total}개
                 </span>{" "}
                 강좌
               </p>
@@ -626,23 +563,31 @@ export default function Home() {
                       active ? "text-white" : "text-slate-900"
                     }`}
                   >
-                    [{statusCounts[status]}]
+                    [{counts[status]}]
                   </span>
                 </button>
               );
             })}
           </div>
 
-          {visiblePrograms.length === 0 ? (
+          {total === 0 && !loading ? (
             <p className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-lg font-semibold text-slate-900">
               해당 상태의 강좌가 없습니다.
+            </p>
+          ) : programs.length === 0 ? (
+            <p
+              role="status"
+              aria-live="polite"
+              className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-lg font-semibold text-slate-900"
+            >
+              강좌를 불러오는 중입니다.
             </p>
           ) : viewMode === "card" ? (
             <ul
               data-testid="program-grid"
               className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
             >
-              {shownPrograms.map((program) => {
+              {programs.map((program) => {
                 const style = statusStyles[program.status];
                 const applicable = isApplicable(program.status);
                 const waiting = program.status === "대기접수";
@@ -819,7 +764,7 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
-                    {shownPrograms.map((program) => (
+                    {programs.map((program) => (
                       <tr
                         key={program.id}
                         data-testid="program-row"
@@ -884,7 +829,7 @@ export default function Home() {
                 data-testid="program-list-mobile"
                 className="mt-6 grid gap-3 lg:hidden"
               >
-                {shownPrograms.map((program) => (
+                {programs.map((program) => (
                   <li key={program.id}>
                     <button
                       type="button"
@@ -951,22 +896,26 @@ export default function Home() {
             </>
           )}
 
-          {visiblePrograms.length > 0 && remainingCount > 0 && (
+          {!loading && total > 0 && hasMore && (
             <div className="mt-8 flex flex-col items-center gap-3">
               <button
                 type="button"
                 data-testid="load-more-programs"
-                onClick={() => setVisibleCount((current) => current + PAGE_SIZE)}
-                className="flex min-h-[56px] w-full max-w-md items-center justify-center gap-2 rounded-2xl border-2 border-brand-700 bg-white px-6 text-lg font-bold text-brand-800 transition-colors hover:bg-brand-50"
+                onClick={loadMore}
+                disabled={loadingMore}
+                aria-busy={loadingMore}
+                className="flex min-h-[56px] w-full max-w-md items-center justify-center gap-2 rounded-2xl border-2 border-brand-700 bg-white px-6 text-lg font-bold text-brand-800 transition-colors hover:bg-brand-50 disabled:cursor-wait disabled:border-slate-300 disabled:text-slate-700"
               >
-                더 많은 강좌 보기 (+{Math.min(PAGE_SIZE, remainingCount)}개)
+                {loadingMore
+                  ? "강좌를 불러오는 중입니다"
+                  : `더 많은 강좌 보기 (+${Math.min(programPageSize, remainingCount)}개)`}
                 <ChevronDown aria-hidden className="size-5" />
               </button>
               <p
                 data-testid="programs-shown-count"
                 className="text-base text-slate-900"
               >
-                {shownPrograms.length}개 표시 중 · 남은 강좌 {remainingCount}개
+                {programs.length}개 표시 중 · 남은 강좌 {remainingCount}개
               </p>
             </div>
           )}

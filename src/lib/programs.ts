@@ -4,6 +4,10 @@ export const programStatuses = ["접수중", "접수예정", "대기접수", "�
 
 export type ProgramStatus = (typeof programStatuses)[number];
 
+export type StatusFilter = "전체" | ProgramStatus;
+
+export type ProgramCounts = Record<StatusFilter, number>;
+
 export type Program = {
   id: number;
   title: string;
@@ -21,6 +25,8 @@ export type Program = {
 };
 
 export type ProgramSource = "local" | "supabase";
+
+export const programPageSize = 30;
 
 export const programListColumns = [
   "id",
@@ -96,13 +102,101 @@ export function mapSupabaseProgram(
   };
 }
 
-export async function fetchProgramsFromSupabase(
+const statusRank: Record<ProgramStatus, number> = {
+  접수중: 0,
+  접수예정: 1,
+  대기접수: 2,
+  마감: 3,
+};
+
+const remainingRatio = (program: Program) =>
+  program.capacity > 0
+    ? Math.max(0, program.capacity - (program.enrolled ?? 0)) / program.capacity
+    : 1;
+
+const parseApplyStart = (period: string) => (period.split("~")[0] ?? "").trim();
+const parseApplyEnd = (period: string) => {
+  const end = (period.split("~")[1] ?? "").trim();
+  return end || parseApplyStart(period);
+};
+
+export function comparePrograms(a: Program, b: Program) {
+  const rank = statusRank[a.status] - statusRank[b.status];
+  if (rank !== 0) return rank;
+  switch (a.status) {
+    case "접수중":
+      return (
+        remainingRatio(a) - remainingRatio(b) ||
+        parseApplyEnd(a.applyPeriod).localeCompare(parseApplyEnd(b.applyPeriod))
+      );
+    case "접수예정":
+      return parseApplyStart(a.applyPeriod).localeCompare(
+        parseApplyStart(b.applyPeriod),
+      );
+    case "대기접수":
+      return (
+        (b.enrolled ?? 0) - (a.enrolled ?? 0) ||
+        parseApplyEnd(a.applyPeriod).localeCompare(parseApplyEnd(b.applyPeriod))
+      );
+    default:
+      return parseApplyEnd(b.applyPeriod).localeCompare(
+        parseApplyEnd(a.applyPeriod),
+      );
+  }
+}
+
+async function countPrograms(
   client: SupabaseClient,
-): Promise<Program[]> {
-  const { data, error } = await client
+  status: ProgramStatus | null,
+): Promise<number> {
+  let query = client
     .from("programs")
-    .select(programListColumns)
-    .order("created_at", { ascending: false });
+    .select("id", { count: "exact", head: true });
+  if (status) query = query.eq("status", status);
+
+  const { count, error } = await query;
+  if (error) throw new Error(error.message);
+  return count ?? 0;
+}
+
+export async function fetchProgramCounts(
+  client: SupabaseClient,
+): Promise<ProgramCounts> {
+  const [total, ...byStatus] = await Promise.all([
+    countPrograms(client, null),
+    ...programStatuses.map((status) => countPrograms(client, status)),
+  ]);
+
+  return {
+    전체: total,
+    접수중: byStatus[0],
+    접수예정: byStatus[1],
+    대기접수: byStatus[2],
+    마감: byStatus[3],
+  };
+}
+
+export type ProgramPageParams = {
+  status: ProgramStatus | null;
+  offset: number;
+  limit?: number;
+};
+
+export async function fetchProgramPage(
+  client: SupabaseClient,
+  { status, offset, limit = programPageSize }: ProgramPageParams,
+): Promise<Program[]> {
+  let query = client.from("programs").select(programListColumns);
+  if (status) query = query.eq("status", status);
+
+  // Server ordering must stay deterministic for stable range paging.
+  // Status desc puts 접수중/접수예정 first (Korean collation); the client
+  // re-sorts loaded rows with comparePrograms for the final senior UI order.
+  const { data, error } = await query
+    .order("status", { ascending: false })
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: true })
+    .range(offset, offset + limit - 1);
 
   if (error) throw new Error(error.message);
   if (!Array.isArray(data)) return [];

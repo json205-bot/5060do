@@ -223,15 +223,49 @@ const STATUS_ORDER = ["접수중", "접수예정", "대기접수", "마감"];
 const rank = (status) => STATUS_ORDER.indexOf(status);
 
 const PAGE_SIZE = Number(process.env.PAGE_SIZE ?? 30);
+const CARD_COUNT = `document.querySelectorAll('[data-testid="program-card"]').length`;
+const LOAD_MORE_EXISTS =
+  `Boolean(document.querySelector('[data-testid="load-more-programs"]'))`;
 
 const expandAllPrograms = async (cdp, sessionId, maxClicks = 40) => {
+  let clicks = 0;
   for (let index = 0; index < maxClicks; index += 1) {
+    const before = await evaluate(cdp, sessionId, CARD_COUNT);
     const clicked = await evaluate(cdp, sessionId, click("load-more-programs"));
-    if (!clicked) return index;
-    await sleep(150);
+    if (!clicked) return clicks;
+    clicks += 1;
+
+    const deadline = Date.now() + 20000;
+    let grew = false;
+    while (Date.now() < deadline) {
+      await sleep(150);
+      const after = await evaluate(cdp, sessionId, CARD_COUNT);
+      if (after > before) {
+        grew = true;
+        break;
+      }
+      if (!(await evaluate(cdp, sessionId, LOAD_MORE_EXISTS))) return clicks;
+    }
+    if (!grew) return clicks;
   }
-  return maxClicks;
+  return clicks;
 };
+
+const waitForCondition = async (cdp, sessionId, expression, timeoutMs = 15000) => {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await evaluate(cdp, sessionId, expression)) return true;
+    await sleep(200);
+  }
+  return false;
+};
+
+const waitForFirstPage = (cdp, sessionId, total) =>
+  waitForCondition(
+    cdp,
+    sessionId,
+    `${CARD_COUNT} === ${Math.min(PAGE_SIZE, total)}`,
+  );
 
 const readProgramsSource = (cdp, sessionId) =>
   evaluate(
@@ -321,14 +355,23 @@ async function main() {
       }
     });
 
-    cdp.on("Network.responseReceived", (params) => {
-      const url = params.response?.url ?? "";
+    cdp.on("Network.requestWillBeSent", (params) => {
+      const url = params.request?.url ?? "";
       if (!url.includes("/rest/v1/programs")) return;
       payloadRequests.set(params.requestId, {
+        requestId: params.requestId,
         url,
-        status: params.response.status,
+        method: params.request?.method ?? "GET",
+        status: 0,
         encodedDataLength: 0,
+        rawBytes: 0,
       });
+    });
+
+    cdp.on("Network.responseReceived", (params) => {
+      const entry = payloadRequests.get(params.requestId);
+      if (!entry) return;
+      entry.status = params.response?.status ?? entry.status;
     });
 
     cdp.on("Network.loadingFinished", (params) => {
@@ -356,13 +399,53 @@ async function main() {
 
     await loadAt(1280, 900, false);
     results.programsSource = await waitForProgramsSource(cdp, sessionId, "supabase");
-    await sleep(500);
-    const payloadEntries = Array.from(payloadRequests.values());
-    const payloadTransfer = payloadEntries.reduce(
-      (sum, entry) => sum + (entry.encodedDataLength || 0),
-      0,
+    const expectedTotal = Number(process.env.EXPECTED_TOTAL ?? 667);
+    const firstPageReady = await waitForCondition(
+      cdp,
+      sessionId,
+      `(() => {
+        const cards = document.querySelectorAll('[data-testid="program-card"]').length;
+        const chip = document.querySelector('[data-testid="status-chip-전체"]');
+        const match = (chip?.textContent || '').match(/\\[(\\d+)\\]/);
+        return cards === ${PAGE_SIZE} && match !== null && Number(match[1]) === ${expectedTotal};
+      })()`,
     );
-    results.payload = { entries: payloadEntries, transfer: payloadTransfer };
+    check("초기 목록·카운트 도착", firstPageReady, { pageSize: PAGE_SIZE, expectedTotal });
+
+    const payloadEntries = Array.from(payloadRequests.values());
+    const listEntries = payloadEntries.filter((entry) => entry.method !== "HEAD");
+    const countEntries = payloadEntries.filter((entry) => entry.method === "HEAD");
+
+    for (const entry of listEntries) {
+      try {
+        const bodyResult = await cdp.send(
+          "Network.getResponseBody",
+          { requestId: entry.requestId },
+          sessionId,
+        );
+        entry.rawBytes = bodyResult.base64Encoded
+          ? Buffer.from(bodyResult.body, "base64").length
+          : Buffer.byteLength(bodyResult.body);
+      } catch {
+        entry.rawBytes = 0;
+      }
+    }
+
+    const sumBytes = (entries) =>
+      entries.reduce((sum, entry) => sum + (entry.encodedDataLength || 0), 0);
+    const listTransfer = sumBytes(listEntries);
+    const countTransfer = sumBytes(countEntries);
+    const payloadTransfer = listTransfer + countTransfer;
+    const listRawBytes = listEntries.reduce((sum, entry) => sum + (entry.rawBytes || 0), 0);
+
+    results.payload = {
+      entries: payloadEntries,
+      listTransfer,
+      countTransfer,
+      transfer: payloadTransfer,
+      listRawBytes,
+      baselineRawBytes: Number(process.env.EXPECTED_BASELINE_BYTES ?? 267043),
+    };
     const selectiveOnly =
       payloadEntries.length > 0 &&
       payloadEntries.every(
@@ -371,13 +454,41 @@ async function main() {
           !entry.url.includes("select=%2A") &&
           entry.url.includes("select="),
       );
-    check("목록 조회 요청 수신", payloadEntries.length > 0, payloadEntries.length);
+    check("목록 조회 요청 수신", listEntries.length > 0, listEntries.length);
     check("select=* 미사용(선별 조회)", selectiveOnly, payloadEntries.map((entry) => entry.url));
     check(
-      "목록 네트워크 전송량 150KB 미만",
-      payloadTransfer > 0 && payloadTransfer < 150000,
-      { transferBytes: payloadTransfer, baselineRawBytes: 271000 },
+      "상태별 카운트 쿼리(HEAD) 5건",
+      countEntries.length === 5,
+      countEntries.map((entry) => ({ url: entry.url, status: entry.status })),
     );
+    check(
+      "초기 목록(GET) gzip 전송량 30KB 미만",
+      listTransfer > 0 && listTransfer < 30000,
+      { listTransfer, countTransfer },
+    );
+    check(
+      "초기 REST 총 전송량 30KB 미만",
+      payloadTransfer > 0 && payloadTransfer < 30000,
+      { payloadTransfer, baselineRawBytes: results.payload.baselineRawBytes },
+    );
+    check(
+      "초기 목록 원본 JSON 15KB 이하",
+      listRawBytes > 0 && listRawBytes <= 15000,
+      { listRawBytes, rows: PAGE_SIZE },
+    );
+    check(
+      "초기 목록 원본 전송량 90% 이상 절감",
+      listRawBytes > 0 &&
+        listRawBytes <= results.payload.baselineRawBytes * 0.1,
+      {
+        listRawBytes,
+        baselineRawBytes: results.payload.baselineRawBytes,
+        reductionPercent: Number(
+          ((1 - listRawBytes / results.payload.baselineRawBytes) * 100).toFixed(1),
+        ),
+      },
+    );
+
     const initialChips = await evaluate(cdp, sessionId, CHIP_STATE);
     results.chips = initialChips;
     const totalChip = initialChips.find((chip) => chip.key === "전체");
@@ -390,6 +501,18 @@ async function main() {
         (totalChip?.count ?? -1),
       initialChips,
     );
+    const expectedStatusCounts = JSON.parse(
+      process.env.EXPECTED_STATUS_COUNTS ??
+        '{"접수중":7,"접수예정":1,"대기접수":7,"마감":652}',
+    );
+    const chipMismatch = Object.entries(expectedStatusCounts)
+      .map(([key, expected]) => ({
+        key,
+        expected,
+        actual: initialChips.find((chip) => chip.key === key)?.count ?? null,
+      }))
+      .filter((entry) => entry.actual !== entry.expected);
+    check("상태별 칩 카운트 정확", chipMismatch.length === 0, chipMismatch);
 
     const pageOne = await evaluate(cdp, sessionId, CARD_STATE);
     check(
@@ -427,7 +550,12 @@ async function main() {
       "load-more-programs",
     );
     await evaluate(cdp, sessionId, click("load-more-programs"));
-    await sleep(400);
+    const secondPageReady = await waitForCondition(
+      cdp,
+      sessionId,
+      `${CARD_COUNT} === ${Math.min(PAGE_SIZE * 2, expectedTotal)}`,
+    );
+    check("더보기 후 다음 페이지 도착", secondPageReady, secondPageReady);
     const pageTwo = await evaluate(cdp, sessionId, CARD_STATE);
     check(
       "더보기 클릭 시 +페이지 크기",
@@ -435,20 +563,49 @@ async function main() {
       { cards: pageTwo.count, expected: Math.min(PAGE_SIZE * 2, totalChip?.count ?? 0) },
     );
     results.paging = { pageOne: pageOne.count, pageTwo: pageTwo.count };
-    results.screenshots.push(
-      await (async () => {
-        await evaluate(
-          cdp,
-          sessionId,
-          `document.querySelector('[data-testid="load-more-programs"]')?.scrollIntoView({ block: 'center' })`,
-        );
-        await sleep(400);
-        const shot = await screenshot(cdp, sessionId, "desktop-1280-load-more.png");
-        await evaluate(cdp, sessionId, `window.scrollTo(0, 0)`);
-        await sleep(200);
-        return shot;
-      })(),
+    const rangeRequests = Array.from(payloadRequests.values()).filter(
+      (entry) =>
+        entry.method !== "HEAD" &&
+        /offset=\d+&limit=\d+/.test(entry.url),
     );
+    check(
+      "범위 조회(offset/limit) 요청 확인",
+      rangeRequests.some((entry) => /offset=0&limit=30/.test(entry.url)) &&
+        rangeRequests.some((entry) => /offset=30&limit=30/.test(entry.url)),
+      rangeRequests.map((entry) => entry.url),
+    );
+    await evaluate(cdp, sessionId, click("view-toggle-list"));
+    await sleep(400);
+    const pagedTable = await evaluate(cdp, sessionId, TABLE_STATE);
+    results.pagedTable = pagedTable;
+    check(
+      "목록형 전환에도 페이징 데이터 유지",
+      pagedTable.tableVisible && pagedTable.rowCount === pageTwo.count,
+      { rows: pagedTable.rowCount, cards: pageTwo.count },
+    );
+    await evaluate(cdp, sessionId, click("view-toggle-card"));
+    await sleep(300);
+    results.loadMoreShot = await (async () => {
+      const info = await evaluate(
+        cdp,
+        sessionId,
+        `(() => {
+          const el = document.querySelector('[data-testid="load-more-programs"]');
+          if (!el) return { found: false };
+          const rect = el.getBoundingClientRect();
+          const absoluteTop = rect.top + window.scrollY;
+          window.scrollTo({ top: Math.max(0, absoluteTop - window.innerHeight / 2), behavior: 'instant' });
+          return { found: true, absoluteTop, scrollY: window.scrollY, viewportHeight: window.innerHeight };
+        })()`,
+      );
+      await sleep(500);
+      info.scrollY = await evaluate(cdp, sessionId, `window.scrollY`);
+      const shot = await screenshot(cdp, sessionId, "desktop-1280-load-more.png");
+      await evaluate(cdp, sessionId, `window.scrollTo(0, 0)`);
+      await sleep(200);
+      return { ...info, shot };
+    })();
+    results.screenshots.push(results.loadMoreShot.shot);
     await expandAllPrograms(cdp, sessionId);
 
     const allCards = await evaluate(cdp, sessionId, CARD_STATE);
@@ -500,7 +657,8 @@ async function main() {
     for (const status of STATUS_ORDER) {
       const chip = initialChips.find((item) => item.key === status);
       await evaluate(cdp, sessionId, click(`status-chip-${status}`));
-      await sleep(400);
+      const arrived = await waitForFirstPage(cdp, sessionId, chip?.count ?? 0);
+      check(`${status} 첫 페이지 도착`, arrived, { expected: Math.min(PAGE_SIZE, chip?.count ?? 0) });
       await expandAllPrograms(cdp, sessionId);
       const state = await evaluate(cdp, sessionId, CARD_STATE);
       const active = (await evaluate(cdp, sessionId, CHIP_STATE)).find(
@@ -517,7 +675,8 @@ async function main() {
     }
 
     await evaluate(cdp, sessionId, click("status-chip-전체"));
-    await sleep(400);
+    const totalArrived = await waitForFirstPage(cdp, sessionId, totalChip?.count ?? 0);
+    check("전체 첫 페이지 도착", totalArrived, totalArrived);
     await expandAllPrograms(cdp, sessionId);
     await evaluate(cdp, sessionId, click("view-toggle-list"));
     await sleep(500);
@@ -628,6 +787,8 @@ async function main() {
 
     await loadAt(390, 900, true);
     results.mobileProgramsSource = await waitForProgramsSource(cdp, sessionId, "supabase");
+    const mobileReady = await waitForFirstPage(cdp, sessionId, totalChip?.count ?? 0);
+    check("모바일 첫 페이지 도착", mobileReady, mobileReady);
     await expandAllPrograms(cdp, sessionId);
     const mobileCards = await evaluate(cdp, sessionId, CARD_STATE);
     results.mobileCards = mobileCards;
