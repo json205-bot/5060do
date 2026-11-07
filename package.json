@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "test:vercel": "node scripts/test-vercel.mjs",
     "verify:vercel": "node scripts/test-vercel.mjs",
-    "data:programs": "node scripts/build_programs_dataset.mjs"
+    "test:unit": "node tests/unit-merge-programs.mjs",
+    "data:programs": "node scripts/build_programs_dataset.mjs",
+    "data:knowledge": "node scripts/seed-supabase-knowledge.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

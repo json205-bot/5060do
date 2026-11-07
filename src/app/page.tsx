@@ -146,6 +146,8 @@ export default function Home() {
   const {
     programs,
     overview,
+    activePrograms,
+    loadActivePrograms,
     counts,
     source: programsSource,
     total,
@@ -1538,7 +1540,12 @@ export default function Home() {
         </div>
       )}
 
-      <ChatbotWidget programs={overview} counts={counts} />
+      <ChatbotWidget
+        programs={overview}
+        activePrograms={activePrograms}
+        counts={counts}
+        onOpen={loadActivePrograms}
+      />
     </div>
   );
 }

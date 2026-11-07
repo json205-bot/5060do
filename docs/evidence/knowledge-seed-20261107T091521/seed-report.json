@@ -1,0 +1,106 @@
+{
+  "ticket": "5060DO-20261107-1810",
+  "table": "documents",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "target": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/documents",
+  "sourceEntries": 14,
+  "documentCount": 6,
+  "skippedEntries": 8,
+  "upserted": 6,
+  "remoteCount": 6,
+  "countPass": true,
+  "contentPass": true,
+  "keywordChecks": [
+    {
+      "name": "인사말",
+      "mode": "title",
+      "keywords": [
+        "인사말"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "층별안내",
+      "mode": "content",
+      "keywords": [
+        "층별",
+        "층 안내"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "위치/주차",
+      "mode": "content",
+      "keywords": [
+        "주소",
+        "주차"
+      ],
+      "missing": [],
+      "pass": true
+    },
+    {
+      "name": "대관 이용안내",
+      "mode": "content",
+      "keywords": [
+        "대관"
+      ],
+      "missing": [],
+      "pass": true
+    }
+  ],
+  "keywordPass": true,
+  "documents": [
+    {
+      "id": 1,
+      "title": "인사말",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-greeting",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/greeting",
+      "contentChars": 421
+    },
+    {
+      "id": 2,
+      "title": "비전/미션",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-vision",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/vision",
+      "contentChars": 418
+    },
+    {
+      "id": 3,
+      "title": "운영법인",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-corporate",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/corporate",
+      "contentChars": 890
+    },
+    {
+      "id": 4,
+      "title": "시설안내",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-facility",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/facility",
+      "contentChars": 750
+    },
+    {
+      "id": 5,
+      "title": "오시는 길",
+      "category": "센터소개",
+      "sourceId": "center-subLifeTwist-location",
+      "sourceUrl": "https://www.5060do.or.kr/subLifeTwist/location",
+      "contentChars": 65
+    },
+    {
+      "id": 6,
+      "title": "대관신청",
+      "category": "대관안내",
+      "sourceId": "center-convention-index",
+      "sourceUrl": "https://www.5060do.or.kr/convention/index",
+      "contentChars": 610
+    }
+  ],
+  "startedAt": "2026-11-07T09:15:21.955Z",
+  "elapsedMs": 1241
+}

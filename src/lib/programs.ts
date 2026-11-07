@@ -212,6 +212,25 @@ export async function fetchProgramCounts(
   });
 }
 
+export const activeProgramColumns = [
+  "id",
+  "title",
+  "category",
+  "target",
+  "capacity",
+  "enrolled",
+  "fee",
+  "edu_period",
+  "apply_period",
+  "location",
+  "status",
+  "status_order",
+].join(", ");
+
+// status_order < 4 means 접수중, 접수예정, 대기접수. 마감(4) courses are never
+// helpful to the chatbot and are skipped server-side.
+export const activeStatusOrderLimit = 4;
+
 export type ProgramPageParams = {
   status: ProgramStatus | null;
   offset: number;
@@ -233,6 +252,29 @@ export async function fetchProgramPage(
       .order("status_order", { ascending: true })
       .order("id", { ascending: false })
       .range(offset, offset + limit - 1)
+      .abortSignal(signal);
+
+    if (error) throw new Error(error.message);
+    if (!Array.isArray(data)) return [];
+
+    return (data as unknown as SupabaseProgramRow[]).map(mapSupabaseProgram);
+  });
+}
+
+// The main list fetches 30 rows at a time, so the chatbot cannot rely on it to
+// know every open course. This dedicated query returns only active courses with
+// the lightweight columns the chatbot answers need, independent of paging.
+export async function fetchActivePrograms(
+  client: SupabaseClient,
+): Promise<Program[]> {
+  return withRequestTimeout(async (signal) => {
+    const { data, error } = await client
+      .from("programs")
+      .select(activeProgramColumns)
+      .lt("status_order", activeStatusOrderLimit)
+      .order("status_order", { ascending: true })
+      .order("id", { ascending: false })
+      .range(0, 999)
       .abortSignal(signal);
 
     if (error) throw new Error(error.message);

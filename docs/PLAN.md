@@ -173,3 +173,18 @@ status: done
 | 증거 | `docs/evidence/vercel-e2e-20261107/`, `docs/evidence/nas-e2e-20261107/` |
 | 한계 | 실제 Vercel 클라우드 배포는 하지 않았다. 접수중 7건이 모두 첫 페이지에 있어 페이지 경계를 넘는 재정렬은 현재 데이터로 직접 발생하지 않는다 |
 
+## 16. 센터 지식 documents 적재·챗봇 활성강좌 전용 조회·Vercel 배포 가이드 (2026-11-07 18:10)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 센터 안내 지식을 수파베이스 `public.documents`에 적재하고, 챗봇이 첫 페이지 30건과 무관하게 활성 강좌 전체를 근거로 답하며, 접수중 30건 초과 시 전역 임박순을 단위 테스트로 고정하고, Vercel 실배포 절차를 문서로 확정 |
+| 지식 적재 | `scripts/seed-supabase-knowledge.mjs` — `center_knowledge.json` 14개 항목 중 텍스트 있는 6개를 평탄화해 `documents(id, title, category, content)`에 upsert. 빈 청크 8개 제외, `npm run data:knowledge` 등록 |
+| 챗봇 조회 | `fetchActivePrograms()` — `status_order < 4`(접수중·접수예정·대기접수) 전용 경량 컬럼 1회 조회(`range 0..999`). 챗봇을 열 때 지연 조회해 첫 페이지 15KB 예산을 유지. `freeCourseReply()`는 활성 강좌 전체에서 무료 강좌 추출, `applyReply()`는 활성 강좌의 접수중 건수 사용 |
+| 단위 검증 | `tests/unit-merge-programs.mjs` — Node 내장 `assert`(외부 패키지 없음). 40건 접수중(1페이지 30 + 2페이지 10) 병합 후 잔여석 비율 0.0→1.0 오름차순, id 중복 없음, 마감 그룹 순서 보존. `npm run test:unit` 등록 |
+| 배포 문서 | `docs/VERCEL_DEPLOY_GUIDE.md` — Vercel 대시보드·GitHub 미러·CLI 3경로, 필수 환경변수 3종(`NEXT_PUBLIC_SUPABASE_URL`·`NEXT_PUBLIC_SUPABASE_ANON_KEY`·`NEXT_PUBLIC_BASE_PATH=""`), 빌드/출력 디렉터리, 7단계 확인 체크리스트 |
+| 적재 검증 | `node scripts/seed-supabase-knowledge.mjs` — 6건 upsert, `documents` count 6/6 일치, 내용 길이 일치, 인사말·층별안내·위치/주차·대관 키워드 4종 PASS |
+| 검증 | typecheck Exit 0, lint Exit 0, unit PASS(40건), NAS build Exit 0, Vercel 루트 build Exit 0(`/5060do` 누출 0), NAS E2E **77/77 PASS**, Vercel 루트 E2E **77/77 PASS**, 활성 강좌 15건(7/1/7)·무료 2건 조회 확인 |
+| 배포 | `deploy_www.sh` → `/volume3/www/5060do` 37개 파일, `/5060do/`·`/5060do/classic/` HTTP 200 |
+| 증거 | `docs/evidence/knowledge-chatbot-20261107/`, `docs/evidence/knowledge-seed-20261107T091521/` |
+| 한계 | 실제 Vercel 클라우드 배포는 토큰·GitHub 원격이 없어 실행하지 않았다. 활성 강좌 15건으로 30건 초과 상황은 단위 테스트로만 검증했다 |
+

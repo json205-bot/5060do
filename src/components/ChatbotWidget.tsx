@@ -15,6 +15,7 @@ type KnowledgeEntry = {
 
 type ChatData = {
   programs: Program[];
+  activePrograms: Program[];
   counts: ProgramCounts;
 };
 
@@ -59,8 +60,8 @@ const formatFee = (fee: number) =>
 
 type Reply = Omit<Message, "id" | "role">;
 
-function freeCourseReply({ programs, counts }: ChatData): Reply {
-  const openFree = programs
+function freeCourseReply({ activePrograms, counts }: ChatData): Reply {
+  const openFree = activePrograms
     .filter(
       (program) =>
         program.fee === 0 &&
@@ -87,9 +88,14 @@ function freeCourseReply({ programs, counts }: ChatData): Reply {
   };
 }
 
-function applyReply({ counts }: ChatData): Reply {
+function applyReply({ activePrograms, counts }: ChatData): Reply {
+  const openPrograms = activePrograms.filter(
+    (program) => program.status === "접수중",
+  );
+  const openCount = openPrograms.length > 0 ? openPrograms.length : counts.접수중;
+
   return {
-    text: `수강신청은 이 화면에서 바로 하실 수 있습니다.\n\n1. '교육신청'에서 원하는 강좌를 누릅니다.\n2. 상세 내용을 확인하고 '수강신청'을 누릅니다.\n3. 성명과 연락처를 입력하고 결제 버튼을 누릅니다. 무료 강좌는 결제 없이 신청됩니다.\n\n지금 접수 중인 강좌는 ${counts.접수중}개입니다.`,
+    text: `수강신청은 이 화면에서 바로 하실 수 있습니다.\n\n1. '교육신청'에서 원하는 강좌를 누릅니다.\n2. 상세 내용을 확인하고 '수강신청'을 누릅니다.\n3. 성명과 연락처를 입력하고 결제 버튼을 누릅니다. 무료 강좌는 결제 없이 신청됩니다.\n\n지금 접수 중인 강좌는 ${openCount}개입니다.`,
     action: {
       href: applyGuideUrl,
       label: "신청 방법 안내 보기",
@@ -211,10 +217,17 @@ function buildReply(question: string, data: ChatData): Reply {
 
 type ChatbotWidgetProps = {
   programs: Program[];
+  activePrograms: Program[];
   counts: ProgramCounts;
+  onOpen?: () => void;
 };
 
-export default function ChatbotWidget({ programs, counts }: ChatbotWidgetProps) {
+export default function ChatbotWidget({
+  programs,
+  activePrograms,
+  counts,
+  onOpen,
+}: ChatbotWidgetProps) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -254,7 +267,7 @@ export default function ChatbotWidget({ programs, counts }: ChatbotWidgetProps) 
     }
 
     replyTimerRef.current = window.setTimeout(() => {
-      const reply = buildReply(trimmed, { programs, counts });
+      const reply = buildReply(trimmed, { programs, activePrograms, counts });
       setTyping(false);
       setMessages((current) => [
         ...current,
@@ -262,7 +275,7 @@ export default function ChatbotWidget({ programs, counts }: ChatbotWidgetProps) 
       ]);
       replyTimerRef.current = null;
     }, RECOMMEND_DELAY_MS);
-  }, [counts, programs]);
+  }, [activePrograms, counts, programs]);
 
   useEffect(() => {
     if (!open) return;
@@ -311,7 +324,10 @@ export default function ChatbotWidget({ programs, counts }: ChatbotWidgetProps) 
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls="chatbot-panel"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          onOpen?.();
+          setOpen(true);
+        }}
         className="fixed bottom-20 right-4 z-40 flex h-[60px] items-center gap-2 rounded-full bg-brand-700 px-5 text-white shadow-lg transition-colors hover:bg-brand-800 md:bottom-6 md:right-6"
       >
         <span className="relative flex items-center justify-center">

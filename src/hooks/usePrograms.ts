@@ -5,6 +5,7 @@ import localProgramData from "@/data/programs.json";
 import {
   comparePrograms,
   defaultProgramCounts,
+  fetchActivePrograms,
   fetchProgramCounts,
   fetchProgramPage,
   mergeProgramPage,
@@ -52,9 +53,16 @@ const selectLocalPrograms = (
   return [...filtered].sort(comparePrograms).slice(0, limit);
 };
 
+const selectLocalActivePrograms = (): Program[] =>
+  localPrograms
+    .filter((program) => program.status !== "마감")
+    .sort(comparePrograms);
+
 export type UseProgramsResult = {
   programs: Program[];
   overview: Program[];
+  activePrograms: Program[];
+  loadActivePrograms: () => void;
   counts: ProgramCounts;
   source: ProgramSource;
   total: number;
@@ -88,6 +96,36 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
   const [overview, setOverview] = useState<Program[]>(() =>
     selectLocalPrograms("전체", programPageSize),
   );
+  // The chatbot needs every active course, not just the 30 rows on the first
+  // page. The request is deferred until the chatbot is opened so the initial
+  // page payload stays inside the 15KB budget.
+  const [activePrograms, setActivePrograms] = useState<Program[]>(() =>
+    selectLocalActivePrograms(),
+  );
+  const [activeRequested, setActiveRequested] = useState(false);
+
+  useEffect(() => {
+    if (!client || !activeRequested) return;
+
+    let cancelled = false;
+    fetchActivePrograms(client)
+      .then((rows) => {
+        if (cancelled) return;
+        setActivePrograms(rows);
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        console.warn(
+          "[programs] failed to load active programs from Supabase. Keeping local active programs.",
+          error,
+        );
+        setActivePrograms(selectLocalActivePrograms());
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeRequested, client]);
 
   useEffect(() => {
     if (!client) return;
@@ -223,9 +261,15 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
     total,
   ]);
 
+  const loadActivePrograms = useCallback(() => {
+    setActiveRequested(true);
+  }, []);
+
   return {
     programs,
     overview,
+    activePrograms,
+    loadActivePrograms,
     counts,
     source,
     total,
