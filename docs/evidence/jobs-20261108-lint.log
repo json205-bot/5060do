@@ -1,7 +1,7 @@
 cmd : '\\x4\workspace\dev\5060do'
-위치 줄:1 문자:1
-+ cmd /c "pushd Z:\dev\5060do && npm run lint" 2>&1 | Tee-Object -FileP ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+위치 줄:1 문자:276
++ ... t"; $lint = cmd /c "pushd Z:\dev\5060do && npm run lint" 2>&1 | Out-S ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: ('\\x4\workspace\dev\5060do':String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
@@ -11,3 +11,4 @@ cmd : '\\x4\workspace\dev\5060do'
 > 5060do@0.1.0 lint
 > eslint
 
+EXIT=0
