@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MessageCircle, Phone, Send, X } from "lucide-react";
 import knowledgeData from "@/data/center_knowledge.json";
-import programsData from "@/data/programs.json";
+import type { Program, ProgramCounts } from "@/lib/programs";
 
 type KnowledgeEntry = {
   id: string;
@@ -13,20 +13,9 @@ type KnowledgeEntry = {
   chunks?: string[];
 };
 
-type ProgramLite = {
-  id: number;
-  title: string;
-  category: string;
-  summary: string;
-  capacity: number;
-  enrolled: number;
-  location: string;
-  fee: number;
-  target: string;
-  applyPeriod: string;
-  eduPeriod: string;
-  status: string;
-  sourceUrl: string;
+type ChatData = {
+  programs: Program[];
+  counts: ProgramCounts;
 };
 
 type Message = {
@@ -46,7 +35,6 @@ const QUICK_QUESTIONS = [
 const RECOMMEND_DELAY_MS = 700;
 
 const knowledge = knowledgeData as KnowledgeEntry[];
-const programs = programsData as ProgramLite[];
 
 const knowledgeById = (id: string) => knowledge.find((entry) => entry.id === id);
 
@@ -71,7 +59,7 @@ const formatFee = (fee: number) =>
 
 type Reply = Omit<Message, "id" | "role">;
 
-function freeCourseReply(): Reply {
+function freeCourseReply({ programs, counts }: ChatData): Reply {
   const openFree = programs
     .filter(
       (program) =>
@@ -79,12 +67,11 @@ function freeCourseReply(): Reply {
         ["접수중", "접수예정", "대기접수"].includes(program.status),
     )
     .slice(0, 3);
+  const countLine = `전체 ${counts.전체}개 강좌 중 접수중 ${counts.접수중}개입니다.`;
 
   if (openFree.length === 0) {
     return {
-      text: `지금 접수 중인 무료 강좌는 없습니다.\n\n전체 ${programs.length}개 강좌 중 접수중인 강좌는 ${
-        programs.filter((program) => program.status === "접수중").length
-      }개입니다. 궁금한 강좌 이름을 그대로 입력하셔도 안내해 드립니다.`,
+      text: `지금 접수 중인 무료 강좌는 없습니다.\n\n${countLine} 궁금한 강좌 이름을 그대로 입력하셔도 안내해 드립니다.`,
     };
   }
 
@@ -96,16 +83,13 @@ function freeCourseReply(): Reply {
   return {
     text: `이달의 무료 강좌 ${openFree.length}개를 안내합니다.\n\n${lines.join(
       "\n\n",
-    )}\n\n무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다.`,
+    )}\n\n${countLine}\n무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다.`,
   };
 }
 
-function applyReply(): Reply {
-  const openCount = programs.filter(
-    (program) => program.status === "접수중",
-  ).length;
+function applyReply({ counts }: ChatData): Reply {
   return {
-    text: `수강신청은 이 화면에서 바로 하실 수 있습니다.\n\n1. '교육신청'에서 원하는 강좌를 누릅니다.\n2. 상세 내용을 확인하고 '수강신청'을 누릅니다.\n3. 성명과 연락처를 입력하고 결제 버튼을 누릅니다. 무료 강좌는 결제 없이 신청됩니다.\n\n지금 접수 중인 강좌는 ${openCount}개입니다.`,
+    text: `수강신청은 이 화면에서 바로 하실 수 있습니다.\n\n1. '교육신청'에서 원하는 강좌를 누릅니다.\n2. 상세 내용을 확인하고 '수강신청'을 누릅니다.\n3. 성명과 연락처를 입력하고 결제 버튼을 누릅니다. 무료 강좌는 결제 없이 신청됩니다.\n\n지금 접수 중인 강좌는 ${counts.접수중}개입니다.`,
     action: {
       href: applyGuideUrl,
       label: "신청 방법 안내 보기",
@@ -169,9 +153,9 @@ function greetingReply(): Reply {
   };
 }
 
-function programReply(program: ProgramLite, term: string): Reply {
+function programReply(program: Program, term: string): Reply {
   return {
-    text: `'${term}' 관련 강좌를 찾았습니다.\n\n${program.title}\n분야: ${program.category}\n교육기간: ${program.eduPeriod}\n장소: ${program.location}\n수강료: ${formatFee(program.fee)}\n신청기간: ${program.applyPeriod}\n정원 ${program.capacity}명 · 신청 ${program.enrolled}명 · 상태 ${program.status}\n\n'교육신청'에서 이 강좌를 누르면 상세 내용과 신청 버튼을 보실 수 있습니다.`,
+    text: `'${term}' 관련 강좌를 찾았습니다.\n\n${program.title}\n분야: ${program.category}\n교육기간: ${program.eduPeriod}\n장소: ${program.location}\n수강료: ${formatFee(program.fee)}\n신청기간: ${program.applyPeriod}\n정원 ${program.capacity}명 · 신청 ${program.enrolled ?? 0}명 · 상태 ${program.status}\n\n'교육신청'에서 이 강좌를 누르면 상세 내용과 신청 버튼을 보실 수 있습니다.`,
     action: {
       href: program.sourceUrl,
       label: "센터 홈페이지에서 보기",
@@ -180,7 +164,10 @@ function programReply(program: ProgramLite, term: string): Reply {
   };
 }
 
-function findProgram(question: string): { program: ProgramLite; term: string } | null {
+function findProgram(
+  question: string,
+  programs: Program[],
+): { program: Program; term: string } | null {
   const tokens = question
     .split(/[\s,.;:!?]+/)
     .map((token) => token.trim())
@@ -193,7 +180,7 @@ function findProgram(question: string): { program: ProgramLite; term: string } |
   return null;
 }
 
-function buildReply(question: string): Reply {
+function buildReply(question: string, data: ChatData): Reply {
   const normalized = question.replace(/\s+/g, " ").trim();
   const has = (...keys: string[]) =>
     keys.some((key) => normalized.includes(key));
@@ -201,27 +188,19 @@ function buildReply(question: string): Reply {
   if (has("상담원", "전화", "연락", "연결")) return phoneReply();
   if (has("주차", "위치", "주소", "오시는", "찾아오", "찾아가는"))
     return locationReply();
-  if (has("무료")) return freeCourseReply();
+  if (has("무료")) return freeCourseReply(data);
   if (has("수강신청", "신청 방법", "신청방법", "접수", "결제", "등록"))
-    return applyReply();
+    return applyReply(data);
   if (has("대관", "강당", "소모임실")) return conventionReply();
   if (has("시설", "층별", "층 안내", "강의실")) return facilityReply();
   if (has("비전", "미션", "핵심가치")) return visionReply();
   if (has("소개", "인사말", "환영")) return greetingReply();
   if (has("강좌", "강의", "프로그램", "교육"))
     return {
-      text: `현재 센터에는 모두 ${programs.length}개 강좌가 등록되어 있습니다.\n\n접수중 ${
-        programs.filter((program) => program.status === "접수중").length
-      }개 · 접수예정 ${
-        programs.filter((program) => program.status === "접수예정").length
-      }개 · 대기접수 ${
-        programs.filter((program) => program.status === "대기접수").length
-      }개 · 마감 ${
-        programs.filter((program) => program.status === "마감").length
-      }개입니다.\n\n'무료 강좌'를 물어보시면 이달의 무료 강좌를 안내해 드립니다.`,
+      text: `현재 센터에는 모두 ${data.counts.전체}개 강좌가 등록되어 있습니다.\n\n접수중 ${data.counts.접수중}개 · 접수예정 ${data.counts.접수예정}개 · 대기접수 ${data.counts.대기접수}개 · 마감 ${data.counts.마감}개입니다.\n\n'무료 강좌'를 물어보시면 이달의 무료 강좌를 안내해 드립니다.`,
     };
 
-  const matched = findProgram(normalized);
+  const matched = findProgram(normalized, data.programs);
   if (matched) return programReply(matched.program, matched.term);
 
   return {
@@ -230,7 +209,12 @@ function buildReply(question: string): Reply {
   };
 }
 
-export default function ChatbotWidget() {
+type ChatbotWidgetProps = {
+  programs: Program[];
+  counts: ProgramCounts;
+};
+
+export default function ChatbotWidget({ programs, counts }: ChatbotWidgetProps) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -270,7 +254,7 @@ export default function ChatbotWidget() {
     }
 
     replyTimerRef.current = window.setTimeout(() => {
-      const reply = buildReply(trimmed);
+      const reply = buildReply(trimmed, { programs, counts });
       setTyping(false);
       setMessages((current) => [
         ...current,
@@ -278,7 +262,7 @@ export default function ChatbotWidget() {
       ]);
       replyTimerRef.current = null;
     }, RECOMMEND_DELAY_MS);
-  }, []);
+  }, [counts, programs]);
 
   useEffect(() => {
     if (!open) return;

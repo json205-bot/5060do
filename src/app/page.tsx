@@ -145,6 +145,7 @@ export default function Home() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("전체");
   const {
     programs,
+    overview,
     counts,
     source: programsSource,
     total,
@@ -1537,7 +1538,7 @@ export default function Home() {
         </div>
       )}
 
-      <ChatbotWidget />
+      <ChatbotWidget programs={overview} counts={counts} />
     </div>
   );
 }

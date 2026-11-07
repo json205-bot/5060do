@@ -6,7 +6,14 @@ import path from "node:path";
 const CHROME =
   process.env.CHROME_PATH ??
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
-const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3100/";
+// Supports both the NAS sub-path (/5060do) and the Vercel root deployment ("").
+const RAW_BASE_PATH = process.env.BASE_PATH ?? "/5060do";
+const BASE_PATH =
+  RAW_BASE_PATH === "" || RAW_BASE_PATH === "/"
+    ? ""
+    : `/${RAW_BASE_PATH.replace(/^\/+|\/+$/g, "")}`;
+const BASE_ORIGIN = process.env.BASE_ORIGIN ?? "http://127.0.0.1:3100";
+const BASE_URL = process.env.BASE_URL ?? `${BASE_ORIGIN}${BASE_PATH}/`;
 const OUT_DIR = path.resolve(
   process.env.OUT_DIR ?? path.join("docs", "evidence", "programs-20261107"),
 );
@@ -174,8 +181,30 @@ const MOBILE_STATE = `(() => {
   };
 })()`;
 
-const MODAL_STATE = `(() => {
-  const modal = document.querySelector('[data-testid="detail-modal"]');
+// Collects every internal absolute URL so the same run can prove the bundle
+// was built for the requested BASE_PATH ("" on Vercel, "/5060do" on the NAS).
+const LINK_STATE = `(() => {
+  const urls = [];
+  for (const el of document.querySelectorAll('a[href], img[src], script[src], link[href]')) {
+    const value = el.getAttribute('href') ?? el.getAttribute('src');
+    if (value) urls.push({ value, tag: el.tagName.toLowerCase() });
+  }
+  const switcher = document.querySelector('[data-testid="switch-classic"]');
+  return {
+    urls,
+    switcherHref: switcher ? switcher.getAttribute('href') : null,
+  };
+})()`;
+
+const CHATBOT_LAST_BOT = `(() => {
+  const nodes = Array.from(
+    document.querySelectorAll('[data-testid="chatbot-message"][data-role="bot"]'),
+  );
+  const last = nodes[nodes.length - 1];
+  return last ? (last.querySelector('p')?.textContent || '').replace(/\\s+/g, ' ').trim() : '';
+})()`;
+
+const MODAL_STATE = `(() => {  const modal = document.querySelector('[data-testid="detail-modal"]');
   if (!modal) return { visible: false };
   const title = modal.querySelector('#program-dialog-title')?.textContent?.trim() ?? '';
   const buttons = Array.from(modal.querySelectorAll('button'));
@@ -317,6 +346,8 @@ async function main() {
 
   const results = {
     baseUrl: BASE_URL,
+    basePath: BASE_PATH,
+    baseOrigin: BASE_ORIGIN,
     checkedAt: new Date().toISOString(),
     checks: [],
     console: [],
@@ -412,6 +443,42 @@ async function main() {
       })()`,
     );
     check("초기 목록·카운트 도착", firstPageReady, { pageSize: PAGE_SIZE, expectedTotal });
+
+    const linkState = await evaluate(cdp, sessionId, LINK_STATE);
+    const internalPrefix = `${BASE_PATH}/`;
+    const absoluteInternal = linkState.urls
+      .map((entry) => entry.value)
+      .filter((value) => value.startsWith("/"));
+    const mismatchedLinks = absoluteInternal.filter((value) => {
+      const normalized = value.split(/[?#]/)[0];
+      return !normalized.startsWith(internalPrefix);
+    });
+    const rootLeaks =
+      BASE_PATH === ""
+        ? absoluteInternal.filter((value) => value.startsWith("/5060do"))
+        : [];
+    const expectedSwitcher = `${BASE_PATH}/classic/`;
+    results.links = {
+      basePath: BASE_PATH,
+      absoluteInternal: absoluteInternal.length,
+      switcherHref: linkState.switcherHref,
+      mismatchedLinks,
+      rootLeaks,
+    };
+    check(
+      "BASE_PATH 내부 링크 일관성",
+      mismatchedLinks.length === 0 && rootLeaks.length === 0,
+      {
+        basePath: BASE_PATH,
+        mismatched: mismatchedLinks.slice(0, 10),
+        rootLeak: rootLeaks.slice(0, 10),
+      },
+    );
+    check(
+      "버전 전환 링크 BASE_PATH 일치",
+      linkState.switcherHref === expectedSwitcher,
+      { expected: expectedSwitcher, actual: linkState.switcherHref },
+    );
 
     const payloadEntries = Array.from(payloadRequests.values());
     const listEntries = payloadEntries.filter((entry) => entry.method !== "HEAD");
@@ -644,6 +711,19 @@ async function main() {
       { cards: allCards.count, chip: totalChip?.count },
     );
     check("스마트 정렬 상태 우선순위", isSortedByStatus(allCards.statuses), allCards.statuses);
+    const globalOpenRatios = allCards.progress
+      .filter((_, index) => allCards.statuses[index] === "접수중")
+      .map((item) => item.ratio);
+    const globalOpenSorted = globalOpenRatios.every(
+      (ratio, index) => index === 0 || globalOpenRatios[index - 1] <= ratio,
+    );
+    results.globalOpenRatios = globalOpenRatios;
+    check(
+      "전체 접수중 잔여석 임박순(전역)",
+      globalOpenRatios.length === expectedStatusCounts["접수중"] &&
+        globalOpenSorted,
+      { count: globalOpenRatios.length, ratios: globalOpenRatios },
+    );
     check(
       "전체 카드 신청현황 진행바 노출",
       allCards.count > 0 && allCards.withProgress === allCards.count,
@@ -988,6 +1068,68 @@ async function main() {
         timeoutElapsedMs <= 11000,
       results.timeoutGuard,
     );
+
+    await loadAt(1280, 900, false);
+    await waitForProgramsSource(cdp, sessionId, "supabase");
+    const chatbotReady = await waitForCondition(
+      cdp,
+      sessionId,
+      `(() => {
+        const count = document.querySelectorAll('[data-testid="program-card"]').length;
+        const chip = document.querySelector('[data-testid="status-chip-전체"]');
+        const match = (chip?.textContent || '').match(/\\[(\\d+)\\]/);
+        return count > 0 && match !== null && Number(match[1]) === ${expectedTotal};
+      })()`,
+    );
+    const activeFreeCount = await evaluate(
+      cdp,
+      sessionId,
+      `(() => {
+        const cards = Array.from(document.querySelectorAll('[data-testid="program-card"]'));
+        return cards.filter((card) => {
+          const status = card.dataset.status || '';
+          return ['접수중', '접수예정', '대기접수'].includes(status) &&
+            (card.textContent || '').includes('무료');
+        }).length;
+      })()`,
+    );
+    await evaluate(cdp, sessionId, click("chatbot-trigger"));
+    await sleep(400);
+    await evaluate(cdp, sessionId, click("chatbot-chip-free"));
+    await sleep(1200);
+    const freeReply = await evaluate(cdp, sessionId, CHATBOT_LAST_BOT);
+    const realtimeCountLine = `전체 ${expectedTotal}개 강좌 중 접수중 ${expectedStatusCounts["접수중"]}개`;
+    const freeListed = Number(/무료 강좌 (\d+)개/.exec(freeReply)?.[1] ?? -1);
+    results.chatbot = { ready: chatbotReady, activeFreeCount, freeReply };
+    check("챗봇 초기 실시간 데이터 동기화", chatbotReady, chatbotReady);
+    check(
+      "챗봇 무료 답변 실시간 접수중 건수 일치",
+      freeReply.includes(realtimeCountLine),
+      { expected: realtimeCountLine, freeReply },
+    );
+    check(
+      "챗봇 무료 강좌 건수 일치",
+      activeFreeCount === 0
+        ? freeReply.includes("무료 강좌는 없습니다")
+        : freeListed === Math.min(3, activeFreeCount),
+      { activeFreeCount, freeListed, freeReply },
+    );
+    await evaluate(cdp, sessionId, click("chatbot-chip-apply"));
+    await sleep(1200);
+    const chatbotApplyReply = await evaluate(cdp, sessionId, CHATBOT_LAST_BOT);
+    results.chatbot.applyReply = chatbotApplyReply;
+    check(
+      "챗봇 신청 답변 실시간 접수중 건수 일치",
+      chatbotApplyReply.includes(
+        `지금 접수 중인 강좌는 ${expectedStatusCounts["접수중"]}개입니다.`,
+      ),
+      { applyReply: chatbotApplyReply },
+    );
+    results.screenshots.push(
+      await screenshot(cdp, sessionId, "desktop-1280-chatbot-realtime.png"),
+    );
+    await evaluate(cdp, sessionId, click("chatbot-close"));
+    await sleep(300);
 
     check(
       "콘솔 오류 0건(실시간 구간)",

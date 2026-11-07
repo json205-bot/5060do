@@ -7,6 +7,7 @@ import {
   defaultProgramCounts,
   fetchProgramCounts,
   fetchProgramPage,
+  mergeProgramPage,
   orderOpenProgramsByImminence,
   programPageSize,
   type Program,
@@ -53,6 +54,7 @@ const selectLocalPrograms = (
 
 export type UseProgramsResult = {
   programs: Program[];
+  overview: Program[];
   counts: ProgramCounts;
   source: ProgramSource;
   total: number;
@@ -81,6 +83,11 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
   );
   const [loadingMore, setLoadingMore] = useState(false);
   const loadingMoreRef = useRef(false);
+  // The chatbot needs a status-agnostic snapshot of the first page so its
+  // answers stay identical to the main list even after the user filters it.
+  const [overview, setOverview] = useState<Program[]>(() =>
+    selectLocalPrograms("전체", programPageSize),
+  );
 
   useEffect(() => {
     if (!client) return;
@@ -99,6 +106,7 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
           error,
         );
         setCounts(countLocalPrograms());
+        setOverview(selectLocalPrograms("전체", programPageSize));
         setServerState("failed");
       });
 
@@ -118,13 +126,15 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
     })
       .then((rows) => {
         if (cancelled) return;
+        const ordered = orderOpenProgramsByImminence(rows);
         setPage({
           filter: statusFilter,
           // Only the first page needs the imminent-seat reorder: later pages
-          // are appended below the already displayed cards.
-          items: orderOpenProgramsByImminence(rows),
+          // are merged into the open group by mergeProgramPage.
+          items: ordered,
           pages: 1,
         });
+        if (statusFilter === "전체") setOverview(ordered);
       })
       .catch((error: unknown) => {
         if (cancelled) return;
@@ -133,6 +143,7 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
           error,
         );
         setCounts(countLocalPrograms());
+        setOverview(selectLocalPrograms("전체", programPageSize));
         setServerState("failed");
       });
 
@@ -187,16 +198,9 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
       .then((rows) => {
         setPage((current) => {
           if (current.filter !== statusFilter) return current;
-          const seen = new Set(current.items.map((program) => program.id));
-          // Server paging already returns the final order, so append new rows
-          // instead of re-sorting to avoid cards jumping into the middle.
-          const merged = [
-            ...current.items,
-            ...rows.filter((program) => !seen.has(program.id)),
-          ];
           return {
             filter: statusFilter,
-            items: merged,
+            items: mergeProgramPage(current.items, rows),
             pages: current.pages + 1,
           };
         });
@@ -221,6 +225,7 @@ export function usePrograms(statusFilter: StatusFilter): UseProgramsResult {
 
   return {
     programs,
+    overview,
     counts,
     source,
     total,

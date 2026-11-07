@@ -262,3 +262,21 @@ export function orderOpenProgramsByImminence(programs: Program[]): Program[] {
     program.status === "접수중" ? ordered[cursor++] : program,
   );
 }
+
+// [더보기] appends a server page that is already ordered by status_order. When
+// the new rows contain another 접수중 course, the visible open group must be
+// re-sorted as a whole so the closest-to-full class stays first across pages.
+// Non-접수중 groups are left in their original sequence.
+export function mergeProgramPage(
+  current: Program[],
+  incoming: Program[],
+): Program[] {
+  const seen = new Set(current.map((program) => program.id));
+  const additions = incoming.filter((program) => !seen.has(program.id));
+  if (additions.length === 0) return current;
+
+  const merged = [...current, ...additions];
+  if (!additions.some((program) => program.status === "접수중")) return merged;
+
+  return orderOpenProgramsByImminence(merged);
+}
