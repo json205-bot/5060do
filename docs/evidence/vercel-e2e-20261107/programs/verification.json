@@ -2,7 +2,7 @@
   "baseUrl": "http://127.0.0.1:3102/",
   "basePath": "",
   "baseOrigin": "http://127.0.0.1:3102",
-  "checkedAt": "2026-11-07T07:06:13.937Z",
+  "checkedAt": "2026-11-07T14:27:22.578Z",
   "checks": [
     {
       "name": "초기 목록·카운트 도착",
@@ -42,9 +42,9 @@
         "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id",
         "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%A4%91",
         "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%98%88%EC%A0%95",
-        "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%A4%91",
         "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%8C%80%EA%B8%B0%EC%A0%91%EC%88%98",
         "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%A7%88%EA%B0%90",
+        "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%A4%91",
         "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%98%88%EC%A0%95",
         "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%8C%80%EA%B8%B0%EC%A0%91%EC%88%98",
         "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%A7%88%EA%B0%90",
@@ -82,7 +82,7 @@
       "name": "초기 목록(GET) gzip 전송량 30KB 미만",
       "pass": true,
       "detail": {
-        "listTransfer": 2896,
+        "listTransfer": 2898,
         "countTransfer": 0
       }
     },
@@ -90,7 +90,7 @@
       "name": "초기 REST 총 전송량 30KB 미만",
       "pass": true,
       "detail": {
-        "payloadTransfer": 2896,
+        "payloadTransfer": 2898,
         "baselineRawBytes": 267043
       }
     },
@@ -1330,7 +1330,7 @@
       "name": "수파베이스 응답 지연 시 5초 타임아웃 폴백",
       "pass": true,
       "detail": {
-        "elapsedMs": 5192,
+        "elapsedMs": 5207,
         "source": "local",
         "chipTotal": 47
       }
@@ -1345,7 +1345,7 @@
       "pass": true,
       "detail": {
         "expected": "전체 667개 강좌 중 접수중 7개",
-        "freeReply": "이달의 무료 강좌 2개를 안내합니다. 1. [특강] AI시대 가짜정보 판별하기(50~99세) (접수중) 신청 2026-10-30 ~ 2026-11-09 · 교육 2026-11-11 ~ 2026-11-11 2. [특강] '굿모닝성모안과'와 함께하는 신중년 안건강 교육(50~99세) (접수중) 신청 2026-11-06 ~ 2026-11-21 · 교육 2026-11-24 ~ 2026-11-24 전체 667개 강좌 중 접수중 7개입니다. 무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다."
+        "freeReply": "이달의 무료 강좌 2개를 안내합니다. 1. [특강] '굿모닝성모안과'와 함께하는 신중년 안건강 교육(50~99세) (접수중) 신청 2026-11-06 ~ 2026-11-21 · 교육 2026-11-24 ~ 2026-11-24 2. [특강] AI시대 가짜정보 판별하기(50~99세) (접수중) 신청 2026-10-30 ~ 2026-11-09 · 교육 2026-11-11 ~ 2026-11-11 전체 667개 강좌 중 접수중 7개입니다. 무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다."
       }
     },
     {
@@ -1354,7 +1354,7 @@
       "detail": {
         "activeFreeCount": 2,
         "freeListed": 2,
-        "freeReply": "이달의 무료 강좌 2개를 안내합니다. 1. [특강] AI시대 가짜정보 판별하기(50~99세) (접수중) 신청 2026-10-30 ~ 2026-11-09 · 교육 2026-11-11 ~ 2026-11-11 2. [특강] '굿모닝성모안과'와 함께하는 신중년 안건강 교육(50~99세) (접수중) 신청 2026-11-06 ~ 2026-11-21 · 교육 2026-11-24 ~ 2026-11-24 전체 667개 강좌 중 접수중 7개입니다. 무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다."
+        "freeReply": "이달의 무료 강좌 2개를 안내합니다. 1. [특강] '굿모닝성모안과'와 함께하는 신중년 안건강 교육(50~99세) (접수중) 신청 2026-11-06 ~ 2026-11-21 · 교육 2026-11-24 ~ 2026-11-24 2. [특강] AI시대 가짜정보 판별하기(50~99세) (접수중) 신청 2026-10-30 ~ 2026-11-09 · 교육 2026-11-11 ~ 2026-11-11 전체 667개 강좌 중 접수중 7개입니다. 무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다."
       }
     },
     {
@@ -1362,6 +1362,30 @@
       "pass": true,
       "detail": {
         "applyReply": "수강신청은 이 화면에서 바로 하실 수 있습니다. 1. '교육신청'에서 원하는 강좌를 누릅니다. 2. 상세 내용을 확인하고 '수강신청'을 누릅니다. 3. 성명과 연락처를 입력하고 결제 버튼을 누릅니다. 무료 강좌는 결제 없이 신청됩니다. 지금 접수 중인 강좌는 7개입니다."
+      }
+    },
+    {
+      "name": "챗봇 연혁 지식 답변",
+      "pass": true,
+      "detail": {
+        "matched": true,
+        "reply": "센터 연혁을 안내합니다. 오륙도인생후반전지원센터는 2023년 개관했습니다. 부산광역시 남구 이기대공원로 18(더파크이기대 101동)에 있으며, 50~60대 신중년이 인생 후반전을 스스로 설계하고 지역사회와 연결될 수 있도록 만든 신중년 맞춤형 거점입니다. 개관 이후 생애설계 진단·상담, 인생설계 교육, 일·활동 연계, 커뮤니티 지원, 공유사무실 운영을 차례로 갖추며 교육·일자리·공동체 사업을 한 건물에서 제공하는 복합 지원 체계를 구축했습니다. 현재 1층 56do 카페, 3층 안내데스크·사무실·56do 강당, 4층 강의실·디지털강의실·소모임실·해맞이 쉼터, 5층 공유사무실·담소마루·요리실·실습실을 운영하며, 운영법인은 사회복지법인 천혜복지재단과 사단법인 월드에이드입니다. 연혁의 상세 연도별 자료는 센터 홈페이지 '센터소개 > 연혁'에서 확인하실 수 있으며, 문의는 대표전화 051-628-5060으로 하시면 됩니다."
+      }
+    },
+    {
+      "name": "챗봇 조직도 지식 답변",
+      "pass": true,
+      "detail": {
+        "matched": true,
+        "reply": "센터 조직과 담당 업무를 안내합니다. 오륙도인생후반전지원센터는 센터장을 중심으로 운영팀, 교육기획팀, 일자리지원팀이 협력하는 직제로 운영됩니다. 운영팀은 시설·안내데스크·대관 운영과 회원 관리를 맡고, 교육기획팀은 생애설계·인생설계 교육과 커뮤니티 프로그램을 기획합니다. 일자리지원팀은 신중년 적합형 일자리와 사회공헌활동 연계를 담당합니다. 3층 안내데스크에서 방문 상담과 시설 안내를 받으실 수 있고, 부서별 담당 연결은 대표전화 051-628-5060으로 요청하시면 됩니다. 조직도의 세부 구성은 센터 홈페이지 '센터소개 > 조직도'에서 확인하실 수 있습니다."
+      }
+    },
+    {
+      "name": "챗봇 커뮤니티 지식 답변",
+      "pass": true,
+      "detail": {
+        "matched": true,
+        "reply": "커뮤니티 지원과 참여 방법을 안내합니다. 커뮤니티지원은 신중년이 스스로 만든 소모임과 동아리가 안정적으로 활동하도록 돕는 사업입니다. 자발적 모임의 인큐베이팅, 활동 공간(4층 소모임실·커뮤니티실 등) 지원, 멘토링 연계를 제공합니다. 2026년에는 통기타로 티키타, 벗과벗, 56Do 파크골프 클럽, 오륙도키즈스피치, 퍼니어니, 그리다온, 달보드레, 명화반 등이 활동하고 있습니다. 새 모임을 시작하려면 대표전화 051-628-5060 또는 3층 안내데스크로 문의하시고, 커뮤니티 소개는 홈페이지 '커뮤니티 > 커뮤니티 소개'에서 확인하실 수 있습니다. 커뮤니티 참여는 센터 회원가입 후 동아리 등록 절차를 거쳐 시작합니다. 회원가입은 홈페이지 상단 '회원가입' 또는 3층 안내데스크에서 하실 수 있습니다. 동아리 등록은 대표자 1인과 구성 인원, 활동 목적과 활동 계획을 정리해 신청합니다. 활동 분야와 인원에 따라 4층 소모임실·커뮤니티실을 배정하며, 정기 활동 일정이 겹치지 않도록 조정합니다. 등록 문의와 신청은 051-628-5060으로 하시거나 3층 안내데스크에 방문하시면 안내받으실 수 있습니다. 참여방법 상세는 홈페이지 '커뮤니티 > 커뮤니티 참여방법'에서 확인하실 수 있습니다."
       }
     },
     {
@@ -1398,15 +1422,7 @@
   "payload": {
     "entries": [
       {
-        "requestId": "39381CBAE7B89673597F6CA899435C64",
-        "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id",
-        "method": "OPTIONS",
-        "status": 200,
-        "encodedDataLength": 0,
-        "rawBytes": 0
-      },
-      {
-        "requestId": "12028.30",
+        "requestId": "32328.30",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id",
         "method": "HEAD",
         "status": 200,
@@ -1414,7 +1430,15 @@
         "rawBytes": 0
       },
       {
-        "requestId": "12028.31",
+        "requestId": "C47D73CDF738DECC2D2A9FAAFD47FE84",
+        "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id",
+        "method": "OPTIONS",
+        "status": 200,
+        "encodedDataLength": 0,
+        "rawBytes": 0
+      },
+      {
+        "requestId": "32328.31",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%A4%91",
         "method": "HEAD",
         "status": 200,
@@ -1422,7 +1446,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "12028.32",
+        "requestId": "32328.32",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%98%88%EC%A0%95",
         "method": "HEAD",
         "status": 200,
@@ -1430,7 +1454,23 @@
         "rawBytes": 0
       },
       {
-        "requestId": "8F0844ACF9B926E7E0A4B64EBE3735EB",
+        "requestId": "32328.33",
+        "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%8C%80%EA%B8%B0%EC%A0%91%EC%88%98",
+        "method": "HEAD",
+        "status": 200,
+        "encodedDataLength": 0,
+        "rawBytes": 0
+      },
+      {
+        "requestId": "32328.34",
+        "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%A7%88%EA%B0%90",
+        "method": "HEAD",
+        "status": 200,
+        "encodedDataLength": 0,
+        "rawBytes": 0
+      },
+      {
+        "requestId": "D687EC0B5D72D211CC43F15002EBE4C7",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%A4%91",
         "method": "OPTIONS",
         "status": 200,
@@ -1438,23 +1478,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "12028.33",
-        "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%8C%80%EA%B8%B0%EC%A0%91%EC%88%98",
-        "method": "HEAD",
-        "status": 200,
-        "encodedDataLength": 0,
-        "rawBytes": 0
-      },
-      {
-        "requestId": "12028.34",
-        "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%A7%88%EA%B0%90",
-        "method": "HEAD",
-        "status": 200,
-        "encodedDataLength": 0,
-        "rawBytes": 0
-      },
-      {
-        "requestId": "2C1E3209D2148EE617879F607D0141E0",
+        "requestId": "333B7D6971A4219C3C8C8DA2A87514F1",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%98%88%EC%A0%95",
         "method": "OPTIONS",
         "status": 200,
@@ -1462,7 +1486,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "B78237FEABF1D4742A0502E5CDAF8775",
+        "requestId": "AB757CC0B5826D2739DC48289AC78FB5",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%8C%80%EA%B8%B0%EC%A0%91%EC%88%98",
         "method": "OPTIONS",
         "status": 200,
@@ -1470,7 +1494,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "6DD5E1E3DAE0685E5B562C42B387E3A4",
+        "requestId": "2B6ECC9A062E1FC3F40A9D5474D66428",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%A7%88%EA%B0%90",
         "method": "OPTIONS",
         "status": 200,
@@ -1478,15 +1502,15 @@
         "rawBytes": 0
       },
       {
-        "requestId": "12028.36",
+        "requestId": "32328.36",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id%2Ctitle%2Ccategory%2Ctarget%2Ccapacity%2Cenrolled%2Cfee%2Cedu_period%2Capply_period%2Clocation%2Cstatus%2Cstatus_order%2Csummary%2Ccreated_at&order=status_order.asc%2Cid.desc&offset=0&limit=30",
         "method": "GET",
         "status": 200,
-        "encodedDataLength": 2896,
+        "encodedDataLength": 2898,
         "rawBytes": 12239
       },
       {
-        "requestId": "97EB7648BC75BED67F8E4F8CDA40F09F",
+        "requestId": "775A2B8586784D230367C28E29BFBA75",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id%2Ctitle%2Ccategory%2Ctarget%2Ccapacity%2Cenrolled%2Cfee%2Cedu_period%2Capply_period%2Clocation%2Cstatus%2Cstatus_order%2Csummary%2Ccreated_at&order=status_order.asc%2Cid.desc&offset=0&limit=30",
         "method": "OPTIONS",
         "status": 200,
@@ -1494,9 +1518,9 @@
         "rawBytes": 0
       }
     ],
-    "listTransfer": 2896,
+    "listTransfer": 2898,
     "countTransfer": 0,
-    "transfer": 2896,
+    "transfer": 2898,
     "listRawBytes": 12239,
     "baselineRawBytes": 267043
   },
@@ -17196,19 +17220,31 @@
     }
   ],
   "timeoutGuard": {
-    "elapsedMs": 5192,
+    "elapsedMs": 5207,
     "source": "local",
     "chipTotal": 47
   },
   "chatbot": {
     "ready": true,
     "activeFreeCount": 2,
-    "freeReply": "이달의 무료 강좌 2개를 안내합니다. 1. [특강] AI시대 가짜정보 판별하기(50~99세) (접수중) 신청 2026-10-30 ~ 2026-11-09 · 교육 2026-11-11 ~ 2026-11-11 2. [특강] '굿모닝성모안과'와 함께하는 신중년 안건강 교육(50~99세) (접수중) 신청 2026-11-06 ~ 2026-11-21 · 교육 2026-11-24 ~ 2026-11-24 전체 667개 강좌 중 접수중 7개입니다. 무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다.",
-    "applyReply": "수강신청은 이 화면에서 바로 하실 수 있습니다. 1. '교육신청'에서 원하는 강좌를 누릅니다. 2. 상세 내용을 확인하고 '수강신청'을 누릅니다. 3. 성명과 연락처를 입력하고 결제 버튼을 누릅니다. 무료 강좌는 결제 없이 신청됩니다. 지금 접수 중인 강좌는 7개입니다."
+    "freeReply": "이달의 무료 강좌 2개를 안내합니다. 1. [특강] '굿모닝성모안과'와 함께하는 신중년 안건강 교육(50~99세) (접수중) 신청 2026-11-06 ~ 2026-11-21 · 교육 2026-11-24 ~ 2026-11-24 2. [특강] AI시대 가짜정보 판별하기(50~99세) (접수중) 신청 2026-10-30 ~ 2026-11-09 · 교육 2026-11-11 ~ 2026-11-11 전체 667개 강좌 중 접수중 7개입니다. 무료 강좌는 수강료가 0원입니다. 화면의 '교육신청'에서 강좌 카드를 누르면 바로 신청하실 수 있습니다.",
+    "applyReply": "수강신청은 이 화면에서 바로 하실 수 있습니다. 1. '교육신청'에서 원하는 강좌를 누릅니다. 2. 상세 내용을 확인하고 '수강신청'을 누릅니다. 3. 성명과 연락처를 입력하고 결제 버튼을 누릅니다. 무료 강좌는 결제 없이 신청됩니다. 지금 접수 중인 강좌는 7개입니다.",
+    "historyAnswer": {
+      "matched": true,
+      "reply": "센터 연혁을 안내합니다. 오륙도인생후반전지원센터는 2023년 개관했습니다. 부산광역시 남구 이기대공원로 18(더파크이기대 101동)에 있으며, 50~60대 신중년이 인생 후반전을 스스로 설계하고 지역사회와 연결될 수 있도록 만든 신중년 맞춤형 거점입니다. 개관 이후 생애설계 진단·상담, 인생설계 교육, 일·활동 연계, 커뮤니티 지원, 공유사무실 운영을 차례로 갖추며 교육·일자리·공동체 사업을 한 건물에서 제공하는 복합 지원 체계를 구축했습니다. 현재 1층 56do 카페, 3층 안내데스크·사무실·56do 강당, 4층 강의실·디지털강의실·소모임실·해맞이 쉼터, 5층 공유사무실·담소마루·요리실·실습실을 운영하며, 운영법인은 사회복지법인 천혜복지재단과 사단법인 월드에이드입니다. 연혁의 상세 연도별 자료는 센터 홈페이지 '센터소개 > 연혁'에서 확인하실 수 있으며, 문의는 대표전화 051-628-5060으로 하시면 됩니다."
+    },
+    "organizationAnswer": {
+      "matched": true,
+      "reply": "센터 조직과 담당 업무를 안내합니다. 오륙도인생후반전지원센터는 센터장을 중심으로 운영팀, 교육기획팀, 일자리지원팀이 협력하는 직제로 운영됩니다. 운영팀은 시설·안내데스크·대관 운영과 회원 관리를 맡고, 교육기획팀은 생애설계·인생설계 교육과 커뮤니티 프로그램을 기획합니다. 일자리지원팀은 신중년 적합형 일자리와 사회공헌활동 연계를 담당합니다. 3층 안내데스크에서 방문 상담과 시설 안내를 받으실 수 있고, 부서별 담당 연결은 대표전화 051-628-5060으로 요청하시면 됩니다. 조직도의 세부 구성은 센터 홈페이지 '센터소개 > 조직도'에서 확인하실 수 있습니다."
+    },
+    "communityAnswer": {
+      "matched": true,
+      "reply": "커뮤니티 지원과 참여 방법을 안내합니다. 커뮤니티지원은 신중년이 스스로 만든 소모임과 동아리가 안정적으로 활동하도록 돕는 사업입니다. 자발적 모임의 인큐베이팅, 활동 공간(4층 소모임실·커뮤니티실 등) 지원, 멘토링 연계를 제공합니다. 2026년에는 통기타로 티키타, 벗과벗, 56Do 파크골프 클럽, 오륙도키즈스피치, 퍼니어니, 그리다온, 달보드레, 명화반 등이 활동하고 있습니다. 새 모임을 시작하려면 대표전화 051-628-5060 또는 3층 안내데스크로 문의하시고, 커뮤니티 소개는 홈페이지 '커뮤니티 > 커뮤니티 소개'에서 확인하실 수 있습니다. 커뮤니티 참여는 센터 회원가입 후 동아리 등록 절차를 거쳐 시작합니다. 회원가입은 홈페이지 상단 '회원가입' 또는 3층 안내데스크에서 하실 수 있습니다. 동아리 등록은 대표자 1인과 구성 인원, 활동 목적과 활동 계획을 정리해 신청합니다. 활동 분야와 인원에 따라 4층 소모임실·커뮤니티실을 배정하며, 정기 활동 일정이 겹치지 않도록 조정합니다. 등록 문의와 신청은 051-628-5060으로 하시거나 3층 안내데스크에 방문하시면 안내받으실 수 있습니다. 참여방법 상세는 홈페이지 '커뮤니티 > 커뮤니티 참여방법'에서 확인하실 수 있습니다."
+    }
   },
   "summary": {
-    "total": 77,
-    "passed": 77,
+    "total": 80,
+    "passed": 80,
     "failed": 0,
     "verdict": "PASS"
   }
