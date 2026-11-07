@@ -1,0 +1,62 @@
+{
+  "ticket": "5060DO-20261107-1135",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "target": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs",
+  "sourceRows": 667,
+  "chunkSize": 100,
+  "upserted": 667,
+  "failed": 0,
+  "failedRecords": [],
+  "remoteCount": 667,
+  "countPass": true,
+  "samples": [
+    {
+      "id": "917",
+      "title": "[활동] 근력UP 활력UP 홈트레이닝 (근력&유산소)",
+      "edu_period": "2026-11-03 ~ 2026-12-08",
+      "status": "마감",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "499",
+      "title": "[여가] 돌아온 7080 방송댄스",
+      "edu_period": "2025-10-20 ~ 2025-11-26",
+      "status": "마감",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "231",
+      "title": "청바지 리폼&재봉 기초",
+      "edu_period": "2025-02-26 ~ 2025-03-26",
+      "status": "마감",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "734",
+      "title": "[실습용] 간편 결제 실습 (디지털 자신감 키우기 2회차)",
+      "edu_period": "2026-04-18 ~ 2026-04-18",
+      "status": "마감",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "729",
+      "title": "[재무] 부동산 교수가 알려주는 '부동산 재테크: 경매'",
+      "edu_period": "2026-05-22 ~ 2026-05-22",
+      "status": "마감",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    }
+  ],
+  "samplePass": true,
+  "startedAt": "2026-11-07T02:43:15.622Z",
+  "elapsedMs": 805
+}
