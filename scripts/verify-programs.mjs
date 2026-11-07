@@ -218,6 +218,35 @@ const closeModal = `(() => {
 const STATUS_ORDER = ["접수중", "접수예정", "대기접수", "마감"];
 const rank = (status) => STATUS_ORDER.indexOf(status);
 
+const PAGE_SIZE = Number(process.env.PAGE_SIZE ?? 30);
+
+const expandAllPrograms = async (cdp, sessionId, maxClicks = 40) => {
+  for (let index = 0; index < maxClicks; index += 1) {
+    const clicked = await evaluate(cdp, sessionId, click("load-more-programs"));
+    if (!clicked) return index;
+    await sleep(150);
+  }
+  return maxClicks;
+};
+
+const readProgramsSource = (cdp, sessionId) =>
+  evaluate(
+    cdp,
+    sessionId,
+    `document.querySelector('#programs')?.dataset.programsSource ?? ''`,
+  );
+
+const waitForProgramsSource = async (cdp, sessionId, expected, timeoutMs = 15000) => {
+  const deadline = Date.now() + timeoutMs;
+  let current = "";
+  while (Date.now() < deadline) {
+    current = await readProgramsSource(cdp, sessionId);
+    if (current === expected) return current;
+    await sleep(250);
+  }
+  return current;
+};
+
 function isSortedByStatus(statuses) {
   return statuses.every(
     (status, index) => index === 0 || rank(statuses[index - 1]) <= rank(status),
@@ -304,6 +333,7 @@ async function main() {
     };
 
     await loadAt(1280, 900, false);
+    results.programsSource = await waitForProgramsSource(cdp, sessionId, "supabase");
     const initialChips = await evaluate(cdp, sessionId, CHIP_STATE);
     results.chips = initialChips;
     const totalChip = initialChips.find((chip) => chip.key === "전체");
@@ -316,6 +346,56 @@ async function main() {
         (totalChip?.count ?? -1),
       initialChips,
     );
+
+    const pageOne = await evaluate(cdp, sessionId, CARD_STATE);
+    check(
+      "실시간 수파베이스 데이터 수신",
+      results.programsSource === "supabase",
+      results.programsSource,
+    );
+    check(
+      "전체 강좌 수 일치",
+      (totalChip?.count ?? -1) === Number(process.env.EXPECTED_TOTAL ?? 667),
+      { chip: totalChip?.count, expected: Number(process.env.EXPECTED_TOTAL ?? 667) },
+    );
+    check(
+      "첫 화면 노출 카드 = 페이지 크기",
+      pageOne.count === Math.min(PAGE_SIZE, totalChip?.count ?? 0),
+      { cards: pageOne.count, pageSize: PAGE_SIZE, total: totalChip?.count },
+    );
+    check(
+      "더보기 버튼 노출",
+      (await evaluate(
+        cdp,
+        sessionId,
+        `Boolean(document.querySelector('[data-testid="load-more-programs"]'))`,
+      )) === true,
+      "load-more-programs",
+    );
+    await evaluate(cdp, sessionId, click("load-more-programs"));
+    await sleep(400);
+    const pageTwo = await evaluate(cdp, sessionId, CARD_STATE);
+    check(
+      "더보기 클릭 시 +페이지 크기",
+      pageTwo.count === Math.min(PAGE_SIZE * 2, totalChip?.count ?? 0),
+      { cards: pageTwo.count, expected: Math.min(PAGE_SIZE * 2, totalChip?.count ?? 0) },
+    );
+    results.paging = { pageOne: pageOne.count, pageTwo: pageTwo.count };
+    results.screenshots.push(
+      await (async () => {
+        await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelector('[data-testid="load-more-programs"]')?.scrollIntoView({ block: 'center' })`,
+        );
+        await sleep(400);
+        const shot = await screenshot(cdp, sessionId, "desktop-1280-load-more.png");
+        await evaluate(cdp, sessionId, `window.scrollTo(0, 0)`);
+        await sleep(200);
+        return shot;
+      })(),
+    );
+    await expandAllPrograms(cdp, sessionId);
 
     const allCards = await evaluate(cdp, sessionId, CARD_STATE);
     results.initialCards = allCards;
@@ -353,6 +433,7 @@ async function main() {
       const chip = initialChips.find((item) => item.key === status);
       await evaluate(cdp, sessionId, click(`status-chip-${status}`));
       await sleep(400);
+      await expandAllPrograms(cdp, sessionId);
       const state = await evaluate(cdp, sessionId, CARD_STATE);
       const active = (await evaluate(cdp, sessionId, CHIP_STATE)).find(
         (item) => item.key === status,
@@ -369,6 +450,7 @@ async function main() {
 
     await evaluate(cdp, sessionId, click("status-chip-전체"));
     await sleep(400);
+    await expandAllPrograms(cdp, sessionId);
     await evaluate(cdp, sessionId, click("view-toggle-list"));
     await sleep(500);
     const tableState = await evaluate(cdp, sessionId, TABLE_STATE);
@@ -477,6 +559,8 @@ async function main() {
     await sleep(300);
 
     await loadAt(390, 900, true);
+    results.mobileProgramsSource = await waitForProgramsSource(cdp, sessionId, "supabase");
+    await expandAllPrograms(cdp, sessionId);
     const mobileCards = await evaluate(cdp, sessionId, CARD_STATE);
     results.mobileCards = mobileCards;
     check("모바일 카드 1열", mobileCards.gridColumns === 1, mobileCards.gridColumns);
@@ -561,6 +645,36 @@ async function main() {
       })(),
     );
 
+    const consoleBeforeFallback = results.console.length;
+    await cdp.send("Network.enable", {}, sessionId);
+    await cdp.send(
+      "Network.setBlockedURLs",
+      { urls: ["*supabase.co*"] },
+      sessionId,
+    );
+    await loadAt(1280, 900, false);
+    await sleep(2500);
+    results.fallbackSource = await readProgramsSource(cdp, sessionId);
+    const fallbackChips = await evaluate(cdp, sessionId, CHIP_STATE);
+    const fallbackTotal = fallbackChips.find((chip) => chip.key === "전체");
+    results.fallbackChips = fallbackChips;
+    check(
+      "수파베이스 차단 시 로컬 폴백",
+      results.fallbackSource === "local",
+      results.fallbackSource,
+    );
+    check(
+      "폴백 시 로컬 강좌 수",
+      (fallbackTotal?.count ?? -1) === Number(process.env.LOCAL_TOTAL ?? 47),
+      { chip: fallbackTotal?.count, expected: Number(process.env.LOCAL_TOTAL ?? 47) },
+    );
+    await cdp.send("Network.setBlockedURLs", { urls: [] }, sessionId);
+
+    check(
+      "콘솔 오류 0건(실시간 구간)",
+      consoleBeforeFallback === 0,
+      results.console.slice(0, consoleBeforeFallback),
+    );
     check("콘솔 오류 0건", results.console.length === 0, results.console);
   } finally {
     chrome.kill();

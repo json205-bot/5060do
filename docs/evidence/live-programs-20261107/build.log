@@ -1,0 +1,31 @@
+
+> 5060do@0.1.0 build
+> next build && node scripts/postbuild-static-rsc.mjs
+
+▲ Next.js 16.4.5 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 448ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.0s
+  Running TypeScript ...
+  Finished TypeScript in 65s ...
+  Collecting page data using 6 workers ...
+  Generating static pages using 6 workers (0/5) ...
+  Generating static pages using 6 workers (1/5) 
+  Generating static pages using 6 workers (2/5) 
+  Generating static pages using 6 workers (3/5) 
+✓ Generating static pages using 6 workers (5/5) in 2.4s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /classic
+└ ○ /icon.svg
+
+
+○  (Static)  prerendered as static content
+
+[postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
+[postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt

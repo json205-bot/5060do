@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -7,6 +7,7 @@ import {
   Briefcase,
   CalendarDays,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
   Clock,
   GraduationCap,
@@ -21,29 +22,16 @@ import {
   Wallet,
   X,
 } from "lucide-react";
-import programsData from "@/data/programs.json";
 import VersionSwitcher from "@/components/version-switcher";
 import ChatbotWidget from "@/components/ChatbotWidget";
+import { usePrograms } from "@/hooks/usePrograms";
+import {
+  programStatuses,
+  type Program,
+  type ProgramStatus,
+} from "@/lib/programs";
 
-const programStatuses = ["접수중", "접수예정", "대기접수", "마감"] as const;
-type ProgramStatus = (typeof programStatuses)[number];
 type StatusFilter = "전체" | ProgramStatus;
-
-type Program = {
-  id: number;
-  title: string;
-  category: string;
-  summary: string;
-  capacity: number;
-  enrolled: number;
-  location: string;
-  fee: number;
-  target: string;
-  applyPeriod: string;
-  eduPeriod: string;
-  status: ProgramStatus;
-  sourceUrl: string;
-};
 
 type Applicant = {
   name: string;
@@ -54,7 +42,7 @@ type ModalStage = "detail" | "form" | "done";
 
 type ViewMode = "card" | "list";
 
-const programs = programsData as Program[];
+const PAGE_SIZE = 30;
 
 const statusStyles: Record<
   ProgramStatus,
@@ -107,10 +95,10 @@ const parseApplyEnd = (period: string) => {
   return end || parseApplyStart(period);
 };
 const remainingSeats = (program: Program) =>
-  Math.max(0, program.capacity - program.enrolled);
+  Math.max(0, program.capacity - (program.enrolled ?? 0));
 const remainingRatio = (program: Program) =>
   program.capacity > 0
-    ? Math.max(0, program.capacity - program.enrolled) / program.capacity
+    ? Math.max(0, program.capacity - (program.enrolled ?? 0)) / program.capacity
     : 1;
 const isApplicable = (status: ProgramStatus) =>
   status === "접수중" || status === "대기접수";
@@ -130,7 +118,7 @@ function comparePrograms(a: Program, b: Program) {
       );
     case "대기접수":
       return (
-        b.enrolled - a.enrolled ||
+        (b.enrolled ?? 0) - (a.enrolled ?? 0) ||
         parseApplyEnd(a.applyPeriod).localeCompare(parseApplyEnd(b.applyPeriod))
       );
     default:
@@ -138,17 +126,6 @@ function comparePrograms(a: Program, b: Program) {
         parseApplyEnd(a.applyPeriod),
       );
   }
-}
-
-const statusCounts: Record<StatusFilter, number> = {
-  전체: programs.length,
-  접수중: 0,
-  접수예정: 0,
-  대기접수: 0,
-  마감: 0,
-};
-for (const program of programs) {
-  statusCounts[program.status] += 1;
 }
 
 const navItems = [
@@ -208,6 +185,7 @@ const formatPhone = (value: string) => {
 };
 
 export default function Home() {
+  const { programs, source: programsSource } = usePrograms();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [stage, setStage] = useState<ModalStage>("detail");
   const [applicant, setApplicant] = useState<Applicant>({ name: "", phone: "" });
@@ -218,6 +196,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("전체");
   const [viewMode, setViewMode] = useState<ViewMode>("card");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const modalPanelRef = useRef<HTMLDivElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -229,8 +208,22 @@ export default function Home() {
 
   const selected = useMemo(
     () => programs.find((program) => program.id === selectedId) ?? null,
-    [selectedId],
+    [programs, selectedId],
   );
+
+  const statusCounts = useMemo<Record<StatusFilter, number>>(() => {
+    const counts: Record<StatusFilter, number> = {
+      전체: programs.length,
+      접수중: 0,
+      접수예정: 0,
+      대기접수: 0,
+      마감: 0,
+    };
+    for (const program of programs) {
+      counts[program.status] += 1;
+    }
+    return counts;
+  }, [programs]);
 
   const visiblePrograms = useMemo(() => {
     const filtered =
@@ -238,7 +231,18 @@ export default function Home() {
         ? programs
         : programs.filter((program) => program.status === statusFilter);
     return [...filtered].sort(comparePrograms);
-  }, [statusFilter]);
+  }, [programs, statusFilter]);
+
+  const shownPrograms = useMemo(
+    () => visiblePrograms.slice(0, visibleCount),
+    [visiblePrograms, visibleCount],
+  );
+  const remainingCount = Math.max(0, visiblePrograms.length - shownPrograms.length);
+
+  const handleStatusFilter = (status: StatusFilter) => {
+    setStatusFilter(status);
+    setVisibleCount(PAGE_SIZE);
+  };
 
   const closeModal = useCallback(() => {
     setSelectedId(null);
@@ -519,6 +523,7 @@ export default function Home() {
         <section
           id="programs"
           aria-labelledby="programs-heading"
+          data-programs-source={programsSource}
           className="mx-auto w-full max-w-6xl px-4 py-10 md:px-6 md:py-14"
         >
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -598,7 +603,7 @@ export default function Home() {
                   type="button"
                   data-testid={`status-chip-${status}`}
                   aria-pressed={active}
-                  onClick={() => setStatusFilter(status)}
+                  onClick={() => handleStatusFilter(status)}
                   className={`inline-flex min-h-[52px] items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
                     active
                       ? style
@@ -637,13 +642,16 @@ export default function Home() {
               data-testid="program-grid"
               className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
             >
-              {visiblePrograms.map((program) => {
+              {shownPrograms.map((program) => {
                 const style = statusStyles[program.status];
                 const applicable = isApplicable(program.status);
-                const rate = Math.min(
-                  100,
-                  Math.round((program.enrolled / program.capacity) * 100),
-                );
+                const rate =
+                  program.enrolled === undefined || program.capacity <= 0
+                    ? 0
+                    : Math.min(
+                        100,
+                        Math.round((program.enrolled / program.capacity) * 100),
+                      );
                 return (
                   <li key={program.id} className="flex">
                     <button
@@ -703,34 +711,44 @@ export default function Home() {
                       </dl>
 
                       <div className="mt-5">
-                        <div className="flex items-center justify-between gap-2 text-sm font-semibold text-slate-900">
-                          <span className="inline-flex items-center gap-1">
+                        {program.enrolled === undefined ? (
+                          <p className="inline-flex items-center gap-1 text-sm font-semibold text-slate-900">
                             <Users aria-hidden className="size-4" />
-                            신청 {program.enrolled}명 / 정원 {program.capacity}명
-                          </span>
-                          <span
-                            className={
-                              remainingSeats(program) === 0
-                                ? "font-bold text-red-700"
-                                : "font-bold text-brand-800"
-                            }
-                          >
-                            잔여 {remainingSeats(program)}석
-                          </span>
-                        </div>
-                        <div
-                          role="progressbar"
-                          aria-valuemin={0}
-                          aria-valuemax={program.capacity}
-                          aria-valuenow={program.enrolled}
-                          aria-label={`${program.title} 신청 현황`}
-                          className="mt-2 h-[10px] w-full overflow-hidden rounded-full bg-slate-200"
-                        >
-                          <div
-                            className={`h-full rounded-full ${style.bar}`}
-                            style={{ width: `${rate}%` }}
-                          />
-                        </div>
+                            정원 {program.capacity}명
+                          </p>
+                        ) : (
+                          <>
+                            <div className="flex items-center justify-between gap-2 text-sm font-semibold text-slate-900">
+                              <span className="inline-flex items-center gap-1">
+                                <Users aria-hidden className="size-4" />
+                                신청 {program.enrolled}명 / 정원{" "}
+                                {program.capacity}명
+                              </span>
+                              <span
+                                className={
+                                  remainingSeats(program) === 0
+                                    ? "font-bold text-red-700"
+                                    : "font-bold text-brand-800"
+                                }
+                              >
+                                잔여 {remainingSeats(program)}석
+                              </span>
+                            </div>
+                            <div
+                              role="progressbar"
+                              aria-valuemin={0}
+                              aria-valuemax={program.capacity}
+                              aria-valuenow={program.enrolled}
+                              aria-label={`${program.title} 신청 현황`}
+                              className="mt-2 h-[10px] w-full overflow-hidden rounded-full bg-slate-200"
+                            >
+                              <div
+                                className={`h-full rounded-full ${style.bar}`}
+                                style={{ width: `${rate}%` }}
+                              />
+                            </div>
+                          </>
+                        )}
                       </div>
 
                       <span
@@ -791,7 +809,7 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
-                    {visiblePrograms.map((program) => (
+                    {shownPrograms.map((program) => (
                       <tr
                         key={program.id}
                         data-testid="program-row"
@@ -824,7 +842,9 @@ export default function Home() {
                           {program.location}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-slate-900">
-                          {program.capacity}명 ({remainingSeats(program)}석)
+                          {program.enrolled === undefined
+                            ? `${program.capacity}명`
+                            : `${program.capacity}명 (${remainingSeats(program)}석)`}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 font-semibold text-slate-900">
                           {formatFee(program.fee)}
@@ -852,7 +872,7 @@ export default function Home() {
                 data-testid="program-list-mobile"
                 className="mt-6 grid gap-3 lg:hidden"
               >
-                {visiblePrograms.map((program) => (
+                {shownPrograms.map((program) => (
                   <li key={program.id}>
                     <button
                       type="button"
@@ -893,8 +913,9 @@ export default function Home() {
                       </span>
                       <span className="flex items-center justify-between gap-2 text-base">
                         <span className="font-semibold text-slate-900">
-                          정원 {program.capacity}명 · 잔여{" "}
-                          {remainingSeats(program)}석
+                          {program.enrolled === undefined
+                            ? `정원 ${program.capacity}명`
+                            : `정원 ${program.capacity}명 · 잔여 ${remainingSeats(program)}석`}
                         </span>
                         <span className="font-bold text-slate-900">
                           {formatFee(program.fee)}
@@ -914,6 +935,26 @@ export default function Home() {
                 ))}
               </ul>
             </>
+          )}
+
+          {visiblePrograms.length > 0 && remainingCount > 0 && (
+            <div className="mt-8 flex flex-col items-center gap-3">
+              <button
+                type="button"
+                data-testid="load-more-programs"
+                onClick={() => setVisibleCount((current) => current + PAGE_SIZE)}
+                className="flex min-h-[56px] w-full max-w-md items-center justify-center gap-2 rounded-2xl border-2 border-brand-700 bg-white px-6 text-lg font-bold text-brand-800 transition-colors hover:bg-brand-50"
+              >
+                더 많은 강좌 보기 (+{Math.min(PAGE_SIZE, remainingCount)}개)
+                <ChevronDown aria-hidden className="size-5" />
+              </button>
+              <p
+                data-testid="programs-shown-count"
+                className="text-base text-slate-900"
+              >
+                {shownPrograms.length}개 표시 중 · 남은 강좌 {remainingCount}개
+              </p>
+            </div>
           )}
         </section>
 
@@ -1321,7 +1362,10 @@ export default function Home() {
                         정원 / 신청
                       </dt>
                       <dd className="font-semibold text-slate-800">
-                        {selected.capacity}명 / {selected.enrolled}명
+                        {selected.capacity}명 /{" "}
+                        {selected.enrolled === undefined
+                          ? "신청 현황 없음"
+                          : `${selected.enrolled}명`}
                       </dd>
                     </div>
                   </div>
