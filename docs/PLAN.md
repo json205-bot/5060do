@@ -159,3 +159,17 @@ status: done
 | NAS 검증 | NAS 모드 빌드 Exit 0, 배포 37파일, `/5060do/`·`/classic/`·로고 HTTP 200, `verify-programs.mjs` **70/70 PASS**, 타임아웃 폴백 5,230ms 실측 |
 | 증거 | `docs/evidence/dual-basepath-20261107/` |
 
+## 15. Vercel 루트 E2E·접수중 전역 임박순·챗봇 실시간 데이터 연동 (2026-11-07 16:00)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | `BASE_PATH` 하나로 NAS `/5060do`와 Vercel 루트("")를 같은 E2E 스크립트로 검증하고, [더보기] 이후에도 접수중 그룹 전체의 잔여석 임박순을 유지하며, 챗봇이 실시간 강좌 건수를 안내하도록 정비 |
+| E2E | `scripts/verify-programs.mjs` — `BASE_PATH`/`BASE_ORIGIN` 동적 URL, 내부 링크 BASE_PATH 일관성·버전 전환 링크 검증, 전체 접수중 임박순(전역)·챗봇 실시간 건수 검증 추가 (77개 항목) |
+| 원클릭 검증 | `scripts/test-vercel.mjs` — `VERCEL=1`·`NEXT_PUBLIC_BASE_PATH=""` 빌드 후 3102 포트 정적 서빙, `BASE_PATH=""` E2E 자동 실행. `npm run test:vercel`/`verify:vercel` 등록 (cross-env 없이 Node 로 직접 빌드) |
+| 정렬 | `mergeProgramPage()` — [더보기] 유입분에 접수중이 있으면 기존 접수중 그룹과 합쳐 잔여 비율 오름차순 재정렬, 접수예정·대기접수·마감 그룹 순서는 보존 |
+| 챗봇 | `ChatbotWidget`이 `overview`(전체 첫 페이지)와 `counts`(실시간 667/7/1/7/652)를 props로 받아 무료 강좌·접수중 건수를 실시간 데이터로 안내. 47건 더미 카운트 제거 |
+| 검증 | typecheck Exit 0, lint Exit 0, NAS build Exit 0, Vercel 루트 build Exit 0(`/5060do` 누출 0), NAS E2E **77/77 PASS**, Vercel 루트 E2E **77/77 PASS**, 챗봇 접수중 7건 일치 |
+| 배포 | `deploy_www.sh` → `/volume3/www/5060do` 37개 파일, `/5060do/`·`/5060do/classic/` HTTP 200 |
+| 증거 | `docs/evidence/vercel-e2e-20261107/`, `docs/evidence/nas-e2e-20261107/` |
+| 한계 | 실제 Vercel 클라우드 배포는 하지 않았다. 접수중 7건이 모두 첫 페이지에 있어 페이지 경계를 넘는 재정렬은 현재 데이터로 직접 발생하지 않는다 |
+

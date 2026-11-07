@@ -1,0 +1,9 @@
+$ ssh -i ~/.ssh/maintain_bot_ed25519 -p 2233 bot@100.83.116.15 \
+    "sh /volume1/workspace/common/scripts/deploy_www.sh /volume1/workspace/dev/5060do/out 5060do"
+deployed: /volume3/www/5060do (37 files)
+url: http://100.83.116.15:8780/5060do/
+
+$ Invoke-WebRequest http://100.83.116.15:8780/5060do/
+200
+$ Invoke-WebRequest http://100.83.116.15:8780/5060do/classic/
+200
