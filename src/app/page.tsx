@@ -645,12 +645,17 @@ export default function Home() {
               {shownPrograms.map((program) => {
                 const style = statusStyles[program.status];
                 const applicable = isApplicable(program.status);
+                const waiting = program.status === "대기접수";
+                const seatTotal =
+                  program.enrolled === undefined
+                    ? program.capacity
+                    : Math.max(program.capacity, program.enrolled);
                 const rate =
-                  program.enrolled === undefined || program.capacity <= 0
+                  program.enrolled === undefined || seatTotal <= 0
                     ? 0
                     : Math.min(
                         100,
-                        Math.round((program.enrolled / program.capacity) * 100),
+                        Math.round((program.enrolled / seatTotal) * 100),
                       );
                 return (
                   <li key={program.id} className="flex">
@@ -721,25 +726,30 @@ export default function Home() {
                             <div className="flex items-center justify-between gap-2 text-sm font-semibold text-slate-900">
                               <span className="inline-flex items-center gap-1">
                                 <Users aria-hidden className="size-4" />
-                                신청 {program.enrolled}명 / 정원{" "}
-                                {program.capacity}명
+                                {waiting ? "대기" : "신청"} {program.enrolled}명 /
+                                정원 {program.capacity}명
                               </span>
                               <span
                                 className={
-                                  remainingSeats(program) === 0
+                                  remainingSeats(program) === 0 && !waiting
                                     ? "font-bold text-red-700"
                                     : "font-bold text-brand-800"
                                 }
                               >
-                                잔여 {remainingSeats(program)}석
+                                {waiting
+                                  ? `대기 ${program.enrolled}명 접수중`
+                                  : `잔여 ${remainingSeats(program)}석`}
                               </span>
                             </div>
                             <div
                               role="progressbar"
                               aria-valuemin={0}
-                              aria-valuemax={program.capacity}
-                              aria-valuenow={program.enrolled}
-                              aria-label={`${program.title} 신청 현황`}
+                              aria-valuemax={seatTotal}
+                              aria-valuenow={Math.min(
+                                program.enrolled,
+                                seatTotal,
+                              )}
+                              aria-label={`${program.title} ${waiting ? "대기" : "신청"} 현황`}
                               className="mt-2 h-[10px] w-full overflow-hidden rounded-full bg-slate-200"
                             >
                               <div
@@ -844,7 +854,9 @@ export default function Home() {
                         <td className="whitespace-nowrap px-3 py-4 text-slate-900">
                           {program.enrolled === undefined
                             ? `${program.capacity}명`
-                            : `${program.capacity}명 (${remainingSeats(program)}석)`}
+                            : program.status === "대기접수"
+                              ? `${program.capacity}명 (대기 ${program.enrolled}명)`
+                              : `${program.capacity}명 (${remainingSeats(program)}석)`}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 font-semibold text-slate-900">
                           {formatFee(program.fee)}
@@ -915,7 +927,9 @@ export default function Home() {
                         <span className="font-semibold text-slate-900">
                           {program.enrolled === undefined
                             ? `정원 ${program.capacity}명`
-                            : `정원 ${program.capacity}명 · 잔여 ${remainingSeats(program)}석`}
+                            : program.status === "대기접수"
+                              ? `정원 ${program.capacity}명 · 대기 ${program.enrolled}명 접수중`
+                              : `정원 ${program.capacity}명 · 잔여 ${remainingSeats(program)}석`}
                         </span>
                         <span className="font-bold text-slate-900">
                           {formatFee(program.fee)}
@@ -1365,7 +1379,9 @@ export default function Home() {
                         {selected.capacity}명 /{" "}
                         {selected.enrolled === undefined
                           ? "신청 현황 없음"
-                          : `${selected.enrolled}명`}
+                          : selected.status === "대기접수"
+                            ? `대기 ${selected.enrolled}명`
+                            : `${selected.enrolled}명`}
                       </dd>
                     </div>
                   </div>

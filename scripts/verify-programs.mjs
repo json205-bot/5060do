@@ -128,6 +128,8 @@ const CARD_STATE = `(() => {
   return {
     count: cards.length,
     statuses: cards.map((card) => card.dataset.status || ''),
+    withProgress: cards.filter((card) => card.querySelector('[role="progressbar"]')).length,
+    texts: cards.map((card) => (card.textContent || '').replace(/\\s+/g, ' ').trim()),
     progress: cards.map((card) => {
       const bar = card.querySelector('[role="progressbar"]');
       const now = bar ? Number(bar.getAttribute('aria-valuenow')) : 0;
@@ -141,6 +143,8 @@ const CARD_STATE = `(() => {
     horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   };
 })()`;
+
+const payloadRequests = new Map();
 
 const TABLE_STATE = `(() => {
   const table = document.querySelector('[data-testid="program-table"]');
@@ -317,6 +321,24 @@ async function main() {
       }
     });
 
+    cdp.on("Network.responseReceived", (params) => {
+      const url = params.response?.url ?? "";
+      if (!url.includes("/rest/v1/programs")) return;
+      payloadRequests.set(params.requestId, {
+        url,
+        status: params.response.status,
+        encodedDataLength: 0,
+      });
+    });
+
+    cdp.on("Network.loadingFinished", (params) => {
+      const entry = payloadRequests.get(params.requestId);
+      if (!entry) return;
+      entry.encodedDataLength = params.encodedDataLength;
+    });
+
+    await cdp.send("Network.enable", {}, sessionId);
+
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
 
@@ -334,6 +356,28 @@ async function main() {
 
     await loadAt(1280, 900, false);
     results.programsSource = await waitForProgramsSource(cdp, sessionId, "supabase");
+    await sleep(500);
+    const payloadEntries = Array.from(payloadRequests.values());
+    const payloadTransfer = payloadEntries.reduce(
+      (sum, entry) => sum + (entry.encodedDataLength || 0),
+      0,
+    );
+    results.payload = { entries: payloadEntries, transfer: payloadTransfer };
+    const selectiveOnly =
+      payloadEntries.length > 0 &&
+      payloadEntries.every(
+        (entry) =>
+          !entry.url.includes("select=*") &&
+          !entry.url.includes("select=%2A") &&
+          entry.url.includes("select="),
+      );
+    check("목록 조회 요청 수신", payloadEntries.length > 0, payloadEntries.length);
+    check("select=* 미사용(선별 조회)", selectiveOnly, payloadEntries.map((entry) => entry.url));
+    check(
+      "목록 네트워크 전송량 150KB 미만",
+      payloadTransfer > 0 && payloadTransfer < 150000,
+      { transferBytes: payloadTransfer, baselineRawBytes: 271000 },
+    );
     const initialChips = await evaluate(cdp, sessionId, CHIP_STATE);
     results.chips = initialChips;
     const totalChip = initialChips.find((chip) => chip.key === "전체");
@@ -362,6 +406,16 @@ async function main() {
       "첫 화면 노출 카드 = 페이지 크기",
       pageOne.count === Math.min(PAGE_SIZE, totalChip?.count ?? 0),
       { cards: pageOne.count, pageSize: PAGE_SIZE, total: totalChip?.count },
+    );
+    check(
+      "실시간 신청현황 진행바 노출",
+      pageOne.count > 0 && pageOne.withProgress === pageOne.count,
+      { cards: pageOne.count, withProgress: pageOne.withProgress },
+    );
+    check(
+      "잔여석 표기 노출",
+      pageOne.texts.some((text) => /잔여 \d+석/.test(text)),
+      pageOne.texts.slice(0, 3),
     );
     check(
       "더보기 버튼 노출",
@@ -405,6 +459,20 @@ async function main() {
       { cards: allCards.count, chip: totalChip?.count },
     );
     check("스마트 정렬 상태 우선순위", isSortedByStatus(allCards.statuses), allCards.statuses);
+    check(
+      "전체 카드 신청현황 진행바 노출",
+      allCards.count > 0 && allCards.withProgress === allCards.count,
+      { cards: allCards.count, withProgress: allCards.withProgress },
+    );
+    const waitingCardTexts = allCards.texts.filter(
+      (_, index) => allCards.statuses[index] === "대기접수",
+    );
+    check(
+      "대기접수 대기 인원 표기",
+      waitingCardTexts.length > 0 &&
+        waitingCardTexts.every((text) => /대기 \d+명 접수중/.test(text)),
+      waitingCardTexts.slice(0, 3),
+    );
     const firstGroup = allCards.progress.slice(
       0,
       allCards.statuses.filter((status) => status === "접수중").length,

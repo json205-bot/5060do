@@ -85,6 +85,12 @@ function formatFee(fee) {
   return `${value.toLocaleString("ko-KR")}원`;
 }
 
+function formatEnrolled(enrolled) {
+  const value = Number(enrolled);
+  if (!Number.isFinite(value) || value < 0) return 0;
+  return Math.trunc(value);
+}
+
 function toRow(program) {
   return {
     id: String(program.id),
@@ -92,6 +98,7 @@ function toRow(program) {
     category: program.category ?? "",
     target: program.target ?? "",
     capacity: formatCapacity(program.capacity),
+    enrolled: formatEnrolled(program.enrolled),
     fee: formatFee(program.fee),
     edu_period: program.eduPeriod ?? "",
     apply_period: program.applyPeriod ?? "",
@@ -182,6 +189,21 @@ async function upsertRows(config, rows) {
   return { inserted, failed };
 }
 
+async function assertEnrolledColumn(config) {
+  const response = await request(config, `${TABLE}?select=id,enrolled&limit=1`);
+  if (response.ok) return;
+
+  const body = (await response.text()).slice(0, 400);
+  if (body.includes("42703") || body.includes("enrolled")) {
+    throw new Error(
+      `${TABLE}.enrolled column is missing (HTTP ${response.status}). ` +
+        "Run this once in the Supabase SQL editor, then re-run the seed:\n" +
+        "ALTER TABLE public.programs ADD COLUMN IF NOT EXISTS enrolled INTEGER DEFAULT 0;",
+    );
+  }
+  throw new Error(`preflight select failed: HTTP ${response.status} ${body}`);
+}
+
 async function fetchCount(config) {
   const response = await request(config, `${TABLE}?select=id&limit=1`, {
     headers: { Prefer: "count=exact" },
@@ -213,7 +235,7 @@ async function verifySamples(config, samples) {
 
   return samples.map((expected) => {
     const actual = remoteById.get(expected.id);
-    const mismatches = ["title", "edu_period", "status", "category", "fee", "capacity"]
+    const mismatches = ["title", "edu_period", "status", "category", "fee", "capacity", "enrolled"]
       .filter((field) => (actual?.[field] ?? null) !== expected[field])
       .map((field) => ({
         field,
@@ -225,6 +247,8 @@ async function verifySamples(config, samples) {
       title: expected.title,
       edu_period: expected.edu_period,
       status: expected.status,
+      capacity: expected.capacity,
+      enrolled: expected.enrolled,
       found: Boolean(actual),
       pass: Boolean(actual) && mismatches.length === 0,
       mismatches,
@@ -242,6 +266,8 @@ async function main() {
   const rows = source.map(toRow);
   console.log(`source rows: ${rows.length} (chunk=${CHUNK_SIZE})`);
 
+  await assertEnrolledColumn(config);
+
   const { inserted, failed } = await upsertRows(config, rows);
   const total = await fetchCount(config);
   const samples = pickSamples(rows, SAMPLE_SIZE);
@@ -249,7 +275,7 @@ async function main() {
 
   const elapsedMs = Date.now() - startedAt.getTime();
   const report = {
-    ticket: "5060DO-20261107-1135",
+    ticket: "5060DO-20261107-1305",
     envPath: config.envPath,
     target: `${config.url}/rest/v1/${TABLE}`,
     sourceRows: rows.length,
@@ -283,7 +309,7 @@ async function main() {
   console.log(`remoteCount=${total} expected=${rows.length} countPass=${report.countPass}`);
   for (const sample of sampleResults) {
     console.log(
-      `sample ${sample.id} pass=${sample.pass} title="${sample.title}" status=${sample.status}`,
+      `sample ${sample.id} pass=${sample.pass} title="${sample.title}" status=${sample.status} enrolled=${sample.enrolled}/${sample.capacity}`,
     );
     for (const mismatch of sample.mismatches) {
       console.log(

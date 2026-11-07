@@ -1,0 +1,3 @@
+deployed: /volume3/www/5060do (37 files)
+url: http://100.83.116.15:8780/5060do/
+written: /volume3/www/index.html (38 sites)

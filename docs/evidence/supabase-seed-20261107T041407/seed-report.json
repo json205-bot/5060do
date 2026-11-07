@@ -1,0 +1,72 @@
+{
+  "ticket": "5060DO-20261107-1305",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "target": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs",
+  "sourceRows": 667,
+  "chunkSize": 100,
+  "upserted": 667,
+  "failed": 0,
+  "failedRecords": [],
+  "remoteCount": 667,
+  "countPass": true,
+  "samples": [
+    {
+      "id": "473",
+      "title": "끌어올림_[건강] 유명 전문의와 함께하는 불면증 극복(40대 이상 신청가능/남구보건소협업)",
+      "edu_period": "2025-09-08 ~ 2025-09-08",
+      "status": "마감",
+      "capacity": "60명",
+      "enrolled": 21,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "359",
+      "title": "[인문학] (영화를 통한)스크린 너머 삶 속으로",
+      "edu_period": "2025-07-21 ~ 2025-07-28",
+      "status": "마감",
+      "capacity": "13명",
+      "enrolled": 1,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "692",
+      "title": "[일] 슬기로운 컴퓨터 생활: 컴퓨터기초",
+      "edu_period": "2026-04-15 ~ 2026-05-20",
+      "status": "마감",
+      "capacity": "14명",
+      "enrolled": 14,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "757",
+      "title": "[60세 이상] 함께 걷는 통기타(기초반)(2026년 7월~9월(3분기)/12회차)",
+      "edu_period": "2026-07-06 ~ 2026-09-28",
+      "status": "마감",
+      "capacity": "10명",
+      "enrolled": 10,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": "253",
+      "title": "일본어능력시험 JLPT(N5급) 합격도전 - 입문과정",
+      "edu_period": "2025-04-09 ~ 2025-04-25",
+      "status": "마감",
+      "capacity": "",
+      "enrolled": 4,
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    }
+  ],
+  "samplePass": true,
+  "startedAt": "2026-11-07T04:14:07.986Z",
+  "elapsedMs": 1839
+}

@@ -1,0 +1,27 @@
+connected aws-0-ap-northeast-2.pooler.supabase.com:5432
+[
+  {
+    "status": "마감",
+    "rows": 652,
+    "with_enrolled": 601,
+    "max_enrolled": 42
+  },
+  {
+    "status": "접수중",
+    "rows": 7,
+    "with_enrolled": 6,
+    "max_enrolled": 14
+  },
+  {
+    "status": "대기접수",
+    "rows": 7,
+    "with_enrolled": 7,
+    "max_enrolled": 15
+  },
+  {
+    "status": "접수예정",
+    "rows": 1,
+    "with_enrolled": 0,
+    "max_enrolled": 0
+  }
+]
