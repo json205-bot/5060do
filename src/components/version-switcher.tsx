@@ -23,7 +23,7 @@ export default function VersionSwitcher({ current }: VersionSwitcherProps) {
       data-testid="version-switcher"
       className="border-b border-slate-700 bg-slate-900 text-white"
     >
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-2.5 text-[15px] sm:flex-row sm:items-center sm:justify-between md:px-6">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-2.5 text-sm sm:flex-row sm:items-center sm:justify-between md:px-6">
         <p className="font-semibold text-slate-200">
           버전 전환 · 두 화면을 비교해 보세요
         </p>
@@ -36,7 +36,7 @@ export default function VersionSwitcher({ current }: VersionSwitcherProps) {
                 href={versionPaths[option.key]}
                 data-testid={`switch-${option.key}`}
                 aria-current={isCurrent ? "page" : undefined}
-                className={`flex min-h-9 items-center gap-1 rounded-lg px-3 font-semibold transition-colors ${
+                className={`flex touch-target items-center gap-1 rounded-lg px-3 font-semibold transition-colors ${
                   isCurrent
                     ? "bg-white text-slate-900"
                     : "bg-slate-700 text-white hover:bg-slate-600"

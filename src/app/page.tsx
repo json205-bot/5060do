@@ -59,25 +59,25 @@ const statusStyles: Record<
   접수중: {
     dot: "bg-status-open",
     active: "border-emerald-700 bg-emerald-700 text-white",
-    badge: "bg-emerald-100 text-emerald-900",
+    badge: "bg-status-open-soft text-emerald-900",
     bar: "bg-status-open",
   },
   접수예정: {
     dot: "bg-status-ready",
     active: "border-sky-700 bg-sky-700 text-white",
-    badge: "bg-sky-100 text-sky-900",
+    badge: "bg-status-ready-soft text-sky-900",
     bar: "bg-status-ready",
   },
   대기접수: {
     dot: "bg-status-wait",
     active: "border-amber-700 bg-amber-700 text-white",
-    badge: "bg-amber-100 text-amber-900",
+    badge: "bg-status-wait-soft text-amber-900",
     bar: "bg-status-wait",
   },
   마감: {
     dot: "bg-status-closed",
     active: "border-slate-700 bg-slate-700 text-white",
-    badge: "bg-slate-200 text-slate-800",
+    badge: "bg-status-closed-soft text-slate-800",
     bar: "bg-status-closed",
   },
 };
@@ -397,7 +397,7 @@ export default function Home() {
         <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-2 px-4 py-2 md:flex-row md:items-center md:justify-between md:gap-6 md:px-6">
           <a
             href="#top"
-            className="flex items-center gap-3"
+            className="flex touch-target items-center gap-3"
             aria-label="오륙도인생후반전지원센터 홈으로 이동"
           >
             <Image
@@ -458,7 +458,7 @@ export default function Home() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#programs"
-                className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-accent-500 px-6 text-lg font-bold text-brand-900 transition-colors hover:bg-accent-600"
+                className="flex cta-primary items-center justify-center gap-2 rounded-2xl bg-accent-500 px-6 text-lg font-bold text-brand-900 transition-colors hover:bg-accent-600"
               >
                 지금 수강신청 하기
                 <ChevronRight aria-hidden className="size-5" />
@@ -467,7 +467,7 @@ export default function Home() {
                 href="https://www.5060do.or.kr/education/lifeEduWay"
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border-2 border-white/40 px-6 text-lg font-semibold text-white transition-colors hover:bg-white/10"
+                className="flex cta-primary items-center justify-center gap-2 rounded-2xl border-2 border-white/40 px-6 text-lg font-semibold text-white transition-colors hover:bg-white/10"
               >
                 신청 방법 안내
                 <ArrowUpRight aria-hidden className="size-5" />
@@ -544,7 +544,7 @@ export default function Home() {
                   data-testid="view-toggle-card"
                   aria-pressed={viewMode === "card"}
                   onClick={() => setViewMode("card")}
-                  className={`flex min-h-[48px] items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
+                  className={`flex touch-target items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
                     viewMode === "card"
                       ? "bg-white text-brand-800 shadow-sm"
                       : "text-slate-900 hover:text-slate-900"
@@ -558,7 +558,7 @@ export default function Home() {
                   data-testid="view-toggle-list"
                   aria-pressed={viewMode === "list"}
                   onClick={() => setViewMode("list")}
-                  className={`flex min-h-[48px] items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
+                  className={`flex touch-target items-center gap-2 rounded-xl px-4 text-base font-bold transition-colors ${
                     viewMode === "list"
                       ? "bg-white text-brand-800 shadow-sm"
                       : "text-slate-900 hover:text-slate-900"
@@ -656,7 +656,7 @@ export default function Home() {
                       data-status={program.status}
                       onClick={() => openProgram(program)}
                       aria-haspopup="dialog"
-                      className="group flex w-full flex-col rounded-[24px] border border-slate-200 bg-white p-[24px] text-left shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
+                      className="group flex w-full flex-col rounded-card border border-slate-200 bg-white p-[24px] text-left shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-bold text-brand-800">
@@ -753,7 +753,7 @@ export default function Home() {
                       </div>
 
                       <span
-                        className={`mt-5 flex min-h-[56px] items-center justify-center gap-1 rounded-2xl text-lg font-bold ${
+                        className={`mt-5 flex cta-primary items-center justify-center gap-1 rounded-2xl text-lg font-bold ${
                           applicable
                             ? "bg-brand-700 text-white group-hover:bg-brand-800"
                             : "bg-slate-200 text-slate-800"
@@ -856,7 +856,7 @@ export default function Home() {
                           <button
                             type="button"
                             onClick={() => openProgram(program)}
-                            className={`flex min-h-[48px] w-full items-center justify-center whitespace-nowrap rounded-xl px-2 text-sm font-bold transition-colors ${
+                            className={`flex touch-target w-full items-center justify-center whitespace-nowrap rounded-xl px-2 text-sm font-bold transition-colors ${
                               isApplicable(program.status)
                                 ? "bg-brand-700 text-white hover:bg-brand-800"
                                 : "bg-slate-200 text-slate-800 hover:bg-slate-300"
@@ -950,7 +950,7 @@ export default function Home() {
                 onClick={loadMore}
                 disabled={loadingMore}
                 aria-busy={loadingMore}
-                className="flex min-h-[56px] w-full max-w-md items-center justify-center gap-2 rounded-2xl border-2 border-brand-700 bg-white px-6 text-lg font-bold text-brand-800 transition-colors hover:bg-brand-50 disabled:cursor-wait disabled:border-slate-300 disabled:text-slate-700"
+                className="flex cta-primary w-full max-w-md items-center justify-center gap-2 rounded-2xl border-2 border-brand-700 bg-white px-6 text-lg font-bold text-brand-800 transition-colors hover:bg-brand-50 disabled:cursor-wait disabled:border-slate-300 disabled:text-slate-700"
               >
                 {loadingMore
                   ? "강좌를 불러오는 중입니다"
@@ -1009,7 +1009,7 @@ export default function Home() {
                   href="https://www.5060do.or.kr/board/lifeFindJob"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-[48px] items-center gap-1 text-base font-bold text-brand-800 underline decoration-brand-300 underline-offset-4 hover:text-brand-900"
+                  className="inline-flex touch-target items-center gap-1 text-base font-bold text-brand-800 underline decoration-brand-300 underline-offset-4 hover:text-brand-900"
                 >
                   원본 게시판
                   <ArrowUpRight aria-hidden className="size-4" />
@@ -1017,7 +1017,7 @@ export default function Home() {
               </div>
             </div>
 
-            <label className="mt-6 flex min-h-[56px] items-center gap-3 rounded-2xl border-2 border-slate-200 bg-white px-4 focus-within:border-brand-500">
+            <label className="mt-6 flex cta-primary items-center gap-3 rounded-2xl border-2 border-slate-200 bg-white px-4 focus-within:border-brand-500">
               <Search aria-hidden className="size-5 shrink-0 text-brand-700" />
               <span className="sr-only">채용정보 검색</span>
               <input
@@ -1045,7 +1045,7 @@ export default function Home() {
                     data-testid={`job-board-chip-${boardType}`}
                     aria-pressed={active}
                     onClick={() => setJobBoardFilter(boardType)}
-                    className={`inline-flex min-h-[48px] items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
+                    className={`inline-flex touch-target items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
                       active
                         ? "border-brand-700 bg-brand-700 text-white"
                         : "border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50"
@@ -1079,7 +1079,7 @@ export default function Home() {
                     data-testid={`job-region-chip-${region}`}
                     aria-pressed={active}
                     onClick={() => setJobRegionFilter(region)}
-                    className={`inline-flex min-h-[48px] items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
+                    className={`inline-flex touch-target items-center gap-2 rounded-full border-2 px-4 text-base font-bold transition-colors ${
                       active
                         ? "border-brand-700 bg-brand-700 text-white"
                         : "border-slate-200 bg-white text-slate-900 hover:border-slate-300 hover:bg-slate-50"
@@ -1170,7 +1170,7 @@ export default function Home() {
                   onClick={loadMoreJobs}
                   disabled={jobsLoadingMore}
                   aria-busy={jobsLoadingMore}
-                  className="flex min-h-[56px] w-full max-w-md items-center justify-center gap-2 rounded-2xl border-2 border-brand-700 bg-white px-6 text-lg font-bold text-brand-800 transition-colors hover:bg-brand-50 disabled:cursor-wait disabled:border-slate-300 disabled:text-slate-700"
+                  className="flex cta-primary w-full max-w-md items-center justify-center gap-2 rounded-2xl border-2 border-brand-700 bg-white px-6 text-lg font-bold text-brand-800 transition-colors hover:bg-brand-50 disabled:cursor-wait disabled:border-slate-300 disabled:text-slate-700"
                 >
                   {jobsLoadingMore
                     ? "채용정보를 불러오는 중입니다"
@@ -1209,7 +1209,7 @@ export default function Home() {
                   className="flex min-h-16 flex-col justify-center gap-1 px-4 py-4 transition-colors hover:bg-slate-50 sm:flex-row sm:items-center sm:justify-between md:px-6"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="rounded-lg bg-accent-100 px-2.5 py-1 text-sm font-bold text-accent-600">
+                    <span className="rounded-lg bg-accent-100 px-2.5 py-1 text-sm font-bold text-accent-700">
                       {notice.tag}
                     </span>
                     <span className="text-lg font-semibold text-slate-800">
@@ -1265,7 +1265,7 @@ export default function Home() {
                   aria-expanded={tab.key === "menu" ? menuOpen : undefined}
                   aria-haspopup={tab.key === "menu" ? "dialog" : undefined}
                   onClick={() => handleTabClick(tab.key)}
-                  className={`relative flex h-full min-h-[48px] min-w-[48px] w-full flex-col items-center justify-center gap-1 transition-colors ${
+                  className={`relative flex h-full touch-target min-w-[48px] w-full flex-col items-center justify-center gap-1 transition-colors ${
                     isActive
                       ? "text-brand-700"
                       : "text-slate-900 hover:text-brand-700"
@@ -1284,7 +1284,7 @@ export default function Home() {
                   />
                   <span
                     data-tab-label=""
-                    className="text-[13px] font-bold leading-none"
+                      className="text-xs font-bold leading-none"
                   >
                     {tab.label}
                   </span>
@@ -1341,7 +1341,7 @@ export default function Home() {
                   type="button"
                   data-testid={`menu-shortcut-${item.id}`}
                   onClick={() => handleMenuShortcut(item.id)}
-                  className="flex min-h-[56px] items-center justify-between gap-3 rounded-2xl border border-slate-200 px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-slate-50"
+                  className="flex cta-primary items-center justify-between gap-3 rounded-2xl border border-slate-200 px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-slate-50"
                 >
                   <span className="flex items-center gap-3">
                     <item.icon
@@ -1365,7 +1365,7 @@ export default function Home() {
                   href={item.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex min-h-[56px] items-center justify-between gap-3 rounded-2xl bg-canvas px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-brand-50"
+                  className="flex cta-primary items-center justify-between gap-3 rounded-2xl bg-canvas px-4 text-lg font-semibold text-slate-800 transition-colors hover:bg-brand-50"
                 >
                   {item.label}
                   <ArrowUpRight
@@ -1389,7 +1389,7 @@ export default function Home() {
                   <a
                     href="tel:0510000000"
                     data-testid="menu-phone-link"
-                    className="font-bold text-brand-700 underline underline-offset-4"
+                    className="inline-flex touch-target items-center font-bold text-brand-700 underline underline-offset-4"
                   >
                     051-000-0000 (예시)
                   </a>
@@ -1503,7 +1503,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="mt-6 flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800"
+                  className="mt-6 flex cta-primary w-full items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800"
                 >
                   확인
                 </button>
@@ -1645,14 +1645,14 @@ export default function Home() {
                       type="button"
                       onClick={() => setStage("form")}
                       disabled={!isApplicable(selected.status)}
-                      className="flex min-h-[56px] flex-1 items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-900"
+                      className="flex cta-primary flex-1 items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-900"
                     >
                       {actionLabels[selected.status]}
                     </button>
                     <button
                       type="button"
                       onClick={closeModal}
-                      className="flex min-h-[56px] items-center justify-center rounded-2xl border-2 border-slate-300 px-6 text-lg font-semibold text-slate-900 transition-colors hover:bg-slate-50"
+                      className="flex cta-primary items-center justify-center rounded-2xl border-2 border-slate-300 px-6 text-lg font-semibold text-slate-900 transition-colors hover:bg-slate-50"
                     >
                       닫기
                     </button>
@@ -1688,7 +1688,7 @@ export default function Home() {
                         placeholder="신청자 성명"
                         aria-invalid={Boolean(errors.name)}
                         aria-describedby={errors.name ? "name-error" : undefined}
-                        className="mt-2 min-h-[52px] w-full rounded-xl border-2 border-slate-300 px-4 text-[18px] text-slate-900 placeholder:text-slate-600 focus:border-brand-600 focus:outline-none"
+                        className="mt-2 min-h-[52px] w-full rounded-xl border-2 border-slate-300 px-4 text-base text-slate-900 placeholder:text-slate-600 focus:border-brand-600 focus:outline-none"
                       />
                       {errors.name && (
                         <p
@@ -1725,7 +1725,7 @@ export default function Home() {
                         aria-describedby={
                           errors.phone ? "phone-error" : undefined
                         }
-                        className="mt-2 min-h-[52px] w-full rounded-xl border-2 border-slate-300 px-4 text-[18px] text-slate-900 placeholder:text-slate-600 focus:border-brand-600 focus:outline-none"
+                        className="mt-2 min-h-[52px] w-full rounded-xl border-2 border-slate-300 px-4 text-base text-slate-900 placeholder:text-slate-600 focus:border-brand-600 focus:outline-none"
                       />
                       {errors.phone && (
                         <p
@@ -1756,14 +1756,14 @@ export default function Home() {
                         type="button"
                         data-testid="pay-button"
                         onClick={handlePayment}
-                        className="flex min-h-[56px] flex-1 items-center justify-center gap-2 rounded-2xl bg-accent-500 text-lg font-bold text-brand-900 transition-colors hover:bg-accent-600"
+                        className="flex cta-primary flex-1 items-center justify-center gap-2 rounded-2xl bg-accent-500 text-lg font-bold text-brand-900 transition-colors hover:bg-accent-600"
                       >
                         {selected.fee > 0 ? "결제하기" : "무료로 신청하기"}
                       </button>
                       <button
                         type="button"
                         onClick={() => setStage("detail")}
-                        className="flex min-h-[56px] items-center justify-center rounded-2xl border-2 border-slate-300 px-6 text-lg font-semibold text-slate-900 transition-colors hover:bg-slate-50"
+                        className="flex cta-primary items-center justify-center rounded-2xl border-2 border-slate-300 px-6 text-lg font-semibold text-slate-900 transition-colors hover:bg-slate-50"
                       >
                         이전
                       </button>
@@ -1870,7 +1870,7 @@ export default function Home() {
               target="_blank"
               rel="noreferrer"
               data-testid="job-source-link"
-              className="mt-5 flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-brand-700 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-800"
+              className="mt-5 flex cta-primary items-center justify-center gap-2 rounded-2xl bg-brand-700 px-6 text-lg font-bold text-white transition-colors hover:bg-brand-800"
             >
               원문 게시판에서 보기
               <ArrowUpRight aria-hidden className="size-5" />

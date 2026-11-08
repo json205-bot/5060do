@@ -1,0 +1,242 @@
+{
+  "mode": "remote-nas",
+  "baseUrl": "http://100.83.116.15:8780/5060do/",
+  "basePath": "/5060do",
+  "checkedAt": "2026-11-08T09:18:25.927Z",
+  "checks": [
+    {
+      "name": "/5060do/ HTTP 200",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "bytes": 33034
+      }
+    },
+    {
+      "name": "/5060do/ HTML 본문 수신",
+      "pass": true,
+      "detail": {
+        "bytes": 33034
+      }
+    },
+    {
+      "name": "/5060do/classic/ HTTP 200",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "bytes": 44181
+      }
+    },
+    {
+      "name": "/5060do/classic/ HTML 본문 수신",
+      "pass": true,
+      "detail": {
+        "bytes": 44181
+      }
+    },
+    {
+      "name": "/5060do/ HTML 내 /5060do/_next/ 자산 참조",
+      "pass": true,
+      "detail": {
+        "references": 19
+      }
+    },
+    {
+      "name": "/5060do/ HTML 루트 /_next/ 누출 0건",
+      "pass": true,
+      "detail": {
+        "occurrences": 0
+      }
+    },
+    {
+      "name": "/5060do/classic/ HTML 내 /5060do/_next/ 자산 참조",
+      "pass": true,
+      "detail": {
+        "references": 16
+      }
+    },
+    {
+      "name": "/5060do/classic/ HTML 루트 /_next/ 누출 0건",
+      "pass": true,
+      "detail": {
+        "occurrences": 0
+      }
+    },
+    {
+      "name": "참조 자산 전부 HTTP 200",
+      "pass": true,
+      "detail": {
+        "checked": 10,
+        "failed": 0,
+        "failures": []
+      }
+    },
+    {
+      "name": "채용정보 수파베이스 실데이터 바인딩",
+      "pass": true,
+      "detail": {
+        "source": "supabase",
+        "cards": 12,
+        "section": true,
+        "classicLink": "/5060do/classic/",
+        "overflow": false
+      }
+    },
+    {
+      "name": "채용정보 실시간 소스 사용",
+      "pass": true,
+      "detail": {
+        "source": "supabase"
+      }
+    },
+    {
+      "name": "채용정보 섹션·클래식 링크 렌더링",
+      "pass": true,
+      "detail": {
+        "source": "supabase",
+        "cards": 12,
+        "section": true,
+        "classicLink": "/5060do/classic/",
+        "overflow": false
+      }
+    },
+    {
+      "name": "가로 스크롤 없음(1280px)",
+      "pass": true,
+      "detail": {
+        "overflow": false
+      }
+    },
+    {
+      "name": "클래식 화면 헤더 렌더링",
+      "pass": true,
+      "detail": {
+        "header": true,
+        "gnbItems": 8,
+        "overflow": false
+      }
+    },
+    {
+      "name": "클래식 GNB 8개 메뉴",
+      "pass": true,
+      "detail": {
+        "gnbItems": 8
+      }
+    },
+    {
+      "name": "가로 스크롤 없음(클래식 1280px)",
+      "pass": true,
+      "detail": {
+        "overflow": false
+      }
+    },
+    {
+      "name": "모바일(390px) 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "cards": 12,
+        "stacked": true,
+        "chips": 8,
+        "minChipHeight": 48,
+        "overflow": false,
+        "viewportWidth": 390
+      }
+    },
+    {
+      "name": "모바일(390px) 채용정보 카드 12건 적층",
+      "pass": true,
+      "detail": {
+        "cards": 12,
+        "stacked": true,
+        "chips": 8,
+        "minChipHeight": 48,
+        "overflow": false,
+        "viewportWidth": 390
+      }
+    },
+    {
+      "name": "모바일(390px) 직종·지역 칩 터치·스크롤 동작",
+      "pass": true,
+      "detail": {
+        "pressed": true,
+        "label": "취업지원 459건",
+        "tap": {
+          "x": 96,
+          "y": 485,
+          "height": 48
+        }
+      }
+    },
+    {
+      "name": "모바일(390px) GNB 햄버거 메뉴 열기·닫기",
+      "pass": true,
+      "detail": {
+        "opened": true,
+        "closed": true
+      }
+    },
+    {
+      "name": "태블릿(768px) 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "columns": 2,
+        "headerVisible": true,
+        "headerItems": 3,
+        "bottomNavDisplay": "none",
+        "overflow": false,
+        "viewportWidth": 768
+      }
+    },
+    {
+      "name": "태블릿(768px) 프로그램 카드 2열 그리드",
+      "pass": true,
+      "detail": {
+        "columns": 2
+      }
+    },
+    {
+      "name": "태블릿(768px) 헤더 메뉴 3항목 정합",
+      "pass": true,
+      "detail": {
+        "columns": 2,
+        "headerVisible": true,
+        "headerItems": 3,
+        "bottomNavDisplay": "none",
+        "overflow": false,
+        "viewportWidth": 768
+      }
+    },
+    {
+      "name": "태블릿(768px) 하단 모바일 메뉴 숨김",
+      "pass": true,
+      "detail": {
+        "display": "none"
+      }
+    },
+    {
+      "name": "브라우저 콘솔 오류 0건",
+      "pass": true,
+      "detail": {
+        "count": 0
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "screenshots": [
+    "nas-live-root-1280.png",
+    "nas-live-jobs-1280.png",
+    "nas-live-classic-1280.png",
+    "nas-live-root-390.png",
+    "nas-live-menu-390.png",
+    "nas-live-root-768.png"
+  ],
+  "assetFailures": [],
+  "currentPage": "/ (tablet 768)",
+  "summary": {
+    "total": 25,
+    "passed": 25,
+    "failed": 0,
+    "verdict": "PASS"
+  },
+  "finishedAt": "2026-11-08T09:18:33.774Z"
+}

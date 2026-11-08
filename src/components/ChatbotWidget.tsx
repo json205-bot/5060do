@@ -567,7 +567,7 @@ export default function ChatbotWidget({
                       className={
                         message.role === "user"
                           ? "max-w-[85%] rounded-2xl rounded-br-md bg-brand-700 px-4 py-3 text-white"
-                          : "max-w-[90%] rounded-2xl rounded-bl-md border border-slate-200 bg-white px-4 py-3 text-[#1e293b] shadow-sm"
+                          : "max-w-[90%] rounded-2xl rounded-bl-md border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm"
                       }
                     >
                       <p className="whitespace-pre-line text-base leading-relaxed">
@@ -587,7 +587,7 @@ export default function ChatbotWidget({
                           rel={
                             message.action.external ? "noreferrer" : undefined
                           }
-                          className="mt-3 flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 text-sm font-bold text-white transition-colors hover:bg-brand-800"
+                          className="mt-3 flex touch-target items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 text-sm font-bold text-white transition-colors hover:bg-brand-800"
                         >
                           {message.action.href.startsWith("tel:") && (
                             <Phone aria-hidden className="size-4" />
@@ -636,7 +636,7 @@ export default function ChatbotWidget({
                     type="button"
                     data-testid={`chatbot-chip-${question.id}`}
                     onClick={() => ask(question.label)}
-                    className="flex min-h-[48px] items-center justify-center rounded-xl border-2 border-brand-200 bg-brand-50 px-2 text-center text-sm font-bold text-brand-800 transition-colors last:col-span-2 hover:border-brand-400 hover:bg-brand-100"
+                    className="flex touch-target items-center justify-center rounded-xl border-2 border-brand-200 bg-brand-50 px-2 text-center text-sm font-bold text-brand-800 transition-colors last:col-span-2 hover:border-brand-400 hover:bg-brand-100"
                   >
                     {question.label}
                   </button>
@@ -659,7 +659,7 @@ export default function ChatbotWidget({
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 placeholder="궁금한 내용을 적어 주세요"
-                className="min-h-[52px] w-full min-w-0 flex-1 rounded-xl border-2 border-slate-300 px-4 text-[18px] text-[#1e293b] placeholder:text-slate-600 focus:border-brand-600 focus:outline-none"
+                className="min-h-[52px] w-full min-w-0 flex-1 rounded-xl border-2 border-slate-300 px-4 text-base text-slate-800 placeholder:text-slate-600 focus:border-brand-600 focus:outline-none"
               />
               <button
                 type="submit"

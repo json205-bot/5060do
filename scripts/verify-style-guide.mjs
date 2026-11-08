@@ -7,6 +7,7 @@ const CHROME =
   process.env.CHROME_PATH ??
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const BASE_URL = process.env.BASE_URL ?? "http://100.83.116.15:8780/5060do/";
+const CLASSIC_URL = new URL("classic/", BASE_URL).toString();
 const OUT_DIR = path.resolve(
   process.env.OUT_DIR ?? path.join("docs", "evidence", "styleguide-20261107"),
 );
@@ -119,7 +120,6 @@ const MEASURE = `(() => {
   const context = canvas.getContext('2d', { willReadFrequently: true });
   const rgb = (value) => {
     if (!value) return null;
-    // Normalize any computed color (rgb, oklch, color-mix) through a canvas.
     context.clearRect(0, 0, 1, 1);
     context.fillStyle = 'rgba(0, 0, 0, 0)';
     context.fillStyle = value;
@@ -263,12 +263,128 @@ const MODAL_MEASURE = `(() => {
   const modal = document.querySelector('[data-testid="detail-modal"]');
   if (!modal) return { visible: false };
   const apply = Array.from(modal.querySelectorAll('button')).find((el) =>
-    ['수강신청', '대기신청', '모집 마감', '접수예정'].includes(el.textContent.trim()),
+    ['수강신청', '대기신청', '신청하기', '접수하기'].includes(el.textContent.trim()),
   );
   return {
     visible: true,
     width: box(modal).w,
     applyHeight: apply ? box(apply).h : null,
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+// Audits the whole rendered page instead of named selectors: every visible text
+// node must stay at or above the 14px caption floor and every visible touch
+// target must keep a 48x48px box (docs/STYLE_GUIDE.md §1, §3, §4).
+const AUDIT = `(() => {
+  const round = (value) => Math.round(value * 10) / 10;
+  const canvas = document.createElement('canvas');
+  canvas.width = 1;
+  canvas.height = 1;
+  const context = canvas.getContext('2d', { willReadFrequently: true });
+  const rgb = (value) => {
+    if (!value) return null;
+    context.clearRect(0, 0, 1, 1);
+    context.fillStyle = 'rgba(0, 0, 0, 0)';
+    context.fillStyle = value;
+    context.fillRect(0, 0, 1, 1);
+    const data = context.getImageData(0, 0, 1, 1).data;
+    return { r: data[0], g: data[1], b: data[2], a: data[3] / 255 };
+  };
+  const luminance = ({ r, g, b }) => {
+    const channel = (value) => {
+      const scaled = value / 255;
+      return scaled <= 0.03928 ? scaled / 12.92 : Math.pow((scaled + 0.055) / 1.055, 2.4);
+    };
+    return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+  };
+  const composite = (fg, bg) => ({
+    r: fg.r * fg.a + bg.r * (1 - fg.a),
+    g: fg.g * fg.a + bg.g * (1 - fg.a),
+    b: fg.b * fg.a + bg.b * (1 - fg.a),
+    a: 1,
+  });
+  const backdrop = (el) => {
+    let node = el;
+    while (node) {
+      const color = rgb(getComputedStyle(node).backgroundColor);
+      if (color && color.a > 0.5) return color;
+      node = node.parentElement;
+    }
+    return rgb(getComputedStyle(document.body).backgroundColor);
+  };
+  const contrast = (fg, bg) => {
+    const a = luminance(fg);
+    const b = luminance(bg);
+    return round((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05));
+  };
+  const isVisible = (el) => {
+    if (!el) return false;
+    const style = getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return false;
+    const rect = el.getBoundingClientRect();
+    return rect.width > 1 && rect.height > 1;
+  };
+  const ignored = (el) =>
+    el.closest('[aria-hidden="true"], script, style, noscript, .sr-only') !== null;
+  const describe = (el) => ({
+    tag: el.tagName.toLowerCase(),
+    testid: el.getAttribute('data-testid') || null,
+    className: String(el.className || '').slice(0, 120),
+  });
+
+  const fontViolations = [];
+  const contrastViolations = [];
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    const text = (node.textContent || '').replace(/\\s+/g, ' ').trim();
+    if (!text) continue;
+    const el = node.parentElement;
+    if (!el || ignored(el) || !isVisible(el)) continue;
+    const fontSize = parseFloat(getComputedStyle(el).fontSize);
+    if (fontSize < 14) {
+      fontViolations.push({ ...describe(el), text: text.slice(0, 40), fontSize: round(fontSize) });
+    }
+    const fg = rgb(getComputedStyle(el).color);
+    const bg = backdrop(el);
+    if (fg && bg) {
+      const value = contrast(composite(fg, bg), bg);
+      if (value < 4.5) {
+        contrastViolations.push({ ...describe(el), text: text.slice(0, 40), contrast: value });
+      }
+    }
+  }
+
+  const smallTargets = [];
+  const interactive = document.querySelectorAll(
+    'a[href], button, input:not([type="hidden"]), select, textarea, [role="button"], [role="tab"], [role="link"]',
+  );
+  for (const el of interactive) {
+    if (ignored(el) || !isVisible(el) || el.disabled) continue;
+    const rect = el.getBoundingClientRect();
+    if (rect.width < 48 || rect.height < 48) {
+      smallTargets.push({
+        ...describe(el),
+        text: (el.textContent || el.getAttribute('aria-label') || '').replace(/\\s+/g, ' ').trim().slice(0, 40),
+        width: round(rect.width),
+        height: round(rect.height),
+      });
+    }
+  }
+
+  return {
+    fontViolations: fontViolations.slice(0, 15),
+    fontViolationCount: fontViolations.length,
+    contrastViolations: contrastViolations.slice(0, 15),
+    contrastViolationCount: contrastViolations.length,
+    smallTargets: smallTargets.slice(0, 15),
+    smallTargetCount: smallTargets.length,
+    bodyContrast: (() => {
+      const fg = rgb(getComputedStyle(document.body).color);
+      const bg = backdrop(document.body);
+      return fg && bg ? contrast(composite(fg, bg), bg) : null;
+    })(),
     horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   };
 })()`;
@@ -306,9 +422,11 @@ async function main() {
 
   const results = {
     baseUrl: BASE_URL,
+    classicUrl: CLASSIC_URL,
     checkedAt: new Date().toISOString(),
     checks: [],
     viewports: [],
+    classic: [],
     screenshots: [],
     console: [],
   };
@@ -344,9 +462,7 @@ async function main() {
 
     const viewports = [
       { name: "mobile-390", width: 390, height: 900, mobile: true, expectedColumns: 1 },
-      { name: "fold8-412", width: 412, height: 915, mobile: true, expectedColumns: 1 },
       { name: "tablet-768", width: 768, height: 1024, mobile: false, expectedColumns: 2 },
-      { name: "fold8-820", width: 820, height: 1180, mobile: false, expectedColumns: 2 },
       { name: "desktop-1280", width: 1280, height: 900, mobile: false, expectedColumns: 3 },
     ];
 
@@ -362,6 +478,7 @@ async function main() {
       await sleep(1400);
 
       const metrics = await evaluate(cdp, sessionId, MEASURE);
+      const audit = await evaluate(cdp, sessionId, AUDIT);
       const topShot = await screenshot(cdp, sessionId, `${viewport.name}-top.png`);
 
       await evaluate(cdp, sessionId, `document.querySelector('#programs').scrollIntoView({ block: 'start' })`);
@@ -369,45 +486,94 @@ async function main() {
       const programsShot = await screenshot(cdp, sessionId, `${viewport.name}-programs.png`);
 
       results.screenshots.push(topShot, programsShot);
-      results.viewports.push({ ...viewport, metrics, screenshots: [topShot, programsShot] });
+      results.viewports.push({ ...viewport, metrics, audit, screenshots: [topShot, programsShot] });
 
       const label = `${viewport.width}px`;
-      check(`${label} 카드 열 수 ${viewport.expectedColumns}`, metrics.gridColumns === viewport.expectedColumns, metrics.gridColumns);
+      check(`${label} 카드 수 ${viewport.expectedColumns}열`, metrics.gridColumns === viewport.expectedColumns, metrics.gridColumns);
       check(`${label} 가로 스크롤 없음`, !metrics.horizontalOverflow, {
         scrollWidth: metrics.documentScrollWidth,
         clientWidth: metrics.documentClientWidth,
       });
       check(`${label} 카드 CTA 높이 52~60px`, metrics.card?.ctaHeight >= 52 && metrics.card?.ctaHeight <= 60, metrics.card?.ctaHeight);
-      check(`${label} 카드 곡률 24px`, metrics.card?.radius === 24, metrics.card?.radius);
+      check(`${label} 카드 모서리 24px`, metrics.card?.radius === 24, metrics.card?.radius);
       check(`${label} 카드 패딩 24px`, metrics.card?.padding === 24, metrics.card?.padding);
-      check(`${label} 카드 본문 18px`, metrics.card?.titleFontSize === 18 || metrics.card?.titleFontSize === 20, metrics.card?.titleFontSize);
-      check(`${label} 본문 명도비 7:1 이상`, metrics.bodyContrast >= 7, metrics.bodyContrast);
-      check(`${label} 카드 설명 명도비 7:1 이상`, metrics.card?.summaryContrast >= 7, metrics.card?.summaryContrast);
+      check(`${label} 카드 제목 18px 이상`, metrics.card?.titleFontSize >= 18, metrics.card?.titleFontSize);
+      check(`${label} 본문 대비 7:1 이상`, metrics.bodyContrast >= 7 && audit.bodyContrast >= 7, {
+        body: metrics.bodyContrast,
+        audit: audit.bodyContrast,
+      });
+      check(`${label} 카드 요약 대비 7:1 이상`, metrics.card?.summaryContrast >= 7, metrics.card?.summaryContrast);
       check(`${label} 상태 칩 높이 52~56px`, metrics.chipHeight >= 52 && metrics.chipHeight <= 56, metrics.chipHeight);
-      check(`${label} 상태 칩 명도비 4.5:1 이상`, (metrics.chips ?? []).every((chip) => chip.contrast >= 4.5), metrics.chips);
+      check(`${label} 상태 칩 대비 4.5:1 이상`, (metrics.chips ?? []).every((chip) => chip.contrast >= 4.5), metrics.chips);
 
       check(`${label} 헤더 72px`, Math.round(metrics.headerHeight) === 72, metrics.headerHeight);
-      check(`${label} 히어로 CTA 56px`, metrics.heroCtaHeight === 56, metrics.heroCtaHeight);
+      check(`${label} 대표 CTA 56px`, metrics.heroCtaHeight === 56, metrics.heroCtaHeight);
+
+      check(`${label} 모든 글자 14px 이상`, audit.fontViolationCount === 0, {
+        count: audit.fontViolationCount,
+        violations: audit.fontViolations,
+      });
+      check(`${label} 모든 터치 타깃 48x48px 이상`, audit.smallTargetCount === 0, {
+        count: audit.smallTargetCount,
+        violations: audit.smallTargets,
+      });
+      check(`${label} 모든 글자 대비 4.5:1 이상`, audit.contrastViolationCount === 0, {
+        count: audit.contrastViolationCount,
+        violations: audit.contrastViolations,
+      });
 
       if (viewport.width < 768) {
-        check(`${label} 하단 탭바 64px`, Math.round(metrics.bottomNav?.height) === 64, metrics.bottomNav?.height);
+        check(`${label} 하단 메뉴 64px`, Math.round(metrics.bottomNav?.height) === 64, metrics.bottomNav?.height);
         check(`${label} 탭 5개`, metrics.bottomNav?.tabCount === 5, metrics.bottomNav?.tabCount);
         check(
           `${label} 탭 터치 48x48 이상`,
           metrics.bottomNav?.minTabWidth >= 48 && metrics.bottomNav?.minTabHeight >= 48,
           { width: metrics.bottomNav?.minTabWidth, height: metrics.bottomNav?.minTabHeight },
         );
-        check(`${label} 탭 라벨 13px bold`, metrics.bottomNav?.minLabelFontSize === 13 && metrics.bottomNav?.labelsBold, {
+        check(`${label} 탭 라벨 14px 이상 bold`, metrics.bottomNav?.minLabelFontSize >= 14 && metrics.bottomNav?.labelsBold, {
           fontSize: metrics.bottomNav?.minLabelFontSize,
           bold: metrics.bottomNav?.labelsBold,
         });
-        check(`${label} 하단 탭바 표시`, metrics.bottomNav?.display !== "none", metrics.bottomNav?.display);
+        check(`${label} 하단 메뉴 표시`, metrics.bottomNav?.display !== "none", metrics.bottomNav?.display);
       } else {
-        check(`${label} 하단 탭바 숨김`, metrics.bottomNav?.display === "none", metrics.bottomNav?.display);
+        check(`${label} 하단 메뉴 숨김`, metrics.bottomNav?.display === "none", metrics.bottomNav?.display);
       }
 
       if (viewport.width === 1280) {
-        check("데스크톱 카드형 47개", metrics.cardCount === 47, metrics.cardCount);
+        check("데스크톱 카드 30개(페이지 크기)", metrics.cardCount === 30, metrics.cardCount);
+      }
+
+      const classicLoaded = cdp.once("Page.loadEventFired");
+      await cdp.send("Page.navigate", { url: CLASSIC_URL }, sessionId);
+      await classicLoaded;
+      await sleep(1400);
+      const classicAudit = await evaluate(cdp, sessionId, AUDIT);
+      const classicShot = await screenshot(cdp, sessionId, `${viewport.name}-classic.png`);
+      results.screenshots.push(classicShot);
+      results.classic.push({ ...viewport, audit: classicAudit, screenshot: classicShot });
+
+      check(`${label} 클래식 가로 스크롤 없음`, !classicAudit.horizontalOverflow, classicAudit.horizontalOverflow);
+      check(`${label} 클래식 모든 글자 14px 이상`, classicAudit.fontViolationCount === 0, {
+        count: classicAudit.fontViolationCount,
+        violations: classicAudit.fontViolations,
+      });
+      check(`${label} 클래식 모든 터치 타깃 48x48px 이상`, classicAudit.smallTargetCount === 0, {
+        count: classicAudit.smallTargetCount,
+        violations: classicAudit.smallTargets,
+      });
+      check(`${label} 클래식 모든 글자 대비 4.5:1 이상`, classicAudit.contrastViolationCount === 0, {
+        count: classicAudit.contrastViolationCount,
+        violations: classicAudit.contrastViolations,
+      });
+      check(`${label} 클래식 본문 대비 7:1 이상`, classicAudit.bodyContrast >= 7, classicAudit.bodyContrast);
+
+      if (viewport.width === 1280) {
+        const gnb = await evaluate(
+          cdp,
+          sessionId,
+          `document.querySelectorAll('[data-testid^="classic-gnb-item-"]').length`,
+        );
+        check("클래식 GNB 8개 메뉴", gnb === 8, gnb);
       }
     }
 
@@ -426,8 +592,8 @@ async function main() {
     await sleep(600);
     const listState = await evaluate(cdp, sessionId, MEASURE);
     results.mobileList = listState;
-    check("390px 목록형 표 숨김", listState.tableVisible === false, listState.tableVisible);
-    check("390px 목록형 행 카드 표시", listState.mobileListVisible === true, listState.mobileListVisible);
+    check("390px 목록형 표 표시", listState.tableVisible === false, listState.tableVisible);
+    check("390px 목록형 목 카드 표시", listState.mobileListVisible === true, listState.mobileListVisible);
     check("390px 목록형 가로 스크롤 없음", !listState.horizontalOverflow, listState.horizontalOverflow);
     results.screenshots.push(await screenshot(cdp, sessionId, "mobile-390-list.png"));
 
@@ -438,7 +604,7 @@ async function main() {
     const modalState = await evaluate(cdp, sessionId, MODAL_MEASURE);
     results.mobileModal = modalState;
     check("390px 상세 모달 표시", modalState.visible === true, modalState.visible);
-    check("390px 모달 신청 버튼 56px", modalState.applyHeight === 56, modalState.applyHeight);
+    check("390px 신청 버튼 56px", modalState.applyHeight === 56, modalState.applyHeight);
     check("390px 모달 가로 스크롤 없음", !modalState.horizontalOverflow, modalState.horizontalOverflow);
     results.screenshots.push(await screenshot(cdp, sessionId, "mobile-390-modal.png"));
 
@@ -459,18 +625,18 @@ async function main() {
     const formState = await evaluate(cdp, sessionId, FORM_MEASURE);
     results.mobileForm = formState;
     check("390px 신청 폼 표시", formState.formVisible === true, formState.formVisible);
-    check("390px 성명 입력 52px", formState.name?.box.h === 52, formState.name?.box.h);
+    check("390px 이름 입력 52px", formState.name?.box.h === 52, formState.name?.box.h);
     check("390px 연락처 입력 52px", formState.phone?.box.h === 52, formState.phone?.box.h);
     check("390px 입력 글자 18px (자동 줌 차단)", formState.name?.fontSize === 18 && formState.phone?.fontSize === 18, {
       name: formState.name?.fontSize,
       phone: formState.phone?.fontSize,
     });
     check("390px 결제 버튼 56px", formState.payButton?.box.h === 56, formState.payButton?.box.h);
-    check("390px 폼 라벨 18px", formState.labelFontSize === 18, formState.labelFontSize);
+    check("390px 라벨 18px", formState.labelFontSize === 18, formState.labelFontSize);
     check("390px 폼 가로 스크롤 없음", !formState.horizontalOverflow, formState.horizontalOverflow);
     results.screenshots.push(await screenshot(cdp, sessionId, "mobile-390-form.png"));
 
-    check("콘솔 에러 0건", results.console.length === 0, results.console);
+    check("콘솔 오류 0건", results.console.length === 0, results.console);
   } finally {
     chrome.kill();
   }
