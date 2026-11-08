@@ -1,0 +1,67 @@
+{
+  "ticket": "5060DO-20261108-0505",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "target": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/jobs",
+  "sourceRows": 2034,
+  "chunkSize": 100,
+  "upserted": 2034,
+  "failed": 0,
+  "failedRecords": [],
+  "expected": {
+    "total": 2034,
+    "busan": 2029,
+    "other": 5
+  },
+  "remote": {
+    "total": 2034,
+    "busan": 2029,
+    "other": 5
+  },
+  "totalPass": true,
+  "regionPass": true,
+  "samplePass": true,
+  "samples": [
+    {
+      "id": 2605,
+      "title": "(민간) 제이엠커피 용호점 바리스타 구함 (~10.21)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": 2495,
+      "title": "(민간) 약국 조제보조 오후 근무 (~10.12)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": 1162,
+      "title": "(공공) 2025년 대연 꿈키우미 작은도서관 어린이복합문화공간 기간제근로자 채용공고(~8/8)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": 2201,
+      "title": "(공공) 2026년도 제7회(재공고) 부산광역시 임기제공무원 임용시험 공고 (~8.5)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "id": 2227,
+      "title": "(공공) 영도 조내기 고구마 역사기념관 기간제근로자 채용 공고 (~8.10)",
+      "region": "부산",
+      "found": true,
+      "pass": true,
+      "mismatches": []
+    }
+  ],
+  "startedAt": "2026-11-08T00:03:20.296Z",
+  "elapsedMs": 3102
+}

@@ -1,0 +1,184 @@
+{
+  "mode": "local-preview",
+  "baseUrl": "http://127.0.0.1:3112/",
+  "checkedAt": "2026-11-08T00:00:27.124Z",
+  "buildExit": 0,
+  "checks": [
+    {
+      "name": "/ HTTP 200",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "bytes": 32842
+      }
+    },
+    {
+      "name": "/ HTML 본문 수신",
+      "pass": true,
+      "detail": {
+        "bytes": 32842
+      }
+    },
+    {
+      "name": "/classic/ HTTP 200",
+      "pass": true,
+      "detail": {
+        "status": 200,
+        "bytes": 43603
+      }
+    },
+    {
+      "name": "/classic/ HTML 본문 수신",
+      "pass": true,
+      "detail": {
+        "bytes": 43603
+      }
+    },
+    {
+      "name": "/ HTML에 /5060do 경로 누출 0건",
+      "pass": true,
+      "detail": {
+        "occurrences": 0
+      }
+    },
+    {
+      "name": "/classic/ HTML에 /5060do 경로 누출 0건",
+      "pass": true,
+      "detail": {
+        "occurrences": 0
+      }
+    },
+    {
+      "name": "브라우저 수파베이스 강좌 데이터 바인딩",
+      "pass": true,
+      "detail": {
+        "source": "supabase",
+        "cards": 30,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청",
+        "overflow": false
+      }
+    },
+    {
+      "name": "수파베이스 실시간 소스 사용",
+      "pass": true,
+      "detail": {
+        "source": "supabase"
+      }
+    },
+    {
+      "name": "가로 스크롤 없음(1280px)",
+      "pass": true,
+      "detail": {
+        "overflow": false
+      }
+    },
+    {
+      "name": "브라우저 수파베이스 채용정보 데이터 바인딩",
+      "pass": true,
+      "detail": {
+        "source": "supabase",
+        "cards": 12,
+        "firstRegion": "부산",
+        "tabLink": "#jobs",
+        "section": true
+      }
+    },
+    {
+      "name": "채용정보 실시간 소스 사용",
+      "pass": true,
+      "detail": {
+        "source": "supabase"
+      }
+    },
+    {
+      "name": "채용정보 탭 링크·섹션 렌더링",
+      "pass": true,
+      "detail": {
+        "source": "supabase",
+        "cards": 12,
+        "firstRegion": "부산",
+        "tabLink": "#jobs",
+        "section": true
+      }
+    },
+    {
+      "name": "채용정보 부산 지역 필터",
+      "pass": true,
+      "detail": {
+        "cards": 12
+      }
+    },
+    {
+      "name": "채용정보 직종 필터",
+      "pass": true,
+      "detail": {
+        "cards": 12
+      }
+    },
+    {
+      "name": "채용정보 상세 모달·원문 링크",
+      "pass": true,
+      "detail": {
+        "title": "#11월 1주차 부산 신중년 취업캘린더",
+        "sourceUrl": "https://www.5060do.or.kr/board/read?theme=8&idx=2735"
+      }
+    },
+    {
+      "name": "채용정보 상세 모달 닫기",
+      "pass": true,
+      "detail": {}
+    },
+    {
+      "name": "클래식 화면 헤더 렌더링",
+      "pass": true,
+      "detail": {
+        "header": true,
+        "gnbItems": 8,
+        "heroTitle": "오륙십대가 행복한 도시,\n배움으로 시작하는 인생 후반전",
+        "overflow": false
+      }
+    },
+    {
+      "name": "클래식 GNB 8개 메뉴",
+      "pass": true,
+      "detail": {
+        "gnbItems": 8
+      }
+    },
+    {
+      "name": "클래식 히어로 제목 표시",
+      "pass": true,
+      "detail": {
+        "heroTitle": "오륙십대가 행복한 도시,\n배움으로 시작하는 인생 후반전"
+      }
+    },
+    {
+      "name": "가로 스크롤 없음(클래식 1280px)",
+      "pass": true,
+      "detail": {
+        "overflow": false
+      }
+    },
+    {
+      "name": "브라우저 콘솔 오류 0건",
+      "pass": true,
+      "detail": {
+        "count": 0
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "screenshots": [
+    "vercel-live-root-1280.png",
+    "vercel-live-jobs-1280.png",
+    "vercel-live-classic-1280.png"
+  ],
+  "currentPage": "/classic/",
+  "summary": {
+    "total": 21,
+    "passed": 21,
+    "failed": 0,
+    "verdict": "PASS"
+  },
+  "finishedAt": "2026-11-08T00:02:11.875Z"
+}

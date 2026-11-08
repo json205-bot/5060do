@@ -62,7 +62,7 @@ export const jobRequestTimeoutMs = 5000;
 export const defaultJobCounts: JobCounts = {
   전체: 2034,
   board: { 전체: 2034, 일자리: 1406, 취업지원: 459, 창업: 121, 사회공헌: 48 },
-  region: { 전체: 2034, 부산: 2011, 기타: 23 },
+  region: { 전체: 2034, 부산: 2029, 기타: 5 },
 };
 
 export const jobListColumns = [
@@ -80,6 +80,8 @@ export const jobListColumns = [
 // The jobs board is run by the Busan center, so a row with no location word is
 // still a Busan posting. A row that names another city is filed under 기타 so
 // the region filter never hides an out-of-town event.
+// Busan's 16 gu/gun. They are stripped before the other-region scan because
+// "해운대구" contains "대구" and "북구" is a common gu name in other cities too.
 const BUSAN_DISTRICTS = [
   "해운대구",
   "수영구",
@@ -96,41 +98,131 @@ const BUSAN_DISTRICTS = [
   "영도구",
   "기장군",
   "연제구",
+  "강서구",
 ];
 
-const OTHER_REGIONS = [
-  "서울",
-  "경기",
-  "인천",
-  "대구",
-  "대전",
-  "광주",
-  "울산",
-  "세종",
-  "강원",
-  "충북",
-  "충남",
-  "전북",
-  "전남",
-  "경북",
-  "경남",
-  "제주",
-  "창원",
-  "김해",
-  "양산",
-  "포항",
-  "구미",
-  "거제",
-  "통영",
-  "진주",
-  "마산",
+// Landmarks, industrial complexes, campuses and transport hubs that name Busan
+// without the city or gu. They are also stripped before the other-region scan,
+// so "김해국제공항" is not read as 김해 and "경남정보대" is not read as 경남.
+const BUSAN_LANDMARKS = [
+  "센텀",
+  "서면",
+  "광안리",
+  "남포동",
+  "자갈치",
+  "태종대",
+  "오륙도",
+  "벡스코",
+  "사직",
+  "아시아드",
+  "을숙도",
+  "낙동강",
+  "부산역",
+  "부전",
+  "범일",
+  "초량",
+  "다대포",
+  "감천",
+  "하단",
+  "괴정",
+  "대저",
+  "녹산",
+  "신평",
+  "장림",
+  "지사",
+  "미음",
+  "명지",
+  "화전",
+  "모라",
+  "감전",
+  "주례",
+  "개금",
+  "당감",
+  "전포",
+  "연산",
+  "망미",
+  "재송",
+  "좌동",
+  "우동",
+  "반송",
+  "송정",
+  "오시리아",
+  "정관",
+  "일광",
+  "장안",
+  "가덕도",
+  "금정산",
+  "장산",
+  "황령산",
+  "부산신항",
+  "부산항",
+  "김해국제공항",
+  "부경대",
+  "경남정보대",
+  "동서대",
+  "부산대",
+  "동아대",
+  "경성대",
+  "신라대",
+  "한국해양대",
+  "동의대",
+  "고신대",
+  "부산외대",
 ];
 
-export function deriveJobRegion(title: string, content: string): JobRegion {
-  const text = `${title} ${content}`;
+// Short city names hide inside unrelated words ("해양산업" → 양산,
+// "부경대학교 세종2관" → 세종, "다대포항" → 포항), so each carries a guarded
+// pattern instead of a bare substring.
+const OTHER_REGION_PATTERNS = [
+  /서울/,
+  /경기/,
+  /인천/,
+  /대구/,
+  /대전(?!환)/,
+  /광주/,
+  /울산/,
+  /강원/,
+  /충북/,
+  /충남/,
+  /전북/,
+  /전남/,
+  /경북/,
+  /경남/,
+  /제주/,
+  /세종(?:특별자치시|시)/,
+  /양산시/,
+  /김해시/,
+  /포항시/,
+  /거제시/,
+  /창원/,
+  /구미/,
+  /통영/,
+  /(?<!조성)진주/,
+  /마산/,
+];
+
+const BUSAN_PLACE_NAMES = [...BUSAN_DISTRICTS, ...BUSAN_LANDMARKS];
+
+const stripBusanPlaceNames = (text: string): string =>
+  BUSAN_PLACE_NAMES.reduce(
+    (current, place) => current.split(place).join(" "),
+    text,
+  );
+
+const mentionsOtherRegion = (text: string): boolean =>
+  OTHER_REGION_PATTERNS.some((pattern) => pattern.test(text));
+
+export function deriveJobRegion(
+  title: string,
+  content: string,
+  company = "",
+): JobRegion {
+  // Priority: an explicit 부산 anywhere (title, company, content) wins; then a
+  // masked other-region token files the row under 기타; a row with no location
+  // word stays 부산 because the board belongs to the Busan center.
+  const text = `${title} ${company} ${content}`;
   if (text.includes("부산")) return "부산";
-  if (OTHER_REGIONS.some((region) => text.includes(region))) return "기타";
-  if (BUSAN_DISTRICTS.some((district) => text.includes(district))) return "부산";
+  if (mentionsOtherRegion(stripBusanPlaceNames(text))) return "기타";
   return "부산";
 }
 
@@ -152,7 +244,7 @@ export function mapLocalJob(row: JobSourceRow): Job {
     company: row.company ?? "",
     author: row.author ?? "",
     content,
-    region: deriveJobRegion(row.title ?? "", content),
+    region: deriveJobRegion(row.title ?? "", content, row.company ?? ""),
     sourceUrl: row.sourceUrl ?? "",
   };
 }
@@ -183,7 +275,7 @@ export function toSupabaseJobRow(row: JobSourceRow) {
     company: row.company ?? "",
     author: row.author ?? "",
     content,
-    region: deriveJobRegion(row.title ?? "", content),
+    region: deriveJobRegion(row.title ?? "", content, row.company ?? ""),
     source_url: row.sourceUrl ?? "",
   };
 }

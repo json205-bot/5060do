@@ -1,40 +1,33 @@
-cmd : '\\x4\workspace\dev\5060do'
-위치 줄:1 문자:1
-+ cmd /c "pushd Z:\dev\5060do && npm run build" 2>&1 | Tee-Object -File ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: ('\\x4\workspace\dev\5060do':String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-위의 경로를 현재 디렉터리로 하여 CMD.EXE가 실행되었습니다. UNC 경로는
-지원되지 않습니다. Windows 디렉터리를 기본으로 합니다.
 
 > 5060do@0.1.0 build
-> next build && node scripts/postbuild-static-rsc.mjs
+> node scripts/build-jobs-fallback.mjs && next build && node scripts/postbuild-static-rsc.mjs
 
-??Next.js 16.4.5 (Turbopack)
+jobs_recent: rows=300/2034 bytes=140976 range=2026-08-27~2026-11-03
+jobs_recent boards: {"취업지원":20,"일자리":278,"사회공헌":2}
+▲ Next.js 16.4.5 (Turbopack)
 - Environments: .env.local
-??Running next.config.ts took 448ms
+✓ Running next.config.ts took 371ms
 
   Creating an optimized production build ...
-??Compiled successfully in 5.9s
+✓ Compiled successfully in 2.9s
   Running TypeScript ...
-  Finished TypeScript in 65s ...
+  Finished TypeScript in 75s ...
   Collecting page data using 6 workers ...
   Generating static pages using 6 workers (0/5) ...
   Generating static pages using 6 workers (1/5) 
   Generating static pages using 6 workers (2/5) 
   Generating static pages using 6 workers (3/5) 
-??Generating static pages using 6 workers (5/5) in 2.3s
+✓ Generating static pages using 6 workers (5/5) in 2.4s
   Finalizing page optimization ...
 
 Route (app)
-????/
-????/_not-found
-????/classic
-????/icon.svg
+┌ ○ /
+├ ○ /_not-found
+├ ○ /classic
+└ ○ /icon.svg
 
 
-?? (Static)  prerendered as static content
+○  (Static)  prerendered as static content
 
 [postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
 [postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt

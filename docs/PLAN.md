@@ -231,5 +231,19 @@ status: done
 | 검증 | typecheck Exit 0, lint Exit 0, build Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, 합계 2,034건 일치 |
 | 증거 | `docs/evidence/jobs-seed-20261107T201327/`, `docs/evidence/rag-embeddings-20261107T201335/`, `docs/evidence/vercel-live-20261107T201852/`, `docs/evidence/jobs-20261108-*.log` |
 
+## 20. 채용정보 오프라인 폴백 경량화·지역 판정 사전 보강 (2026-11-08 08:45)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 1.7MB 전체 크롤을 내려받지 않고 최근 300건만 폴백으로 쓰며, 부산 구·군 명칭이 다른 지역 키워드로 오인돼 `기타`로 빠지던 공고를 바로잡는다 |
+| 폴백 생성 | `scripts/build-jobs-fallback.mjs` 신규 — `jobs_all.json` 2,034건을 날짜·id 내림차순 정렬해 상위 300건을 `src/data/jobs_recent.json`으로 생성. 건수·정렬·300KB 상한을 스스로 검증 |
+| 폴백 연동 | `src/hooks/useJobs.ts` 지연 임포트 대상을 `jobs_all.json` → `jobs_recent.json`으로 교체. 파일 141KB(1.7MB 대비 약 92% 절감), 클라이언트 청크 126KB |
+| 빌드 연동 | `package.json` — `npm run build`와 `npm run data:jobs` 실행 시 폴백을 먼저 재생성하고, 단독 실행용 `data:jobs:recent` 추가 |
+| 지역 사전 | `src/lib/jobs.ts` — 부산 16개 구·군과 센텀·녹산·신평·장림·명지·김해국제공항·부경대 등 공단·랜드마크 사전 추가. 다른 지역 키워드 검사 전에 부산 지명을 마스킹 |
+| 우선순위 정규화 | `deriveJobRegion(title, content, company)` — 제목·회사명·내용에 `부산`이 있으면 부산, 없으면 마스킹 후 다른 시·도 키워드로 기타, 무표기면 부산. `해양산업`→양산, `세종2관`→세종, `다대포항`→포항 같은 부분 문자열 오인을 가드 |
+| 재적재 | `npm run data:jobs` — 21배치 `upserted=2034 failed=0`, 원격 `total=2034 busan=2029 other=5` 일치 |
+| 검증 | typecheck Exit 0, lint Exit 0, build Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, `npm run verify:vercel:live` **21/21 PASS** |
+| 증거 | `docs/evidence/jobs-20261108-{typecheck,lint,build,test-vercel,vercel-live}.log`, `docs/evidence/jobs-20261108-region-audit.json`, `docs/evidence/jobs-seed-20261107T234752/` |
+
 
 

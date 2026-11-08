@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/postbuild-static-rsc.mjs",
+    "build": "node scripts/build-jobs-fallback.mjs && next build && node scripts/postbuild-static-rsc.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -14,7 +14,8 @@
     "test:unit": "node tests/unit-merge-programs.mjs",
     "data:programs": "node scripts/build_programs_dataset.mjs",
     "data:knowledge": "node scripts/seed-supabase-knowledge.mjs",
-    "data:jobs": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seed-supabase-jobs.mjs",
+    "data:jobs": "node scripts/build-jobs-fallback.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seed-supabase-jobs.mjs",
+    "data:jobs:recent": "node scripts/build-jobs-fallback.mjs",
     "data:embeddings": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seed-embeddings.mjs",
     "push:github": "node scripts/sync-github.mjs"
   },

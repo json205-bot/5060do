@@ -1,57 +1,51 @@
-cmd : '\\x4\workspace\dev\5060do'
-위치 줄:1 문자:1
-+ cmd /c "pushd Z:\dev\5060do && npm run verify:vercel:live" 2>&1 | Tee ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: ('\\x4\workspace\dev\5060do':String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-위의 경로를 현재 디렉터리로 하여 CMD.EXE가 실행되었습니다. UNC 경로는
-지원되지 않습니다. Windows 디렉터리를 기본으로 합니다.
-
-> 5060do@0.1.0 verify:vercel:live
-> node scripts/verify-vercel-live.mjs
-
-??Next.js 16.4.5 (Turbopack)
+▲ Next.js 16.4.5 (Turbopack)
 - Environments: .env.local
-??Running next.config.ts took 537ms
+✓ Running next.config.ts took 441ms
 
   Creating an optimized production build ...
-??Compiled successfully in 6.6s
+✓ Compiled successfully in 5.6s
   Running TypeScript ...
-  Finished TypeScript in 67s ...
+  Finished TypeScript in 80s ...
   Collecting page data using 6 workers ...
   Generating static pages using 6 workers (0/5) ...
   Generating static pages using 6 workers (1/5) 
   Generating static pages using 6 workers (2/5) 
   Generating static pages using 6 workers (3/5) 
-??Generating static pages using 6 workers (5/5) in 2.3s
+✓ Generating static pages using 6 workers (5/5) in 3.2s
   Finalizing page optimization ...
 
 Route (app)
-????/
-????/_not-found
-????/classic
-????/icon.svg
+┌ ○ /
+├ ○ /_not-found
+├ ○ /classic
+└ ○ /icon.svg
 
 
-?? (Static)  prerendered as static content
+○  (Static)  prerendered as static content
 
 [postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
 [postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt
 PASS  / HTTP 200
-PASS  / HTML 蹂몃Ц ?섏떊
+PASS  / HTML 본문 수신
 PASS  /classic/ HTTP 200
-PASS  /classic/ HTML 蹂몃Ц ?섏떊
-PASS  / HTML??/5060do 寃쎈줈 ?꾩텧 0嫄?PASS  /classic/ HTML??/5060do 寃쎈줈 ?꾩텧 0嫄?PASS  釉뚮씪?곗? ?섑뙆踰좎씠??媛뺤쥖 ?곗씠??諛붿씤??PASS  ?섑뙆踰좎씠???ㅼ떆媛??뚯뒪 ?ъ슜
-PASS  媛濡??ㅽ겕濡??놁쓬(1280px)
-PASS  釉뚮씪?곗? ?섑뙆踰좎씠??梨꾩슜?뺣낫 ?곗씠??諛붿씤??PASS  梨꾩슜?뺣낫 ?ㅼ떆媛??뚯뒪 ?ъ슜
-PASS  梨꾩슜?뺣낫 ??留곹겕쨌?뱀뀡 ?뚮뜑留?PASS  梨꾩슜?뺣낫 遺??吏???꾪꽣
-PASS  梨꾩슜?뺣낫 吏곸쥌 ?꾪꽣
-PASS  梨꾩슜?뺣낫 ?곸꽭 紐⑤떖쨌?먮Ц 留곹겕
-PASS  梨꾩슜?뺣낫 ?곸꽭 紐⑤떖 ?リ린
-PASS  ?대옒???붾㈃ ?ㅻ뜑 ?뚮뜑留?PASS  ?대옒??GNB 8媛?硫붾돱
-PASS  ?대옒???덉뼱濡??쒕ぉ ?쒖떆
-PASS  媛濡??ㅽ겕濡??놁쓬(?대옒??1280px)
-PASS  釉뚮씪?곗? 肄섏넄 ?ㅻ쪟 0嫄?
+PASS  /classic/ HTML 본문 수신
+PASS  / HTML에 /5060do 경로 누출 0건
+PASS  /classic/ HTML에 /5060do 경로 누출 0건
+PASS  브라우저 수파베이스 강좌 데이터 바인딩
+PASS  수파베이스 실시간 소스 사용
+PASS  가로 스크롤 없음(1280px)
+PASS  브라우저 수파베이스 채용정보 데이터 바인딩
+PASS  채용정보 실시간 소스 사용
+PASS  채용정보 탭 링크·섹션 렌더링
+PASS  채용정보 부산 지역 필터
+PASS  채용정보 직종 필터
+PASS  채용정보 상세 모달·원문 링크
+PASS  채용정보 상세 모달 닫기
+PASS  클래식 화면 헤더 렌더링
+PASS  클래식 GNB 8개 메뉴
+PASS  클래식 히어로 제목 표시
+PASS  가로 스크롤 없음(클래식 1280px)
+PASS  브라우저 콘솔 오류 0건
+
 PASS (21/21)
-evidence=Z:\dev\5060do\docs\evidence\vercel-live-20261107T201852
+evidence=Z:\dev\5060do\docs\evidence\vercel-live-20261108T000027

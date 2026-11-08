@@ -1,14 +1,4 @@
-cmd : '\\x4\workspace\dev\5060do'
-위치 줄:1 문자:7
-+ $tc = cmd /c "pushd Z:\dev\5060do && npm run typecheck" 2>&1 | Out-St ...
-+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: ('\\x4\workspace\dev\5060do':String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-위의 경로를 현재 디렉터리로 하여 CMD.EXE가 실행되었습니다. UNC 경로는
-지원되지 않습니다. Windows 디렉터리를 기본으로 합니다.
 
 > 5060do@0.1.0 typecheck
 > tsc --noEmit
 
-EXIT=0

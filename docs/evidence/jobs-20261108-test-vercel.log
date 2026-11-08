@@ -1,108 +1,111 @@
-cmd : '\\x4\workspace\dev\5060do'
-위치 줄:1 문자:1
-+ cmd /c "pushd Z:\dev\5060do && node scripts/test-vercel.mjs" 2>&1 | T ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: ('\\x4\workspace\dev\5060do':String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
-위의 경로를 현재 디렉터리로 하여 CMD.EXE가 실행되었습니다. UNC 경로는
-지원되지 않습니다. Windows 디렉터리를 기본으로 합니다.
-??Next.js 16.4.5 (Turbopack)
+▲ Next.js 16.4.5 (Turbopack)
 - Environments: .env.local
-??Running next.config.ts took 564ms
+✓ Running next.config.ts took 389ms
 
   Creating an optimized production build ...
-??Compiled successfully in 4.5s
+✓ Compiled successfully in 5.7s
   Running TypeScript ...
-  Finished TypeScript in 66s ...
+  Finished TypeScript in 73s ...
   Collecting page data using 6 workers ...
   Generating static pages using 6 workers (0/5) ...
   Generating static pages using 6 workers (1/5) 
   Generating static pages using 6 workers (2/5) 
   Generating static pages using 6 workers (3/5) 
-??Generating static pages using 6 workers (5/5) in 2.3s
+✓ Generating static pages using 6 workers (5/5) in 2.4s
   Finalizing page optimization ...
 
 Route (app)
-????/
-????/_not-found
-????/classic
-????/icon.svg
+┌ ○ /
+├ ○ /_not-found
+├ ○ /classic
+└ ○ /icon.svg
 
 
-?? (Static)  prerendered as static content
+○  (Static)  prerendered as static content
 
 [postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
 [postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt
-PASS  珥덇린 紐⑸줉쨌移댁슫???꾩갑
-PASS  BASE_PATH ?대? 留곹겕 ?쇨???PASS  踰꾩쟾 ?꾪솚 留곹겕 BASE_PATH ?쇱튂
-PASS  紐⑸줉 議고쉶 ?붿껌 ?섏떊
-PASS  select=* 誘몄궗???좊퀎 議고쉶)
-PASS  ?곹깭蹂?移댁슫??荑쇰━(HEAD) 5嫄?PASS  珥덇린 紐⑸줉(GET) gzip ?꾩넚??30KB 誘몃쭔
-PASS  珥덇린 REST 珥??꾩넚??30KB 誘몃쭔
-PASS  珥덇린 紐⑸줉 ?먮낯 JSON 15KB ?댄븯
-PASS  珥덇린 紐⑸줉 ?먮낯 ?꾩넚??90% ?댁긽 ?덇컧
-PASS  移?5醫??뚮뜑
-PASS  移?移댁슫???⑷퀎 = ?꾩껜
-PASS  ?곹깭蹂?移?移댁슫???뺥솗
-PASS  ?ㅼ떆媛??섑뙆踰좎씠???곗씠???섏떊
-PASS  ?꾩껜 媛뺤쥖 ???쇱튂
-PASS  泥??붾㈃ ?몄텧 移대뱶 = ?섏씠吏 ?ш린
-PASS  ?ㅼ떆媛??좎껌?꾪솴 吏꾪뻾諛??몄텧
-PASS  ?붿뿬???쒓린 ?몄텧
-PASS  ?붾낫湲?踰꾪듉 ?몄텧
-PASS  泥??붾㈃ 30嫄댁뿉 ?쒖꽦 媛뺤쥖 ?꾧굔 ?몄텧
-PASS  泥??붾㈃ ?묒닔以??붿뿬???꾨컯??PASS  ?붾낫湲????ㅼ쓬 ?섏씠吏 ?꾩갑
-PASS  ?붾낫湲??대┃ ??+?섏씠吏 ?ш린
-PASS  ?붾낫湲???湲곗〈 移대뱶 ?쒖꽌 ?좎?
-PASS  踰붿쐞 議고쉶(offset/limit) ?붿껌 ?뺤씤
-PASS  紐⑸줉???꾪솚?먮룄 ?섏씠吏??곗씠???좎?
-PASS  ?꾩껜 移대뱶 ??= ?꾩껜 移?PASS  ?ㅻ쭏???뺣젹 ?곹깭 ?곗꽑?쒖쐞
-PASS  ?꾩껜 ?묒닔以??붿뿬???꾨컯???꾩뿭)
-PASS  ?꾩껜 移대뱶 ?좎껌?꾪솴 吏꾪뻾諛??몄텧
-PASS  ?湲곗젒???湲??몄썝 ?쒓린
-PASS  ?곹깭 洹몃９ ?쒖꽌쨌嫄댁닔 ?쇱튂
-PASS  ?묒닔以?洹몃９ ?꾧굔 吏꾪뻾諛??좎?
-PASS  PC 移대뱶 3??PASS  PC 媛濡??ㅻ쾭?뚮줈 ?놁쓬
-PASS  ?묒닔以?泥??섏씠吏 ?꾩갑
-PASS  ?묒닔以??꾪꽣 移대뱶 ???쇱튂
-PASS  ?묒닔以?移??쒖꽦 ?쒖떆
-PASS  ?묒닔?덉젙 泥??섏씠吏 ?꾩갑
-PASS  ?묒닔?덉젙 ?꾪꽣 移대뱶 ???쇱튂
-PASS  ?묒닔?덉젙 移??쒖꽦 ?쒖떆
-PASS  ?湲곗젒??泥??섏씠吏 ?꾩갑
-PASS  ?湲곗젒???꾪꽣 移대뱶 ???쇱튂
-PASS  ?湲곗젒??移??쒖꽦 ?쒖떆
-PASS  留덇컧 泥??섏씠吏 ?꾩갑
-PASS  留덇컧 ?꾪꽣 移대뱶 ???쇱튂
-PASS  留덇컧 移??쒖꽦 ?쒖떆
-PASS  ?꾩껜 泥??섏씠吏 ?꾩갑
-PASS  紐⑸줉?????몄텧
-PASS  紐⑸줉??8媛?而щ읆
-PASS  紐⑸줉??????= ?꾩껜
-PASS  紐⑸줉??媛濡??ㅻ쾭?뚮줈 ?놁쓬
-PASS  紐⑸줉?????대┃ ??紐⑤떖 ?곌껐
-PASS  ?묒닔以?紐⑤떖 ?좎껌 媛??PASS  ?좎껌 ???꾪솚
-PASS  ?湲곗젒??紐⑤떖 ?湲곗떊泥?PASS  留덇컧 紐⑤떖 ?좎껌 鍮꾪솢??PASS  紐⑤컮??泥??섏씠吏 ?꾩갑
-PASS  紐⑤컮??移대뱶 1??PASS  紐⑤컮??移대뱶 媛濡??ㅻ쾭?뚮줈 ?놁쓬
-PASS  紐⑤컮??紐⑸줉????移대뱶 ?몄텧
-PASS  紐⑤컮??紐⑸줉?????④?
-PASS  紐⑤컮??紐⑸줉??????= ?꾩껜
-PASS  紐⑤컮??紐⑸줉??媛濡??ㅻ쾭?뚮줈 ?놁쓬
-PASS  紐⑤컮?????대┃ ??紐⑤떖 ?곌껐
-PASS  紐⑤컮??紐⑤떖 媛濡??ㅻ쾭?뚮줈 ?놁쓬
-PASS  ?쒕툝由?紐⑸줉????移대뱶 ?몄텧
-PASS  ?쒕툝由?紐⑸줉??媛濡??ㅻ쾭?뚮줈 ?놁쓬
-PASS  ?섑뙆踰좎씠??李⑤떒 ??濡쒖뺄 ?대갚
-PASS  ?대갚 ??濡쒖뺄 媛뺤쥖 ??PASS  ?섑뙆踰좎씠???묐떟 吏????5珥???꾩븘???대갚
-PASS  梨쀫큸 珥덇린 ?ㅼ떆媛??곗씠???숆린??PASS  梨쀫큸 臾대즺 ?듬? ?ㅼ떆媛??묒닔以?嫄댁닔 ?쇱튂
-PASS  梨쀫큸 臾대즺 媛뺤쥖 嫄댁닔 ?쇱튂
-PASS  梨쀫큸 ?좎껌 ?듬? ?ㅼ떆媛??묒닔以?嫄댁닔 ?쇱튂
-PASS  梨쀫큸 ?고쁺 吏???듬?
-PASS  梨쀫큸 議곗쭅??吏???듬?
-PASS  梨쀫큸 而ㅻ??덊떚 吏???듬?
-PASS  肄섏넄 ?ㅻ쪟 0嫄??ㅼ떆媛?援ш컙)
-PASS  肄섏넄 ?ㅻ쪟 0嫄?
+PASS  초기 목록·카운트 도착
+PASS  BASE_PATH 내부 링크 일관성
+PASS  버전 전환 링크 BASE_PATH 일치
+PASS  목록 조회 요청 수신
+PASS  select=* 미사용(선별 조회)
+PASS  상태별 카운트 쿼리(HEAD) 5건
+PASS  초기 목록(GET) gzip 전송량 30KB 미만
+PASS  초기 REST 총 전송량 30KB 미만
+PASS  초기 목록 원본 JSON 15KB 이하
+PASS  초기 목록 원본 전송량 90% 이상 절감
+PASS  칩 5종 렌더
+PASS  칩 카운트 합계 = 전체
+PASS  상태별 칩 카운트 정확
+PASS  실시간 수파베이스 데이터 수신
+PASS  전체 강좌 수 일치
+PASS  첫 화면 노출 카드 = 페이지 크기
+PASS  실시간 신청현황 진행바 노출
+PASS  잔여석 표기 노출
+PASS  더보기 버튼 노출
+PASS  첫 화면 30건에 활성 강좌 전건 노출
+PASS  첫 화면 접수중 잔여석 임박순
+PASS  더보기 후 다음 페이지 도착
+PASS  더보기 클릭 시 +페이지 크기
+PASS  더보기 후 기존 카드 순서 유지
+PASS  범위 조회(offset/limit) 요청 확인
+PASS  목록형 전환에도 페이징 데이터 유지
+PASS  전체 카드 수 = 전체 칩
+PASS  스마트 정렬 상태 우선순위
+PASS  전체 접수중 잔여석 임박순(전역)
+PASS  전체 카드 신청현황 진행바 노출
+PASS  대기접수 대기 인원 표기
+PASS  상태 그룹 순서·건수 일치
+PASS  접수중 그룹 전건 진행바 유지
+PASS  PC 카드 3열
+PASS  PC 가로 오버플로 없음
+PASS  접수중 첫 페이지 도착
+PASS  접수중 필터 카드 수 일치
+PASS  접수중 칩 활성 표시
+PASS  접수예정 첫 페이지 도착
+PASS  접수예정 필터 카드 수 일치
+PASS  접수예정 칩 활성 표시
+PASS  대기접수 첫 페이지 도착
+PASS  대기접수 필터 카드 수 일치
+PASS  대기접수 칩 활성 표시
+PASS  마감 첫 페이지 도착
+PASS  마감 필터 카드 수 일치
+PASS  마감 칩 활성 표시
+PASS  전체 첫 페이지 도착
+PASS  목록형 표 노출
+PASS  목록형 8개 컬럼
+PASS  목록형 행 수 = 전체
+PASS  목록형 가로 오버플로 없음
+PASS  목록형 행 클릭 → 모달 연결
+PASS  접수중 모달 신청 가능
+PASS  신청 폼 전환
+PASS  대기접수 모달 대기신청
+PASS  마감 모달 신청 비활성
+PASS  모바일 첫 페이지 도착
+PASS  모바일 카드 1열
+PASS  모바일 카드 가로 오버플로 없음
+PASS  모바일 목록형 행 카드 노출
+PASS  모바일 목록형 표 숨김
+PASS  모바일 목록형 행 수 = 전체
+PASS  모바일 목록형 가로 오버플로 없음
+PASS  모바일 행 클릭 → 모달 연결
+PASS  모바일 모달 가로 오버플로 없음
+PASS  태블릿 목록형 행 카드 노출
+PASS  태블릿 목록형 가로 오버플로 없음
+PASS  수파베이스 차단 시 로컬 폴백
+PASS  폴백 시 로컬 강좌 수
+PASS  수파베이스 응답 지연 시 5초 타임아웃 폴백
+PASS  챗봇 초기 실시간 데이터 동기화
+PASS  챗봇 무료 답변 실시간 접수중 건수 일치
+PASS  챗봇 무료 강좌 건수 일치
+PASS  챗봇 신청 답변 실시간 접수중 건수 일치
+PASS  챗봇 연혁 지식 답변
+PASS  챗봇 조직도 지식 답변
+PASS  챗봇 커뮤니티 지식 답변
+PASS  콘솔 오류 0건(실시간 구간)
+PASS  콘솔 오류 0건
+
 PASS (80/80)
 {
   "basePath": "",
@@ -113,5 +116,5 @@ PASS (80/80)
     "/": 200,
     "/classic/": 200
   },
-  "checkedAt": "2026-11-07T20:22:51.980Z"
+  "checkedAt": "2026-11-08T00:00:14.236Z"
 }

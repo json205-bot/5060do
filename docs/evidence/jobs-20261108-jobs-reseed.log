@@ -1,0 +1,34 @@
+env: Z:\common\env\supabase_5060do.env
+target: https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/jobs
+source rows: 2034 (busan=2029 other=5, chunk=100)
+chunk 1: upserted 100
+chunk 2: upserted 100
+chunk 3: upserted 100
+chunk 4: upserted 100
+chunk 5: upserted 100
+chunk 6: upserted 100
+chunk 7: upserted 100
+chunk 8: upserted 100
+chunk 9: upserted 100
+chunk 10: upserted 100
+chunk 11: upserted 100
+chunk 12: upserted 100
+chunk 13: upserted 100
+chunk 14: upserted 100
+chunk 15: upserted 100
+chunk 16: upserted 100
+chunk 17: upserted 100
+chunk 18: upserted 100
+chunk 19: upserted 100
+chunk 20: upserted 100
+chunk 21: upserted 34
+upserted=2034 failed=0
+remote total=2034 (expected 2034) busan=2029 other=5
+totalPass=true regionPass=true samplePass=true
+sample 2605 pass=true region=부산 title="(민간) 제이엠커피 용호점 바리스타 구함 (~10.21)"
+sample 2495 pass=true region=부산 title="(민간) 약국 조제보조 오후 근무 (~10.12)"
+sample 1162 pass=true region=부산 title="(공공) 2025년 대연 꿈키우미 작은도서관 어린이복합문화공간 기간제근로자 채용공고(~8/8)"
+sample 2201 pass=true region=부산 title="(공공) 2026년도 제7회(재공고) 부산광역시 임기제공무원 임용시험 공고 (~8.5)"
+sample 2227 pass=true region=부산 title="(공공) 영도 조내기 고구마 역사기념관 기간제근로자 채용 공고 (~8.10)"
+elapsedMs=3102
+evidence=Z:\dev\5060do\docs\evidence\jobs-seed-20261108T000320
