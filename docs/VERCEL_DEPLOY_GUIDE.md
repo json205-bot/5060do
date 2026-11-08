@@ -118,8 +118,17 @@ node scripts/test-vercel.mjs
 한 번에 확인하려면 아래 명령을 쓴다.
 
 ```bash
+npm run verify:vercel:live -- --url https://<project>.vercel.app/
+npm run verify:vercel:live                    # 배포 전 로컬 프리뷰 검증
+```
+
+같은 스크립트를 직접 실행해도 된다. URL은 `--url <값>`, `--url=<값>`, 맨 인자,
+`VERCEL_LIVE_URL`, Vercel 자동 주입 `VERCEL_URL`(호스트만 와도 `https://`를 붙인다) 순서로 읽는다.
+
+```bash
+node scripts/verify-vercel-live.mjs --url https://<project>.vercel.app/
 node scripts/verify-vercel-live.mjs https://<project>.vercel.app/
-node scripts/verify-vercel-live.mjs            # 배포 전 로컬 프리뷰 검증
+VERCEL_LIVE_URL=https://<project>.vercel.app/ node scripts/verify-vercel-live.mjs
 ```
 
 검증 항목은 `/`·`/classic/` HTTP 200, 내부 `/5060do` 경로 누출 0건, 수파베이스 실시간 강좌

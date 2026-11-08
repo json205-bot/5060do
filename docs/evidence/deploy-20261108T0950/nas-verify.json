@@ -1,0 +1,13 @@
+{
+    "checkedAt":  "2026-11-08T10:02:34.6250622+09:00",
+    "homeStatus":  200,
+    "classicStatus":  200,
+    "jobsSource":  "supabase",
+    "jobsShownCount":  "12건 표시 중 · 남은 채용정보 2022건",
+    "firstFallbackJobVisible":  true,
+    "classicHref":  "href=\"/5060do/classic/\"",
+    "indexSha256Local":  "731c8d203c6c9c66682ff8f0f42a4e1bcfa228020ddf98549d2a82fc89f32988",
+    "indexSha256Remote":  "731c8d203c6c9c66682ff8f0f42a4e1bcfa228020ddf98549d2a82fc89f32988",
+    "indexHashMatch":  true,
+    "deployedFiles":  38
+}

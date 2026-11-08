@@ -245,5 +245,16 @@ status: done
 | 검증 | typecheck Exit 0, lint Exit 0, build Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, `npm run verify:vercel:live` **21/21 PASS** |
 | 증거 | `docs/evidence/jobs-20261108-{typecheck,lint,build,test-vercel,vercel-live}.log`, `docs/evidence/jobs-20261108-region-audit.json`, `docs/evidence/jobs-seed-20261107T234752/` |
 
+## 21. NAS 운영 배포 동기화·Vercel 실배포 검증 파이프라인 완결 (2026-11-08 09:50)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 최근 300건 경량 폴백과 부산 16개 구·군 보강분을 NAS www(`/5060do/`)에 즉시 반영하고, Vercel 실배포 검증을 `--url`·`VERCEL_URL` 원클릭 래퍼로 정착한다 |
+| 배포 | `NEXT_PUBLIC_BASE_PATH=/5060do npm run build` → `deploy_www.sh /volume1/workspace/dev/5060do/out 5060do` + `www_index.sh`. 38개 파일 배포, 로컬·원격 `index.html` SHA-256 일치 |
+| NAS 검증 | `/5060do/`·`/5060do/classic/` HTTP 200, 헤드리스 Chrome 렌더에서 `data-jobs-source="supabase"`와 첫 채용정보 카드 표시, 클래식 링크 `/5060do/classic/` |
+| Vercel 가드 | `scripts/verify-vercel-live.mjs`가 `--url <값>`, `--url=<값>`, 맨 인자, `VERCEL_LIVE_URL`, Vercel 자동 `VERCEL_URL`(호스트) 순으로 대상 URL을 읽는다 |
+| 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, `npm run verify:vercel:live` **21/21 PASS**, `--url` 원격 모드 **21/21 PASS** |
+| 근거 | `docs/evidence/deploy-20261108T0950/` |
+
 
 

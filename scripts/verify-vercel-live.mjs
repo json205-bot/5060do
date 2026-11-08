@@ -11,8 +11,27 @@ import path from "node:path";
 const CHROME =
   process.env.CHROME_PATH ??
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
-const TARGET_ARG = process.argv.find((argument) => /^https?:\/\//.test(argument));
-const TARGET_URL = (TARGET_ARG ?? process.env.VERCEL_LIVE_URL ?? "").trim();
+// Accept the live URL from `--url <value>`, `--url=<value>`, a bare URL
+// argument, `VERCEL_LIVE_URL`, or Vercel's own `VERCEL_URL` (host only).
+const readUrlArgument = (argv) => {
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument === "--url") return argv[index + 1] ?? "";
+    if (argument.startsWith("--url=")) return argument.slice("--url=".length);
+  }
+  return "";
+};
+const normalizeTarget = (value) => {
+  const trimmed = (value ?? "").trim();
+  if (!trimmed) return "";
+  return /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`;
+};
+const TARGET_URL = normalizeTarget(
+  readUrlArgument(process.argv) ||
+    process.argv.find((argument) => /^https?:\/\//.test(argument)) ||
+    process.env.VERCEL_LIVE_URL ||
+    process.env.VERCEL_URL,
+);
 const REMOTE = TARGET_URL.length > 0;
 const SKIP_BUILD = process.argv.includes("--no-build") || process.env.SKIP_BUILD === "1";
 const PORT = Number(process.env.LIVE_VERIFY_PORT ?? 3112);
