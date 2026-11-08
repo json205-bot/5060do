@@ -1458,6 +1458,7 @@ export default function Home() {
               <button
                 ref={closeButtonRef}
                 type="button"
+                data-testid="detail-modal-close"
                 onClick={closeModal}
                 aria-label="상세 창 닫기"
                 className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200"
@@ -1643,6 +1644,7 @@ export default function Home() {
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                     <button
                       type="button"
+                      data-testid="detail-modal-apply"
                       onClick={() => setStage("form")}
                       disabled={!isApplicable(selected.status)}
                       className="flex cta-primary flex-1 items-center justify-center rounded-2xl bg-brand-700 text-lg font-bold text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-900"

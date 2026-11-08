@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+﻿import { spawn } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -262,21 +262,31 @@ const MODAL_MEASURE = `(() => {
   const box = (el) => el ? { w: round(el.getBoundingClientRect().width), h: round(el.getBoundingClientRect().height) } : null;
   const modal = document.querySelector('[data-testid="detail-modal"]');
   if (!modal) return { visible: false };
-  const apply = Array.from(modal.querySelectorAll('button')).find((el) =>
-    ['수강신청', '대기신청', '신청하기', '접수하기'].includes(el.textContent.trim()),
-  );
+  const close = modal.querySelector('[data-testid="detail-modal-close"]');
+  const apply = modal.querySelector('[data-testid="detail-modal-apply"]');
+  const closeRect = close ? close.getBoundingClientRect() : null;
+  const modalRect = modal.getBoundingClientRect();
   return {
     visible: true,
     width: box(modal).w,
+    modalTop: round(modalRect.top),
+    modalBottom: round(modalRect.bottom),
+    modalInViewport: modalRect.top >= -1 && modalRect.bottom <= window.innerHeight + 1,
+    close: close ? box(close) : null,
+    closeInViewport: closeRect
+      ? closeRect.top >= -1 && closeRect.bottom <= window.innerHeight + 1
+      : false,
     applyHeight: apply ? box(apply).h : null,
     horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   };
 })()`;
 
-// Audits the whole rendered page instead of named selectors: every visible text
-// node must stay at or above the 14px caption floor and every visible touch
-// target must keep a 48x48px box (docs/STYLE_GUIDE.md §1, §3, §4).
-const AUDIT = `(() => {
+// Audits the rendered page (or one opened layer) instead of named selectors:
+// every visible text node must stay at or above the 14px caption floor and
+// every visible touch target must keep a 48x48px box
+// (docs/STYLE_GUIDE.md §1, §3, §4).
+const auditExpression = (scope) => `(() => {
+  const scope = ${scope} ?? document.body;
   const round = (value) => Math.round(value * 10) / 10;
   const canvas = document.createElement('canvas');
   canvas.width = 1;
@@ -335,7 +345,7 @@ const AUDIT = `(() => {
 
   const fontViolations = [];
   const contrastViolations = [];
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
   while (walker.nextNode()) {
     const node = walker.currentNode;
     const text = (node.textContent || '').replace(/\\s+/g, ' ').trim();
@@ -357,7 +367,7 @@ const AUDIT = `(() => {
   }
 
   const smallTargets = [];
-  const interactive = document.querySelectorAll(
+  const interactive = scope.querySelectorAll(
     'a[href], button, input:not([type="hidden"]), select, textarea, [role="button"], [role="tab"], [role="link"]',
   );
   for (const el of interactive) {
@@ -385,6 +395,82 @@ const AUDIT = `(() => {
       const bg = backdrop(document.body);
       return fg && bg ? contrast(composite(fg, bg), bg) : null;
     })(),
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+const AUDIT = auditExpression("document.body");
+
+const layerAudit = (selector) =>
+  auditExpression(`document.querySelector('${selector}')`);
+
+const CHATBOT_MEASURE = `(() => {
+  const round = (value) => Math.round(value * 10) / 10;
+  const box = (el) => el ? { w: round(el.getBoundingClientRect().width), h: round(el.getBoundingClientRect().height) } : null;
+  const rect = (el) => {
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return { top: round(r.top), bottom: round(r.bottom), left: round(r.left), right: round(r.right), ...box(el) };
+  };
+  const inViewport = (value) =>
+    Boolean(value) && value.top >= -1 && value.bottom <= window.innerHeight + 1;
+  const panel = document.querySelector('[data-testid="chatbot-panel"]');
+  if (!panel) return { visible: false };
+  const close = panel.querySelector('[data-testid="chatbot-close"]');
+  const header = close ? close.parentElement : null;
+  const chips = Array.from(panel.querySelectorAll('[data-testid^="chatbot-chip-"]')).map(box);
+  const input = panel.querySelector('[data-testid="chatbot-input"]');
+  const message = panel.querySelector('[data-testid="chatbot-message"] p');
+  const send = panel.querySelector('[data-testid="chatbot-send"]');
+  const panelRect = rect(panel);
+  const closeRect = rect(close);
+  return {
+    visible: true,
+    viewport: { width: window.innerWidth, height: window.innerHeight },
+    panel: panelRect,
+    close: closeRect,
+    closeInViewport: inViewport(closeRect),
+    panelInViewport: inViewport(panelRect),
+    headerPosition: header ? getComputedStyle(header).position : null,
+    headerRect: rect(header),
+    chips,
+    minChipWidth: chips.length ? Math.min(...chips.map((chip) => chip.w)) : null,
+    minChipHeight: chips.length ? Math.min(...chips.map((chip) => chip.h)) : null,
+    input: input ? { ...rect(input), fontSize: round(parseFloat(getComputedStyle(input).fontSize)) } : null,
+    send: rect(send),
+    messageFontSize: message ? round(parseFloat(getComputedStyle(message).fontSize)) : null,
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+const DRAWER_MEASURE = `(() => {
+  const round = (value) => Math.round(value * 10) / 10;
+  const box = (el) => el ? { w: round(el.getBoundingClientRect().width), h: round(el.getBoundingClientRect().height) } : null;
+  const rect = (el) => {
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return { top: round(r.top), bottom: round(r.bottom), left: round(r.left), right: round(r.right), ...box(el) };
+  };
+  const inViewport = (value) =>
+    Boolean(value) && value.top >= -1 && value.bottom <= window.innerHeight + 1;
+  const drawer = document.querySelector('[data-testid="menu-drawer"]');
+  if (!drawer) return { visible: false };
+  const close = drawer.querySelector('[data-testid="menu-drawer-close"]');
+  const shortcuts = Array.from(drawer.querySelectorAll('[data-testid^="menu-shortcut-"]')).map(box);
+  const links = Array.from(drawer.querySelectorAll('a[href]')).map(box);
+  const targets = [...shortcuts, ...links].filter(Boolean);
+  const drawerRect = rect(drawer);
+  const closeRect = rect(close);
+  return {
+    visible: true,
+    viewport: { width: window.innerWidth, height: window.innerHeight },
+    drawer: drawerRect,
+    close: closeRect,
+    closeInViewport: inViewport(closeRect),
+    drawerInViewport: inViewport(drawerRect),
+    shortcutCount: shortcuts.length,
+    minTargetWidth: targets.length ? Math.min(...targets.map((target) => target.w)) : null,
+    minTargetHeight: targets.length ? Math.min(...targets.map((target) => target.h)) : null,
     horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   };
 })()`;
@@ -635,6 +721,219 @@ async function main() {
     check("390px 라벨 18px", formState.labelFontSize === 18, formState.labelFontSize);
     check("390px 폼 가로 스크롤 없음", !formState.horizontalOverflow, formState.horizontalOverflow);
     results.screenshots.push(await screenshot(cdp, sessionId, "mobile-390-form.png"));
+
+    // Opened-layer audits: reopen each dialog from a clean state, then repeat the
+    // font/touch/contrast audit inside that layer (TASK 5060DO-20261108-2110).
+    const freshLoaded = cdp.once("Page.loadEventFired");
+    await cdp.send("Page.navigate", { url: BASE_URL }, sessionId);
+    await freshLoaded;
+    await sleep(1400);
+
+    await evaluate(cdp, sessionId, click("chatbot-trigger"));
+    await sleep(700);
+    const chatbot = await evaluate(cdp, sessionId, CHATBOT_MEASURE);
+    const chatbotAudit = await evaluate(
+      cdp,
+      sessionId,
+      layerAudit('[data-testid="chatbot-panel"]'),
+    );
+    results.chatbotLayer = { ...chatbot, audit: chatbotAudit };
+    check("390px 챗봇 패널 표시", chatbot.visible === true, chatbot.visible);
+    check("390px 챗봇 패널 뷰포트 안", chatbot.panelInViewport === true, chatbot.panel);
+    check(
+      "390px 챗봇 헤더 sticky 고정",
+      chatbot.headerPosition === "sticky",
+      chatbot.headerPosition,
+    );
+    check(
+      "390px 챗봇 닫기 48px 이상 + 화면 안",
+      chatbot.close?.w >= 48 && chatbot.close?.h >= 48 && chatbot.closeInViewport,
+      chatbot.close,
+    );
+    check(
+      "390px 챗봇 퀵 질문 48x48px 이상",
+      chatbot.minChipWidth >= 48 && chatbot.minChipHeight >= 48,
+      { width: chatbot.minChipWidth, height: chatbot.minChipHeight },
+    );
+    check(
+      "390px 챗봇 입력창 52px · 글자 14px 이상",
+      chatbot.input?.h >= 48 && chatbot.input?.fontSize >= 14,
+      chatbot.input,
+    );
+    check(
+      "390px 챗봇 보내기 48x48px 이상",
+      chatbot.send?.w >= 48 && chatbot.send?.h >= 48,
+      chatbot.send,
+    );
+    check(
+      "390px 챗봇 메시지 글자 14px 이상",
+      chatbot.messageFontSize >= 14,
+      chatbot.messageFontSize,
+    );
+    check(
+      "390px 챗봇 모든 글자 14px 이상",
+      chatbotAudit.fontViolationCount === 0,
+      { count: chatbotAudit.fontViolationCount, violations: chatbotAudit.fontViolations },
+    );
+    check(
+      "390px 챗봇 모든 터치 타깃 48x48px 이상",
+      chatbotAudit.smallTargetCount === 0,
+      { count: chatbotAudit.smallTargetCount, violations: chatbotAudit.smallTargets },
+    );
+    check(
+      "390px 챗봇 모든 글자 대비 4.5:1 이상",
+      chatbotAudit.contrastViolationCount === 0,
+      { count: chatbotAudit.contrastViolationCount, violations: chatbotAudit.contrastViolations },
+    );
+    check(
+      "390px 챗봇 가로 스크롤 없음",
+      !chatbot.horizontalOverflow,
+      chatbot.horizontalOverflow,
+    );
+    results.screenshots.push(
+      await screenshot(cdp, sessionId, "mobile-390-chatbot-open.png"),
+    );
+
+    await cdp.send(
+      "Input.dispatchKeyEvent",
+      { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+      sessionId,
+    );
+    await cdp.send(
+      "Input.dispatchKeyEvent",
+      { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+      sessionId,
+    );
+    await sleep(300);
+    const chatbotEscClosed = !(await evaluate(
+      cdp,
+      sessionId,
+      `Boolean(document.querySelector('[data-testid="chatbot-panel"]'))`,
+    ));
+    check("390px 챗봇 Esc 닫기", chatbotEscClosed === true, chatbotEscClosed);
+
+    await evaluate(cdp, sessionId, click("chatbot-trigger"));
+    await sleep(400);
+    const overlayClicked = await evaluate(
+      cdp,
+      sessionId,
+      `(() => {
+        const panel = document.querySelector('[data-testid="chatbot-panel"]');
+        if (!panel) return false;
+        panel.parentElement.click();
+        return true;
+      })()`,
+    );
+    await sleep(300);
+    const chatbotOverlayClosed =
+      overlayClicked &&
+      !(await evaluate(
+        cdp,
+        sessionId,
+        `Boolean(document.querySelector('[data-testid="chatbot-panel"]'))`,
+      ));
+    check("390px 챗봇 오버레이 클릭 닫기", chatbotOverlayClosed === true, chatbotOverlayClosed);
+
+    await evaluate(cdp, sessionId, click("bottom-tab-menu"));
+    await sleep(600);
+    const drawer = await evaluate(cdp, sessionId, DRAWER_MEASURE);
+    const drawerAudit = await evaluate(
+      cdp,
+      sessionId,
+      layerAudit('[data-testid="menu-drawer"]'),
+    );
+    results.drawerLayer = { ...drawer, audit: drawerAudit };
+    check("390px 전체 메뉴 드로어 표시", drawer.visible === true, drawer.visible);
+    check("390px 드로어 뷰포트 안", drawer.drawerInViewport === true, drawer.drawer);
+    check(
+      "390px 드로어 닫기 48px 이상 + 화면 안",
+      drawer.close?.w >= 48 && drawer.close?.h >= 48 && drawer.closeInViewport,
+      drawer.close,
+    );
+    check(
+      "390px 드로어 바로가기 3개",
+      drawer.shortcutCount === 3,
+      drawer.shortcutCount,
+    );
+    check(
+      "390px 드로어 링크 48x48px 이상",
+      drawer.minTargetWidth >= 48 && drawer.minTargetHeight >= 48,
+      { width: drawer.minTargetWidth, height: drawer.minTargetHeight },
+    );
+    check(
+      "390px 드로어 모든 글자 14px 이상",
+      drawerAudit.fontViolationCount === 0,
+      { count: drawerAudit.fontViolationCount, violations: drawerAudit.fontViolations },
+    );
+    check(
+      "390px 드로어 모든 터치 타깃 48x48px 이상",
+      drawerAudit.smallTargetCount === 0,
+      { count: drawerAudit.smallTargetCount, violations: drawerAudit.smallTargets },
+    );
+    check(
+      "390px 드로어 모든 글자 대비 4.5:1 이상",
+      drawerAudit.contrastViolationCount === 0,
+      { count: drawerAudit.contrastViolationCount, violations: drawerAudit.contrastViolations },
+    );
+    check(
+      "390px 드로어 가로 스크롤 없음",
+      !drawer.horizontalOverflow,
+      drawer.horizontalOverflow,
+    );
+    results.screenshots.push(
+      await screenshot(cdp, sessionId, "mobile-390-drawer-open.png"),
+    );
+    await evaluate(cdp, sessionId, click("menu-drawer-close"));
+    await sleep(400);
+
+    await evaluate(cdp, sessionId, openFirstCard);
+    await sleep(600);
+    const modalLayer = await evaluate(cdp, sessionId, MODAL_MEASURE);
+    const modalAudit = await evaluate(
+      cdp,
+      sessionId,
+      layerAudit('[data-testid="detail-modal"]'),
+    );
+    results.modalLayer = { ...modalLayer, audit: modalAudit };
+    check("390px 열린 상세 모달 표시", modalLayer.visible === true, modalLayer.visible);
+    check(
+      "390px 열린 상세 모달 뷰포트 안",
+      modalLayer.modalInViewport === true,
+      { top: modalLayer.modalTop, bottom: modalLayer.modalBottom },
+    );
+    check(
+      "390px 상세 모달 닫기 48px 이상 + 화면 안",
+      modalLayer.close?.w >= 48 && modalLayer.close?.h >= 48 && modalLayer.closeInViewport,
+      modalLayer.close,
+    );
+    check(
+      "390px 열린 상세 모달 신청 버튼 56px",
+      modalLayer.applyHeight === 56,
+      modalLayer.applyHeight,
+    );
+    check(
+      "390px 열린 상세 모달 모든 글자 14px 이상",
+      modalAudit.fontViolationCount === 0,
+      { count: modalAudit.fontViolationCount, violations: modalAudit.fontViolations },
+    );
+    check(
+      "390px 열린 상세 모달 모든 터치 타깃 48x48px 이상",
+      modalAudit.smallTargetCount === 0,
+      { count: modalAudit.smallTargetCount, violations: modalAudit.smallTargets },
+    );
+    check(
+      "390px 열린 상세 모달 모든 글자 대비 4.5:1 이상",
+      modalAudit.contrastViolationCount === 0,
+      { count: modalAudit.contrastViolationCount, violations: modalAudit.contrastViolations },
+    );
+    check(
+      "390px 열린 상세 모달 가로 스크롤 없음",
+      !modalLayer.horizontalOverflow,
+      modalLayer.horizontalOverflow,
+    );
+    results.screenshots.push(
+      await screenshot(cdp, sessionId, "mobile-390-modal-open.png"),
+    );
 
     check("콘솔 오류 0건", results.console.length === 0, results.console);
   } finally {

@@ -514,9 +514,9 @@ export default function ChatbotWidget({
             role="dialog"
             aria-modal="true"
             aria-labelledby="chatbot-title"
-            className="flex h-[85vh] w-full max-w-xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl md:h-[580px] md:w-[400px] md:max-w-none md:rounded-3xl"
+            className="flex h-[88dvh] w-full max-w-xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl md:h-[580px] md:w-[400px] md:max-w-none md:rounded-3xl"
           >
-            <div className="flex items-start justify-between gap-3 bg-brand-800 px-4 py-3 text-white">
+            <div className="sticky top-0 z-10 flex shrink-0 items-start justify-between gap-3 border-b border-brand-900/40 bg-brand-800 px-4 py-3 text-white">
               <div className="flex items-center gap-3">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/15">
                   <MessageCircle aria-hidden className="size-5" />
@@ -536,7 +536,7 @@ export default function ChatbotWidget({
                 data-testid="chatbot-close"
                 aria-label="AI 상담 닫기"
                 onClick={closePanel}
-                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-white transition-colors hover:bg-white/20"
+                className="flex size-12 shrink-0 touch-target items-center justify-center rounded-2xl bg-white text-brand-800 shadow-sm transition-colors hover:bg-brand-50"
               >
                 <X aria-hidden className="size-6" />
               </button>
