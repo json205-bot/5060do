@@ -9,6 +9,10 @@ import { fileURLToPath } from "node:url";
 // NAS www root, refresh the site index, then run the live verifier. Manual runs
 // used to chain three separate commands; a failed step now stops the pipeline.
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "/5060do";
+// The NAS build talks to Supabase pgvector first and falls back to the bundled
+// index when the network or RPC fails. Override with NEXT_PUBLIC_RAG_SOURCE=local
+// to ship the bundle-only build again.
+const RAG_SOURCE = process.env.NEXT_PUBLIC_RAG_SOURCE ?? "supabase";
 const SITE = process.env.NAS_WWW_SITE ?? "5060do";
 const NAS_HOST = process.env.NAS_SSH_HOST ?? "bot@100.83.116.15";
 const NAS_PORT = process.env.NAS_SSH_PORT ?? "2233";
@@ -140,12 +144,17 @@ async function main() {
   }
 
   console.log(`[정보] 사이트 ${SITE}, basePath ${BASE_PATH}`);
+  console.log(`[정보] RAG 소스 ${RAG_SOURCE}`);
   console.log(`[정보] 검증 대상 ${TARGET_URL}`);
 
   run("정적 내보내기 빌드", "npm run build", [], {
     cwd: repoRoot,
     shell: true,
-    env: { ...process.env, NEXT_PUBLIC_BASE_PATH: BASE_PATH },
+    env: {
+      ...process.env,
+      NEXT_PUBLIC_BASE_PATH: BASE_PATH,
+      NEXT_PUBLIC_RAG_SOURCE: RAG_SOURCE,
+    },
   });
 
   if (!existsSync(path.join(outDir, "index.html"))) {

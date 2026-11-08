@@ -26,6 +26,9 @@ const argValue = (name) => {
 
 const MODE = argValue("--mode") ?? "bundle";
 const BUILD = process.argv.includes("--build");
+// --url points the same checks at an already deployed site (for example the NAS
+// www host) instead of building and serving `out/` locally.
+const LIVE_URL = argValue("--url") ?? process.env.CHATBOT_RAG_URL ?? null;
 const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15);
 const OUT_DIR = path.resolve(
   argValue("--out") ?? path.join("docs", "evidence", `chatbot-rag-${stamp}`),
@@ -222,12 +225,15 @@ const LAST_BOT = `(() => {
 
 async function main() {
   if (BUILD) await buildSite();
-  if (!(await stat(path.join(ROOT, "index.html")).catch(() => null))) {
+  if (!LIVE_URL && !(await stat(path.join(ROOT, "index.html")).catch(() => null))) {
     throw new Error("out/index.html missing. Run with --build or build first.");
   }
   await mkdir(OUT_DIR, { recursive: true });
 
-  const server = await serve();
+  const targetUrl = LIVE_URL ?? `http://${HOST}:${PORT}/`;
+  console.log(`[대상] ${targetUrl}`);
+
+  const server = LIVE_URL ? null : await serve();
   const chrome = spawn(
     CHROME,
     [
@@ -307,7 +313,7 @@ async function main() {
     );
 
     const loaded = cdp.once("Page.loadEventFired");
-    await cdp.send("Page.navigate", { url: `http://${HOST}:${PORT}/` }, sessionId);
+    await cdp.send("Page.navigate", { url: targetUrl }, sessionId);
     await loaded;
     await sleep(1000);
 
@@ -382,6 +388,7 @@ async function main() {
 
     const report = {
       mode: MODE,
+      url: targetUrl,
       question: QUESTION,
       expected: EXPECTED,
       reply,
@@ -410,7 +417,7 @@ async function main() {
     if (!report.pass) process.exitCode = 1;
   } finally {
     chrome.kill();
-    await new Promise((resolve) => server.close(resolve));
+    if (server) await new Promise((resolve) => server.close(resolve));
   }
 }
 

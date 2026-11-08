@@ -1,0 +1,7 @@
+[대상] http://100.83.116.15:8780/5060do/
+PASS  RAG 답변이 연혁 문서를 반환
+PASS  ragSource=rpc
+PASS  match_documents RPC 호출 200
+PASS  콘솔 예외 없음
+PASS chatbot-rag mode=rpc source=rpc
+evidence=Z:\dev\5060do\docs\evidence\task-20261108T1715\chatbot-rag-nas

@@ -1,0 +1,82 @@
+[정보] 사이트 5060do, basePath /5060do
+[정보] RAG 소스 supabase
+[정보] 검증 대상 http://100.83.116.15:8780/5060do/
+
+[실행] 정적 내보내기 빌드
+[명령] npm run build 
+
+> 5060do@0.1.0 build
+> node scripts/build-jobs-fallback.mjs && next build && node scripts/postbuild-static-rsc.mjs
+
+jobs_recent: rows=300/2034 bytes=140976 range=2026-08-27~2026-11-03
+jobs_recent boards: {"취업지원":20,"일자리":278,"사회공헌":2}
+▲ Next.js 16.4.5 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 403ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.5s
+  Running TypeScript ...
+  Finished TypeScript in 63s ...
+  Collecting page data using 6 workers ...
+  Generating static pages using 6 workers (0/5) ...
+  Generating static pages using 6 workers (1/5) 
+  Generating static pages using 6 workers (2/5) 
+  Generating static pages using 6 workers (3/5) 
+✓ Generating static pages using 6 workers (5/5) in 2.3s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /classic
+└ ○ /icon.svg
+
+
+○  (Static)  prerendered as static content
+
+[postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
+[postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt
+[검사] basePath 무결성 root=19/0 classic=16/0
+
+[실행] NAS www 동기화
+[명령] ssh -i C:\Users\bot\.ssh\maintain_bot_ed25519 -p 2233 -o BatchMode=yes -o StrictHostKeyChecking=accept-new bot@100.83.116.15 sh /volume1/workspace/common/scripts/deploy_www.sh /volume1/workspace/dev/5060do/out 5060do
+deployed: /volume3/www/5060do (38 files)
+url: http://100.83.116.15:8780/5060do/
+
+[실행] NAS 사이트 목록 갱신
+[명령] ssh -i C:\Users\bot\.ssh\maintain_bot_ed25519 -p 2233 -o BatchMode=yes -o StrictHostKeyChecking=accept-new bot@100.83.116.15 sh /volume1/workspace/common/scripts/www_index.sh
+written: /volume3/www/index.html (38 sites)
+
+[실행] NAS 운영 배포 검증
+[명령] C:\Program Files\nodejs\node.exe Z:\dev\5060do\scripts\verify-nas-live.mjs --url http://100.83.116.15:8780/5060do/
+PASS  /5060do/ HTTP 200
+PASS  /5060do/ HTML 본문 수신
+PASS  /5060do/classic/ HTTP 200
+PASS  /5060do/classic/ HTML 본문 수신
+PASS  /5060do/ HTML 내 /5060do/_next/ 자산 참조
+PASS  /5060do/ HTML 루트 /_next/ 누출 0건
+PASS  /5060do/classic/ HTML 내 /5060do/_next/ 자산 참조
+PASS  /5060do/classic/ HTML 루트 /_next/ 누출 0건
+PASS  참조 자산 전부 HTTP 200
+PASS  채용정보 수파베이스 실데이터 바인딩
+PASS  채용정보 실시간 소스 사용
+PASS  채용정보 섹션·클래식 링크 렌더링
+PASS  가로 스크롤 없음(1280px)
+PASS  클래식 화면 헤더 렌더링
+PASS  클래식 GNB 8개 메뉴
+PASS  가로 스크롤 없음(클래식 1280px)
+PASS  모바일(390px) 가로 스크롤 없음
+PASS  모바일(390px) 채용정보 카드 12건 적층
+PASS  모바일(390px) 직종·지역 칩 터치·스크롤 동작
+PASS  모바일(390px) GNB 햄버거 메뉴 열기·닫기
+PASS  태블릿(768px) 가로 스크롤 없음
+PASS  태블릿(768px) 프로그램 카드 2열 그리드
+PASS  태블릿(768px) 헤더 메뉴 3항목 정합
+PASS  태블릿(768px) 하단 모바일 메뉴 숨김
+PASS  브라우저 콘솔 오류 0건
+
+PASS (25/25)
+evidence=Z:\dev\5060do\docs\evidence\nas-live-20261108T080800
+
+[완료] 빌드 · 배포 · 검증 원클릭 파이프라인이 끝났습니다.

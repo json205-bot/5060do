@@ -1,0 +1,35 @@
+[build] mode=rpc ragSource=supabase
+▲ Next.js 16.4.5 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 373ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.0s
+  Running TypeScript ...
+  Finished TypeScript in 66s ...
+  Collecting page data using 6 workers ...
+  Generating static pages using 6 workers (0/5) ...
+  Generating static pages using 6 workers (1/5) 
+  Generating static pages using 6 workers (2/5) 
+  Generating static pages using 6 workers (3/5) 
+✓ Generating static pages using 6 workers (5/5) in 2.1s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /classic
+└ ○ /icon.svg
+
+
+○  (Static)  prerendered as static content
+
+[postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
+[postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt
+[대상] http://127.0.0.1:3213/
+PASS  RAG 답변이 연혁 문서를 반환
+PASS  ragSource=rpc
+PASS  match_documents RPC 호출 200
+PASS  콘솔 예외 없음
+PASS chatbot-rag mode=rpc source=rpc
+evidence=Z:\dev\5060do\docs\evidence\task-20261108T1715\chatbot-rag-rpc

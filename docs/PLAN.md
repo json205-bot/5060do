@@ -303,4 +303,15 @@ status: done
 | 남은 위험 | 신규 공고가 있으면 `src/data` 2종이 워킹트리에 변경으로 남는다(자동 커밋 없음). NAS crontab/n8n 등록은 아직 하지 않았다. Vercel Production 실도메인은 여전히 미발급 |
 | 근거 | `docs/evidence/task-20261108T1610/`, `docs/evidence/chatbot-rag-20261108T071540/`, `docs/evidence/chatbot-rag-20261108T071549/`, `docs/evidence/nas-live-20261108T071930/`, `docs/logs/cron-jobs.log` |
 
+## 26. NAS 운영 RAG RPC 실적용·크론 데이터 자동 푸시·실운영 검증 (2026-11-08 17:15)
 
+| 항목 | 내용 |
+|---|---|
+| 목표 | NAS 운영 빌드를 Supabase pgvector RPC 모드로 재배포하고, 일별 크롤러가 신규 공고를 갱신하면 데이터 2종만 자동 커밋·푸시하도록 크론 래퍼를 완성한다 |
+| NAS 배포 | `scripts/deploy-nas.mjs`가 `NEXT_PUBLIC_RAG_SOURCE=supabase`를 기본 주입(`NEXT_PUBLIC_RAG_SOURCE=local`로 번들 모드 복귀). `npm run deploy:nas` Exit 0, 38개 파일, **25/25 PASS** |
+| 실운영 RPC | `scripts/verify-chatbot-rag.mjs --url=...` 추가 ? 이미 배포된 사이트를 빌드 없이 검사. NAS `http://100.83.116.15:8780/5060do/`에서 **4/4 PASS**, `data-rag-source=rpc`, `match_documents` HTTP 200 |
+| 크론 자동 푸시 | `scripts/run-daily-cron.sh` ? 크롤러 성공 후 `src/data/jobs_all.json`?`jobs_recent.json` diff가 있을 때만 `git add`?`chore(data): sync incremental jobs (YYYY-MM-DD)` 커밋?`origin master` 푸시. GitHub 미러는 자격 증명이 있을 때만 시도하고 없으면 건너뛴다(`CRON_GITHUB_PUSH=0|1|auto`) |
+| 크론 검증 | NAS 실데이터 실행 **Exit 0**, 신규 0건·`sync=0`. 임시 저장소 시뮬레이션에서 신규 1건?커밋?`origin` 푸시 성공, 2회차 무변경?커밋 없이 Exit 0 |
+| 회귀 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, `node scripts/verify-chatbot-rag.mjs --mode=rpc --build` **4/4 PASS** |
+| 남은 위험 | NAS에는 crontab이 없어 Synology 작업 스케줄러/n8n 등록이 필요하다. NAS에 GitHub 자격 증명이 없어 미러 푸시는 워크스테이션에서 수행해야 한다. Windows `core.autocrlf`와 NAS 체크아웃 차이로 데이터 JSON이 CRLF로 커밋된 이력이 1건 생겼다(내용 동일) |
+| 근거 | `docs/evidence/task-20261108T1715/`, `docs/evidence/nas-live-20261108T080800/`, `docs/logs/cron-jobs.log` |
