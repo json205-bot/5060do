@@ -1,0 +1,80 @@
+{
+  "ticket": "5060DO-20261108-1340",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "dryRun": false,
+  "updateLocal": false,
+  "maxPages": 10,
+  "maxNew": 50,
+  "baselineRows": 2034,
+  "scans": [
+    {
+      "theme": 7,
+      "slug": "lifeWelfare",
+      "boardType": "사회공헌",
+      "pages": [
+        {
+          "page": 1,
+          "items": 20,
+          "unknown": 0,
+          "stop": "all-known"
+        }
+      ],
+      "discovered": 0
+    },
+    {
+      "theme": 8,
+      "slug": "lifeFindJob",
+      "boardType": "취업지원",
+      "pages": [
+        {
+          "page": 1,
+          "items": 20,
+          "unknown": 0,
+          "stop": "all-known"
+        }
+      ],
+      "discovered": 0
+    },
+    {
+      "theme": 9,
+      "slug": "lifeVenture",
+      "boardType": "창업",
+      "pages": [
+        {
+          "page": 1,
+          "items": 20,
+          "unknown": 0,
+          "stop": "all-known"
+        }
+      ],
+      "discovered": 0
+    },
+    {
+      "theme": 10,
+      "slug": "lifeJobHunt",
+      "boardType": "일자리",
+      "pages": [
+        {
+          "page": 1,
+          "items": 20,
+          "unknown": 0,
+          "stop": "all-known"
+        }
+      ],
+      "discovered": 0
+    }
+  ],
+  "discovered": 0,
+  "selected": 0,
+  "newRows": [],
+  "region": {
+    "부산": 0,
+    "기타": 0
+  },
+  "upserted": 0,
+  "updatedLocal": false,
+  "remoteTotal": 2034,
+  "failures": [],
+  "startedAt": "2026-11-08T04:48:24.536Z",
+  "elapsedMs": 866
+}

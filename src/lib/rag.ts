@@ -2,151 +2,60 @@ import knowledgeData from "@/data/center_knowledge.json";
 import {
   EMBEDDING_DIM,
   EMBEDDING_MODEL,
-  buildEmbeddingSpace,
-  cosineSimilarity,
-  documentSpaceText,
-  embedDocument,
-  embedText,
   parseVector,
-  type EmbeddingSpace,
+  embedDocument,
 } from "./embedding";
+import {
+  createRagEngine,
+  defaultRagRpcTimeoutMs,
+  type KnowledgeEntry,
+  type RagDocument,
+  type RagMatch,
+  type RagSearchOutcome,
+  type RagSearchOptions,
+} from "./rag-core";
 import { getSupabaseClient } from "./supabase";
 
-type KnowledgeEntry = {
-  id: string;
-  category?: string;
-  title?: string;
-  sourceUrl?: string;
-  chunks?: string[];
-};
-
-export type RagDocument = {
-  id: string;
-  title: string;
-  category: string;
-  content: string;
-  sourceUrl: string;
-  embedding: number[];
-};
-
-export type RagMatch = Omit<RagDocument, "embedding"> & {
-  score: number;
-};
-
-export type RagSearchOptions = {
-  topK?: number;
-  minScore?: number;
-  index?: RagDocument[];
-};
-
-const DEFAULT_TOP_K = 3;
-// Scores below this are noise from shared vocabulary, not a usable answer.
-const DEFAULT_MIN_SCORE = 0.1;
+export type { RagDocument, RagMatch, RagSearchOutcome, RagSearchOptions };
 
 const entries = knowledgeData as KnowledgeEntry[];
+const engine = createRagEngine(entries);
 
-let localIndex: RagDocument[] | null = null;
-let localSpace: EmbeddingSpace | null = null;
 let remoteIndex: Promise<RagDocument[]> | null = null;
 
-function knowledgeContent(entry: KnowledgeEntry): string {
-  return (entry.chunks ?? [])
-    .filter((chunk) => typeof chunk === "string" && chunk.trim().length > 0)
-    .map((chunk) => chunk.trim())
-    .join("\n\n");
-}
-
-type BaseDocument = {
-  id: string;
-  title: string;
-  category: string;
-  content: string;
-  sourceUrl: string;
-};
-
-function localBaseDocuments(): BaseDocument[] {
-  const documents: BaseDocument[] = [];
-  for (const entry of entries) {
-    const content = knowledgeContent(entry);
-    if (!content) continue;
-    documents.push({
-      id: entry.id,
-      title: entry.title ?? entry.id,
-      category: entry.category ?? "",
-      content,
-      sourceUrl: entry.sourceUrl ?? "",
-    });
-  }
-  return documents;
-}
-
-function getLocalSpace(): EmbeddingSpace {
-  if (!localSpace) {
-    localSpace = buildEmbeddingSpace(
-      localBaseDocuments().map((document) =>
-        documentSpaceText({
-          title: document.title,
-          category: document.category,
-          content: document.content,
-        }),
-      ),
-    );
-  }
-  return localSpace;
-}
-
 export function getLocalRagIndex(): RagDocument[] {
-  if (localIndex) return localIndex;
-
-  const space = getLocalSpace();
-  localIndex = localBaseDocuments().map((document) => ({
-    ...document,
-    embedding: embedDocument(
-      {
-        title: document.title,
-        category: document.category,
-        content: document.content,
-      },
-      space,
-    ),
-  }));
-
-  return localIndex;
+  return engine.getIndex();
 }
 
 export function searchKnowledgeRAG(
   query: string,
   options: RagSearchOptions = {},
 ): RagMatch[] {
-  const normalized = query.replace(/\s+/g, " ").trim();
-  if (!normalized) return [];
-
-  const index = options.index ?? getLocalRagIndex();
-  const topK = options.topK ?? DEFAULT_TOP_K;
-  const minScore = options.minScore ?? DEFAULT_MIN_SCORE;
-  const queryVector = embedText(normalized, getLocalSpace());
-
-  return index
-    .map((document) => ({
-      id: document.id,
-      title: document.title,
-      category: document.category,
-      content: document.content,
-      sourceUrl: document.sourceUrl,
-      score: cosineSimilarity(queryVector, document.embedding),
-    }))
-    .filter((match) => match.score >= minScore)
-    .sort((left, right) => right.score - left.score)
-    .slice(0, topK);
+  return engine.search(query, options);
 }
 
-type RemoteDocumentRow = {
-  id: number;
-  title: string;
-  category: string | null;
-  content: string | null;
-  embedding: unknown;
-};
+// RPC is an optional upgrade over the bundled vectors. The returned matches are
+// identical in shape, so a missing function or a blocked network never breaks
+// the chatbot: the guard falls back to searchKnowledgeRAG() and only the reason
+// changes.
+export async function searchKnowledgeRAGRemote(
+  query: string,
+  options: RagSearchOptions = {},
+  config: { timeoutMs?: number } = {},
+): Promise<RagSearchOutcome> {
+  const client = getSupabaseClient();
+  return engine.searchWithRpc(
+    query,
+    options,
+    async (args) => {
+      if (!client) {
+        return { data: null, error: { message: "supabase client is not configured" } };
+      }
+      return client.rpc("match_documents", args);
+    },
+    { timeoutMs: config.timeoutMs ?? defaultRagRpcTimeoutMs },
+  );
+}
 
 // Opt-in remote path: the static export reads bundled vectors by default so a
 // blocked or slow network can never break the chatbot. Set
@@ -161,6 +70,14 @@ export async function loadRagIndex(): Promise<RagDocument[]> {
   }
   return remoteIndex;
 }
+
+type RemoteDocumentRow = {
+  id: number;
+  title: string;
+  category: string | null;
+  content: string | null;
+  embedding: unknown;
+};
 
 async function fetchRemoteIndex(): Promise<RagDocument[]> {
   const client = getSupabaseClient();
@@ -182,7 +99,7 @@ async function fetchRemoteIndex(): Promise<RagDocument[]> {
     if (entry.title && entry.sourceUrl) urls.set(entry.title, entry.sourceUrl);
   }
 
-  const space = getLocalSpace();
+  const space = engine.getSpace();
   const documents: RagDocument[] = [];
 
   for (const raw of data as RemoteDocumentRow[]) {

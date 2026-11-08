@@ -1,0 +1,22 @@
+{
+  "ticket": "5060DO-20261108-1340",
+  "sampleId": 2728,
+  "checks": {
+    "titleMatch": true,
+    "dateMatch": true,
+    "contentPresent": true,
+    "regionValid": true,
+    "sourceUrlMatch": true
+  },
+  "pass": true,
+  "job": {
+    "id": 2728,
+    "boardType": "일자리",
+    "title": "(민간) 소방시설점검 관리 직원 (~12.28)",
+    "date": "2026-10-29",
+    "company": "",
+    "author": "관리자",
+    "content": "출처 : 부산일자리정보망, 고용24",
+    "sourceUrl": "https://www.5060do.or.kr/board/read?theme=10&idx=2728"
+  }
+}

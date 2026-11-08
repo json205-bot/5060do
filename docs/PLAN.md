@@ -279,3 +279,15 @@ status: done
 | 복구 가드 | Vercel 루트 모드 빌드 후에는 `npm run deploy:nas`를 마지막에 실행해 `out/`과 NAS 서빙본을 항상 `/5060do` 서브패스 정합 상태로 되돌린다 |
 | 근거 | `docs/evidence/deploy-20261108T1100/`, `docs/evidence/nas-live-20261108T021902/` |
 
+## 24. RAG RPC 안전 폴백·채용정보 일별 증분 크롤러·NAS 재배포 (2026-11-08 14:02)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | REST로 DDL을 실행할 수 없는 환경에서도 `match_documents` RPC가 있으면 선택 사용하고, 실패하면 클라이언트 번들 벡터 검색으로 무중단 폴백한다. 신규 채용공고만 골라 Supabase `public.jobs`에 Upsert하는 일별 크롤러를 추가한다 |
+| RAG 분리 | `src/lib/rag-core.ts` 신규 — 번들 인덱스·검색·RPC 호출 가드를 한 엔진으로 묶고, `src/lib/rag.ts`는 이를 사용하는 얇은 래퍼로 정리. `searchKnowledgeRAG()`는 기본 번들 검색을 유지하고 `searchKnowledgeRAGRemote()`가 RPC 실패(함수 미존재·HTTP 오류·예외·빈 결과·2.5초 타임아웃) 시 `source="bundle"`로 폴백한다 |
+| 증분 크롤러 | `scripts/crawl-incremental-jobs.mjs` 신규 — 테마 7·8·9·10 목록을 최신순으로 훑어 기존 `jobs_all.json`에 없는 id만 상세 수집하고 `toSupabaseJobRow()`로 지역을 판정해 Upsert. `--dry-run`, `--limit=N`, `--update-local`, `--self-test` 지원. `package.json`에 `cron:jobs` 등록 |
+| 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, `npm run cron:jobs` Exit 0(신규 0건, 원격 2,034건), `--self-test` 5/5, `node scripts/verify-rag-rpc.mjs` **7/7 PASS**, `npm run deploy:nas` Exit 0, NAS 검증 **25/25 PASS** |
+| 남은 위험 | `match_documents`는 현재 프로젝트에 설치되어 있다. 향후 마이그레이션으로 사라져도 챗봇은 번들 검색으로 계속 동작한다. Vercel Production 실도메인은 여전히 미발급 |
+| 근거 | `docs/evidence/rag-rpc-20261108T044810/`, `docs/evidence/jobs-incremental-20261108T044824/`, `docs/evidence/nas-live-20261108T045641/` |
+
+

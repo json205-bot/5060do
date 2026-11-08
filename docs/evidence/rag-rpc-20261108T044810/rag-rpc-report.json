@@ -1,0 +1,81 @@
+{
+  "ticket": "5060DO-20261108-1340",
+  "endpoint": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/rpc/match_documents",
+  "envPath": "Z:\\common\\env\\supabase_5060do.env",
+  "question": "센터는 언제 문을 열었나요?",
+  "expectedTitle": "연혁",
+  "testTimeoutMs": 2500,
+  "pass": true,
+  "checks": [
+    {
+      "name": "RPC 엔드포인트 응답",
+      "pass": true,
+      "source": "rpc",
+      "reason": "ok",
+      "rpcRows": 2,
+      "top": "연혁"
+    },
+    {
+      "name": "RPC 결과 최상위 문서 = 연혁",
+      "pass": true,
+      "top": "연혁",
+      "score": 0.421285858043727
+    },
+    {
+      "name": "함수 미존재(PGRST202) → 번들 폴백",
+      "pass": true,
+      "source": "bundle",
+      "reason": "rpc-error: PGRST202 Could not find the function public.match_documents",
+      "matchesBundle": true
+    },
+    {
+      "name": "네트워크 예외 → 번들 폴백",
+      "pass": true,
+      "source": "bundle",
+      "reason": "rpc-exception: fetch failed",
+      "matchesBundle": true
+    },
+    {
+      "name": "빈 결과 → 번들 폴백",
+      "pass": true,
+      "source": "bundle",
+      "reason": "rpc-empty",
+      "matchesBundle": true
+    },
+    {
+      "name": "응답 지연 → 번들 폴백",
+      "pass": true,
+      "source": "bundle",
+      "reason": "rpc-exception: RPC timed out after 250ms",
+      "matchesBundle": true
+    },
+    {
+      "name": "번들 검색 기준선",
+      "pass": true,
+      "top": "연혁",
+      "score": 0.42128640606286244
+    }
+  ],
+  "bundleTop": [
+    {
+      "title": "연혁",
+      "score": 0.4213
+    },
+    {
+      "title": "일·활동",
+      "score": 0.1986
+    }
+  ],
+  "rpcTop": [
+    {
+      "title": "연혁",
+      "score": 0.4213
+    },
+    {
+      "title": "일·활동",
+      "score": 0.1986
+    }
+  ],
+  "startedAt": "2026-11-08T04:48:10.175Z",
+  "elapsedMs": 1401
+}
