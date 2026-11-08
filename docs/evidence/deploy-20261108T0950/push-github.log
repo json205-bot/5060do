@@ -1,0 +1,20 @@
+
+> 5060do@0.1.0 push:github
+> node scripts/sync-github.mjs
+
+[?뺣낫] github ??https://github.com/json205-bot/5060do.git
+[?뺣낫] git push github master ?ㅽ뻾
+node.exe : To https://github.com/json205-bot/5060do.git
+위치 줄:1 문자:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (To https://gith...-bot/5060do.git:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   912e9fa..34704d0  master -> master
+[?뺣낫] 濡쒖뺄 master 而ㅻ컠: 34704d04c1fa559c11e059741f3d0ab8e0e6928b
+[?뺣낫] ?먭꺽 master 而ㅻ컠: 34704d04c1fa559c11e059741f3d0ab8e0e6928b
+[?꾨즺] master 釉뚮옖移섎? github ?먭꺽???숆린?뷀뻽?듬땲??
+(node:29300) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security 
+vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
