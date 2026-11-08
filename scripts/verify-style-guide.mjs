@@ -16,6 +16,15 @@ const PROFILE_DIR = path.join(tmpdir(), `5060do-style-${Date.now()}`);
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const waitForCondition = async (cdp, sessionId, expression, timeoutMs = 15000) => {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await evaluate(cdp, sessionId, expression)) return true;
+    await sleep(250);
+  }
+  return false;
+};
+
 class Cdp {
   constructor(socket) {
     this.socket = socket;
@@ -277,6 +286,30 @@ const MODAL_MEASURE = `(() => {
       ? closeRect.top >= -1 && closeRect.bottom <= window.innerHeight + 1
       : false,
     applyHeight: apply ? box(apply).h : null,
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+const JOB_MODAL_MEASURE = `(() => {
+  const round = (value) => Math.round(value * 10) / 10;
+  const box = (el) => el ? { w: round(el.getBoundingClientRect().width), h: round(el.getBoundingClientRect().height) } : null;
+  const modal = document.querySelector('[data-testid="job-detail-modal"]');
+  if (!modal) return { visible: false };
+  const close = modal.querySelector('[data-testid="job-detail-close"]');
+  const source = modal.querySelector('[data-testid="job-source-link"]');
+  const closeRect = close ? close.getBoundingClientRect() : null;
+  const modalRect = modal.getBoundingClientRect();
+  return {
+    visible: true,
+    width: box(modal).w,
+    modalTop: round(modalRect.top),
+    modalBottom: round(modalRect.bottom),
+    modalInViewport: modalRect.top >= -1 && modalRect.bottom <= window.innerHeight + 1,
+    close: close ? box(close) : null,
+    closeInViewport: closeRect
+      ? closeRect.top >= -1 && closeRect.bottom <= window.innerHeight + 1
+      : false,
+    sourceHeight: source ? box(source).h : null,
     horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   };
 })()`;
@@ -653,6 +686,98 @@ async function main() {
       });
       check(`${label} 클래식 본문 대비 7:1 이상`, classicAudit.bodyContrast >= 7, classicAudit.bodyContrast);
 
+      const classicChatbot = await evaluate(
+        cdp,
+        sessionId,
+        `(() => {
+          const trigger = document.querySelector('[data-testid="chatbot-trigger"]');
+          if (!trigger) return { visible: false };
+          const style = getComputedStyle(trigger);
+          const rect = trigger.getBoundingClientRect();
+          const round = (value) => Math.round(value * 10) / 10;
+          return {
+            visible: style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) > 0,
+            width: round(rect.width),
+            height: round(rect.height),
+            inViewport:
+              rect.top >= -1 &&
+              rect.bottom <= window.innerHeight + 1 &&
+              rect.left >= -1 &&
+              rect.right <= window.innerWidth + 1,
+            right: round(rect.right),
+            bottom: round(rect.bottom),
+          };
+        })()`,
+      );
+      results.classic[results.classic.length - 1].chatbotTrigger = classicChatbot;
+      check(
+        `${label} 클래식 챗봇 버튼 표시·48x48px 이상`,
+        classicChatbot.visible && classicChatbot.width >= 48 && classicChatbot.height >= 48,
+        classicChatbot,
+      );
+
+      if (viewport.width === 390) {
+        await evaluate(cdp, sessionId, click("chatbot-trigger"));
+        await sleep(700);
+        const classicChatbotPanel = await evaluate(cdp, sessionId, CHATBOT_MEASURE);
+        const classicChatbotAudit = await evaluate(
+          cdp,
+          sessionId,
+          layerAudit('[data-testid="chatbot-panel"]'),
+        );
+        results.classicChatbot = { ...classicChatbotPanel, audit: classicChatbotAudit };
+        check(
+          "390px 클래식 챗봇 패널 표시·뷰포트 안",
+          classicChatbotPanel.visible === true && classicChatbotPanel.panelInViewport === true,
+          classicChatbotPanel.panel,
+        );
+        check(
+          "390px 클래식 챗봇 닫기 48px 이상 + 화면 안",
+          classicChatbotPanel.close?.w >= 48 &&
+            classicChatbotPanel.close?.h >= 48 &&
+            classicChatbotPanel.closeInViewport,
+          classicChatbotPanel.close,
+        );
+        check(
+          "390px 클래식 챗봇 모든 글자 14px 이상",
+          classicChatbotAudit.fontViolationCount === 0,
+          { count: classicChatbotAudit.fontViolationCount, violations: classicChatbotAudit.fontViolations },
+        );
+        check(
+          "390px 클래식 챗봇 모든 터치 타깃 48x48px 이상",
+          classicChatbotAudit.smallTargetCount === 0,
+          { count: classicChatbotAudit.smallTargetCount, violations: classicChatbotAudit.smallTargets },
+        );
+        check(
+          "390px 클래식 챗봇 가로 스크롤 없음",
+          !classicChatbotPanel.horizontalOverflow && !classicChatbotAudit.horizontalOverflow,
+          {
+            measure: classicChatbotPanel.horizontalOverflow,
+            audit: classicChatbotAudit.horizontalOverflow,
+          },
+        );
+        results.screenshots.push(
+          await screenshot(cdp, sessionId, "mobile-390-classic-chatbot-open.png"),
+        );
+        await cdp.send(
+          "Input.dispatchKeyEvent",
+          { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+          sessionId,
+        );
+        await cdp.send(
+          "Input.dispatchKeyEvent",
+          { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+          sessionId,
+        );
+        await sleep(300);
+        const classicChatClosed = !(await evaluate(
+          cdp,
+          sessionId,
+          `Boolean(document.querySelector('[data-testid="chatbot-panel"]'))`,
+        ));
+        check("390px 클래식 챗봇 Esc 닫기", classicChatClosed === true, classicChatClosed);
+      }
+
       if (viewport.width === 1280) {
         const gnb = await evaluate(
           cdp,
@@ -934,6 +1059,118 @@ async function main() {
     results.screenshots.push(
       await screenshot(cdp, sessionId, "mobile-390-modal-open.png"),
     );
+
+    // Job detail modal (TASK 5060DO-20261108-2145): the newest opened layer.
+    await evaluate(cdp, sessionId, click("detail-modal-close"));
+    await sleep(400);
+    await evaluate(
+      cdp,
+      sessionId,
+      `document.querySelector('#jobs').scrollIntoView({ block: 'start', behavior: 'instant' })`,
+    );
+    const jobsReady = await waitForCondition(
+      cdp,
+      sessionId,
+      `document.querySelectorAll('[data-testid="job-card"]').length > 0`,
+      20000,
+    );
+    results.jobsReady = jobsReady;
+    check("390px 채용정보 카드 로드", jobsReady === true, jobsReady);
+
+    const openFirstJob = `(() => {
+      const card = document.querySelector('[data-testid="job-card"]');
+      if (!card) return false;
+      card.click();
+      return true;
+    })()`;
+    const jobModalOpenExpr = `Boolean(document.querySelector('[data-testid="job-detail-modal"]'))`;
+
+    const jobOpened = await evaluate(cdp, sessionId, openFirstJob);
+    await sleep(600);
+    const jobModal = await evaluate(cdp, sessionId, JOB_MODAL_MEASURE);
+    const jobAudit = await evaluate(
+      cdp,
+      sessionId,
+      layerAudit('[data-testid="job-detail-modal"]'),
+    );
+    results.jobModalLayer = { ...jobModal, audit: jobAudit };
+    check("390px 채용 상세 모달 표시", jobOpened === true && jobModal.visible === true, jobModal.visible);
+    check(
+      "390px 채용 상세 모달 뷰포트 안",
+      jobModal.modalInViewport === true,
+      { top: jobModal.modalTop, bottom: jobModal.modalBottom },
+    );
+    check(
+      "390px 채용 상세 닫기 48px 이상 + 화면 안",
+      jobModal.close?.w >= 48 && jobModal.close?.h >= 48 && jobModal.closeInViewport,
+      jobModal.close,
+    );
+    check(
+      "390px 채용 원문 링크 56px CTA",
+      jobModal.sourceHeight === 56,
+      jobModal.sourceHeight,
+    );
+    check(
+      "390px 채용 상세 모든 글자 14px 이상",
+      jobAudit.fontViolationCount === 0,
+      { count: jobAudit.fontViolationCount, violations: jobAudit.fontViolations },
+    );
+    check(
+      "390px 채용 상세 모든 터치 타깃 48x48px 이상",
+      jobAudit.smallTargetCount === 0,
+      { count: jobAudit.smallTargetCount, violations: jobAudit.smallTargets },
+    );
+    check(
+      "390px 채용 상세 모든 글자 대비 4.5:1 이상",
+      jobAudit.contrastViolationCount === 0,
+      { count: jobAudit.contrastViolationCount, violations: jobAudit.contrastViolations },
+    );
+    check(
+      "390px 채용 상세 가로 스크롤 없음",
+      !jobModal.horizontalOverflow && !jobAudit.horizontalOverflow,
+      { measure: jobModal.horizontalOverflow, audit: jobAudit.horizontalOverflow },
+    );
+    results.screenshots.push(
+      await screenshot(cdp, sessionId, "mobile-390-job-modal-open.png"),
+    );
+
+    await cdp.send(
+      "Input.dispatchKeyEvent",
+      { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+      sessionId,
+    );
+    await cdp.send(
+      "Input.dispatchKeyEvent",
+      { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+      sessionId,
+    );
+    await sleep(300);
+    const jobEscClosed = !(await evaluate(cdp, sessionId, jobModalOpenExpr));
+    check("390px 채용 상세 Esc 닫기", jobEscClosed === true, jobEscClosed);
+
+    await evaluate(cdp, sessionId, openFirstJob);
+    await sleep(400);
+    const jobOverlayClicked = await evaluate(
+      cdp,
+      sessionId,
+      `(() => {
+        const modal = document.querySelector('[data-testid="job-detail-modal"]');
+        if (!modal) return false;
+        modal.parentElement.click();
+        return true;
+      })()`,
+    );
+    await sleep(300);
+    const jobOverlayClosed =
+      jobOverlayClicked && !(await evaluate(cdp, sessionId, jobModalOpenExpr));
+    check("390px 채용 상세 오버레이 클릭 닫기", jobOverlayClosed === true, jobOverlayClosed);
+
+    await evaluate(cdp, sessionId, openFirstJob);
+    await sleep(400);
+    await evaluate(cdp, sessionId, click("job-detail-close"));
+    await sleep(300);
+    const jobButtonClosed = !(await evaluate(cdp, sessionId, jobModalOpenExpr));
+    check("390px 채용 상세 닫기 버튼 클릭", jobButtonClosed === true, jobButtonClosed);
 
     check("콘솔 오류 0건", results.console.length === 0, results.console);
   } finally {

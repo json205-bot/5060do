@@ -15,7 +15,9 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ChatbotWidget from "@/components/ChatbotWidget";
 import VersionSwitcher from "@/components/version-switcher";
+import { usePrograms } from "@/hooks/usePrograms";
 import { withBasePath } from "@/lib/basePath";
 import {
   CLASSIC_CENTER,
@@ -48,6 +50,14 @@ export default function ClassicPage() {
   const activePrograms =
     classicProgramTabs.find((tab) => tab.key === activeTab) ??
     classicProgramTabs[0];
+  // Same live snapshot as the modern screen so both chat widgets answer with
+  // identical course data.
+  const {
+    overview: chatbotOverview,
+    activePrograms: chatbotActivePrograms,
+    counts: chatbotCounts,
+    loadActivePrograms,
+  } = usePrograms("전체");
 
   const goToSlide = useCallback((next: number) => {
     const length = classicHeroSlides.length;
@@ -729,6 +739,16 @@ export default function ClassicPage() {
           </p>
         </div>
       </footer>
+
+      <ChatbotWidget
+        programs={chatbotOverview}
+        activePrograms={chatbotActivePrograms}
+        counts={chatbotCounts}
+        onOpen={() => {
+          setMobileOpen(false);
+          loadActivePrograms();
+        }}
+      />
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
