@@ -1,0 +1,9 @@
+
+> 5060do@0.1.0 push:github
+> node scripts/sync-github.mjs
+
+[중단] 작업 트리에 커밋되지 않은 변경이 있어 푸시하지 않았습니다.
+변경 내용을 커밋한 뒤 다시 실행하세요.
+
+  ?? docs/evidence/deploy-20261108T1035/push-github.log
+  ?? docs/evidence/deploy-20261108T1035/push-origin.log
