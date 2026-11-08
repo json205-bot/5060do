@@ -1,0 +1,11 @@
+{
+  "basePath": "",
+  "buildExit": 0,
+  "verifyExit": 0,
+  "rootLeak": false,
+  "probes": {
+    "/": 200,
+    "/classic/": 200
+  },
+  "checkedAt": "2026-11-08T02:16:16.428Z"
+}

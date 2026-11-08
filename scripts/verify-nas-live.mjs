@@ -142,6 +142,65 @@ const screenshot = async (cdp, sessionId, fileName) => {
   await writeFile(path.join(OUT_DIR, fileName), Buffer.from(data, "base64"));
 };
 
+const setViewport = async (cdp, sessionId, { width, height, mobile }) => {
+  await cdp.send(
+    "Emulation.setDeviceMetricsOverride",
+    { width, height, deviceScaleFactor: 1, mobile },
+    sessionId,
+  );
+  await cdp.send(
+    "Emulation.setTouchEmulationEnabled",
+    { enabled: mobile, maxTouchPoints: 1 },
+    sessionId,
+  );
+};
+
+// Real touch events instead of element.click(): the mobile checks must fail if
+// a tap target is covered or off-screen at 390px.
+const touchTap = async (cdp, sessionId, selector) => {
+  const scrolled = await evaluate(
+    cdp,
+    sessionId,
+    `(() => {
+      const element = document.querySelector(${JSON.stringify(selector)});
+      if (!element) return false;
+      element.scrollIntoView({ behavior: "instant", block: "center" });
+      return true;
+    })()`,
+  );
+  if (!scrolled) return null;
+  await sleep(300);
+  const point = await evaluate(
+    cdp,
+    sessionId,
+    `(() => {
+      const element = document.querySelector(${JSON.stringify(selector)});
+      if (!element) return null;
+      const rect = element.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return null;
+      return {
+        x: Math.round(rect.left + rect.width / 2),
+        y: Math.round(rect.top + rect.height / 2),
+        height: Math.round(rect.height),
+      };
+    })()`,
+  );
+  if (!point) return null;
+  await cdp.send(
+    "Input.dispatchTouchEvent",
+    { type: "touchStart", touchPoints: [{ x: point.x, y: point.y }] },
+    sessionId,
+  );
+  await sleep(60);
+  await cdp.send(
+    "Input.dispatchTouchEvent",
+    { type: "touchEnd", touchPoints: [] },
+    sessionId,
+  );
+  await sleep(500);
+  return point;
+};
+
 async function fetchPage(url) {
   const response = await fetch(url, { redirect: "follow" });
   const html = await response.text();
@@ -372,6 +431,166 @@ async function main() {
     });
     await screenshot(cdp, sessionId, "nas-live-classic-1280.png");
     results.screenshots.push("nas-live-classic-1280.png");
+
+    // 5. Mobile viewport (390px): stacked job cards, touch chips, drawer menu.
+    await setViewport(cdp, sessionId, { width: 390, height: 844, mobile: true });
+    results.currentPage = "/ (mobile 390)";
+    await load(baseUrl);
+    const mobileBound = await waitForCondition(
+      cdp,
+      sessionId,
+      `document.querySelectorAll('[data-testid="job-card"]').length >= 12`,
+    );
+    const mobileState = await evaluate(
+      cdp,
+      sessionId,
+      `(() => {
+        const cards = Array.from(document.querySelectorAll('[data-testid="job-card"]'));
+        const list = document.querySelector('[data-testid="job-list"]');
+        const listRect = list ? list.getBoundingClientRect() : null;
+        const stacked =
+          cards.length > 0 &&
+          Boolean(listRect) &&
+          cards.every((card) => {
+            const rect = card.getBoundingClientRect();
+            return rect.width > 0 && rect.left >= listRect.left - 1 && rect.right <= listRect.right + 1;
+          });
+        const chips = Array.from(
+          document.querySelectorAll('[data-testid^="job-board-chip-"], [data-testid^="job-region-chip-"]'),
+        );
+        return {
+          cards: cards.length,
+          stacked,
+          chips: chips.length,
+          minChipHeight: chips.length
+            ? Math.min(...chips.map((chip) => Math.round(chip.getBoundingClientRect().height)))
+            : 0,
+          overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+          viewportWidth: window.innerWidth,
+        };
+      })()`,
+    );
+    check(
+      "모바일(390px) 가로 스크롤 없음",
+      mobileState.overflow === false && mobileState.viewportWidth === 390,
+      mobileState,
+    );
+    check(
+      "모바일(390px) 채용정보 카드 12건 적층",
+      mobileBound && mobileState.cards === 12 && mobileState.stacked,
+      mobileState,
+    );
+    const chipPoint = await touchTap(
+      cdp,
+      sessionId,
+      '[data-testid="job-board-chip-취업지원"]',
+    );
+    const chipState = await evaluate(
+      cdp,
+      sessionId,
+      `(() => {
+        const chip = document.querySelector('[data-testid="job-board-chip-취업지원"]');
+        const result = document.querySelector('[data-testid="job-result-count"]');
+        return {
+          pressed: chip?.getAttribute('aria-pressed') === 'true',
+          label: (result?.textContent ?? '').replace(/\\s+/g, ' ').trim(),
+        };
+      })()`,
+    );
+    check(
+      "모바일(390px) 직종·지역 칩 터치·스크롤 동작",
+      Boolean(chipPoint) &&
+        chipState.pressed &&
+        chipState.label.includes("취업지원") &&
+        chipPoint.height >= 44,
+      { ...chipState, tap: chipPoint },
+    );
+    await screenshot(cdp, sessionId, "nas-live-root-390.png");
+    results.screenshots.push("nas-live-root-390.png");
+
+    const menuPoint = await touchTap(
+      cdp,
+      sessionId,
+      '[data-testid="bottom-tab-menu"]',
+    );
+    const menuOpened = await waitForCondition(
+      cdp,
+      sessionId,
+      `(() => {
+        const drawer = document.querySelector('[data-testid="menu-drawer"]');
+        if (!drawer) return false;
+        const rect = drawer.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && rect.top < window.innerHeight;
+      })()`,
+      8000,
+    );
+    await screenshot(cdp, sessionId, "nas-live-menu-390.png");
+    results.screenshots.push("nas-live-menu-390.png");
+    if (menuOpened) {
+      await touchTap(cdp, sessionId, '[data-testid="menu-drawer-close"]');
+    }
+    const menuClosed = await waitForCondition(
+      cdp,
+      sessionId,
+      `!document.querySelector('[data-testid="menu-drawer"]')`,
+      8000,
+    );
+    check(
+      "모바일(390px) GNB 햄버거 메뉴 열기·닫기",
+      Boolean(menuPoint) && menuOpened && menuClosed,
+      { opened: menuOpened, closed: menuClosed },
+    );
+
+    // 6. Tablet viewport (768px): two-column card grid and desktop header.
+    await setViewport(cdp, sessionId, { width: 768, height: 1024, mobile: false });
+    results.currentPage = "/ (tablet 768)";
+    await load(baseUrl);
+    await waitForCondition(
+      cdp,
+      sessionId,
+      `document.querySelectorAll('[data-testid="program-card"]').length > 0`,
+    );
+    const tabletState = await evaluate(
+      cdp,
+      sessionId,
+      `(() => {
+        const grid = document.querySelector('[data-testid="program-grid"]');
+        const columns = grid
+          ? getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length
+          : 0;
+        const header = document.querySelector('header nav[aria-label="주요 메뉴"]');
+        const headerRect = header ? header.getBoundingClientRect() : null;
+        const bottomNav = document.querySelector('[data-testid="bottom-nav"]');
+        return {
+          columns,
+          headerVisible: Boolean(headerRect && headerRect.width > 0 && headerRect.height > 0),
+          headerItems: header ? header.querySelectorAll('a').length : 0,
+          bottomNavDisplay: bottomNav ? getComputedStyle(bottomNav).display : null,
+          overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+          viewportWidth: window.innerWidth,
+        };
+      })()`,
+    );
+    check(
+      "태블릿(768px) 가로 스크롤 없음",
+      tabletState.overflow === false && tabletState.viewportWidth === 768,
+      tabletState,
+    );
+    check("태블릿(768px) 프로그램 카드 2열 그리드", tabletState.columns === 2, {
+      columns: tabletState.columns,
+    });
+    check(
+      "태블릿(768px) 헤더 메뉴 3항목 정합",
+      tabletState.headerVisible && tabletState.headerItems === 3,
+      tabletState,
+    );
+    check(
+      "태블릿(768px) 하단 모바일 메뉴 숨김",
+      tabletState.bottomNavDisplay === "none",
+      { display: tabletState.bottomNavDisplay },
+    );
+    await screenshot(cdp, sessionId, "nas-live-root-768.png");
+    results.screenshots.push("nas-live-root-768.png");
 
     check("브라우저 콘솔 오류 0건", results.consoleErrors.length === 0, {
       count: results.consoleErrors.length,

@@ -267,3 +267,15 @@ status: done
 | 회귀 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, NAS 검증 **17/17 PASS** |
 | 근거 | `docs/evidence/deploy-20261108T1035/`, `docs/evidence/nas-live-20261108T013624/`, `docs/evidence/vercel-live-20261108T013850/` |
 
+## 23. NAS 원클릭 배포 자동화와 모바일·태블릿 뷰포트 검증 확장 (2026-11-08 11:20)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 수동 3단계(`npm run build` → `deploy_www.sh` → `www_index.sh`)를 한 명령으로 묶고, NAS 운영 배포 검증을 1280px 단일 뷰포트에서 모바일(390px)·태블릿(768px)까지 확장한다 |
+| 배포 파이프라인 | `scripts/deploy-nas.mjs` 신규 — `NEXT_PUBLIC_BASE_PATH=/5060do` 빌드 → `out/index.html`·`out/classic/index.html`의 basePath 무결성 검사(루트 `/_next/` 0건) → NAS 호스트에서 `deploy_www.sh`·`www_index.sh` 실행 → `verify-nas-live.mjs` 자동 호출. `package.json`에 `npm run deploy:nas` 등록 |
+| 실행 환경 | Windows에서는 SSH(`bot@100.83.116.15:2233`)로 NAS 호스트에서 배포 스크립트를 실행하고, NAS/Linux에서는 로컬 `sh`로 바로 실행한다. UNC 작업 경로는 `Z:` 드라이브로 자동 변환 |
+| NAS 검증 확장 | 모바일 390px: 가로 스크롤 없음, 채용정보 카드 12건 적층, 직종·지역 칩 실제 터치 이벤트(`Input.dispatchTouchEvent`) 동작, 하단 GNB 전체 메뉴 열기·닫기. 태블릿 768px: 가로 스크롤 없음, 프로그램 카드 2열, 헤더 메뉴 3항목, 하단 모바일 메뉴 숨김. 스크린샷 자동 저장 |
+| 회귀 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**(rootLeak false), `npm run deploy:nas` Exit 0, NAS 검증 **25/25 PASS** |
+| 복구 가드 | Vercel 루트 모드 빌드 후에는 `npm run deploy:nas`를 마지막에 실행해 `out/`과 NAS 서빙본을 항상 `/5060do` 서브패스 정합 상태로 되돌린다 |
+| 근거 | `docs/evidence/deploy-20261108T1100/`, `docs/evidence/nas-live-20261108T021902/` |
+
