@@ -256,5 +256,14 @@ status: done
 | 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, `npm run verify:vercel:live` **21/21 PASS**, `--url` 원격 모드 **21/21 PASS** |
 | 근거 | `docs/evidence/deploy-20261108T0950/` |
 
+## 22. Vercel 실도메인 배포 검증·NAS 배포 검증 상시화 (2026-11-08 10:35)
 
+| 항목 | 내용 |
+|---|---|
+| 목표 | Vercel Production 실도메인 21개 항목을 기계 검증하고, NAS 운영 배포(`/5060do/`)도 같은 방식으로 상시 점검한다 |
+| NAS 검증기 | `scripts/verify-nas-live.mjs` 신규 — 기본 대상 `http://100.83.116.15:8780/5060do/`, `--url`·`NAS_LIVE_URL`·`NAS_URL` 재정의. `npm run verify:nas` 등록 |
+| NAS 검사 항목 | 홈·클래식 HTTP 200, `basePath` 자산 참조와 루트 `/_next/` 누출 0건, 참조 자산 전부 HTTP 200, 채용정보 수파베이스 바인딩·카드 렌더, 섹션·클래식 링크, 1280px 가로 스크롤 없음, 헤더·GNB 8개, 콘솔 오류 0건 (17항목) |
+| Vercel 검증 | 실도메인 URL이 아직 없어 `npm run verify:vercel:live`(로컬 프리뷰) 21/21과 `--url http://127.0.0.1:3113/` 원격 모드 21/21로 동일 항목을 통과했다. 실도메인 배포가 생기면 같은 명령에 URL만 넘긴다 |
+| 회귀 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, NAS 검증 **17/17 PASS** |
+| 근거 | `docs/evidence/deploy-20261108T1035/`, `docs/evidence/nas-live-20261108T013624/`, `docs/evidence/vercel-live-20261108T013850/` |
 

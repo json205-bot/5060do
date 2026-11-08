@@ -1,0 +1,12 @@
+﻿[checked] 2026-11-08 10:40:49 +09:00
+[.vercel] False
+[vercel-cli] not installed
+[git remotes]
+github	https://github.com/json205-bot/5060do.git (fetch)
+github	https://github.com/json205-bot/5060do.git (push)
+origin	http://100.83.116.15:3300/Jason/5060do.git (fetch)
+origin	http://100.83.116.15:3300/Jason/5060do.git (push)
+[github deployments]
+count=0
+[vercel api without token]
+status=403

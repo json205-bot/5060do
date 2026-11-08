@@ -1,0 +1,24 @@
+PASS  / HTTP 200
+PASS  / HTML 본문 수신
+PASS  /classic/ HTTP 200
+PASS  /classic/ HTML 본문 수신
+PASS  / HTML에 /5060do 경로 누출 0건
+PASS  /classic/ HTML에 /5060do 경로 누출 0건
+PASS  브라우저 수파베이스 강좌 데이터 바인딩
+PASS  수파베이스 실시간 소스 사용
+PASS  가로 스크롤 없음(1280px)
+PASS  브라우저 수파베이스 채용정보 데이터 바인딩
+PASS  채용정보 실시간 소스 사용
+PASS  채용정보 탭 링크·섹션 렌더링
+PASS  채용정보 부산 지역 필터
+PASS  채용정보 직종 필터
+PASS  채용정보 상세 모달·원문 링크
+PASS  채용정보 상세 모달 닫기
+PASS  클래식 화면 헤더 렌더링
+PASS  클래식 GNB 8개 메뉴
+PASS  클래식 히어로 제목 표시
+PASS  가로 스크롤 없음(클래식 1280px)
+PASS  브라우저 콘솔 오류 0건
+
+PASS (21/21)
+evidence=Z:\dev\5060do\docs\evidence\vercel-live-20261108T014031

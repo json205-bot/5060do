@@ -1,0 +1,4 @@
+
+> 5060do@0.1.0 typecheck
+> tsc --noEmit
+
