@@ -1,0 +1,52 @@
+{
+  "mode": "rpc",
+  "question": "센터는 언제 문을 열었나요?",
+  "expected": "연혁",
+  "reply": {
+    "count": 2,
+    "text": "'센터는 언제 문을 열었나요?'와 가장 가까운 센터 안내를 찾았습니다. [연혁] 오륙도인생후반전지원센터는 2023년 개관했습니다. 부산광역시 남구 이기대공원로 18(더파크이기대 101동)에 있으며, 50~60대 신중년이 인생 후반전을 스스로 설계하고 지역사회와 연결될 수 있도록 만든 신중년 맞춤형 거점입니다. 개관 이후 생애설계 진단·상담, 인생설계 교육, 일·활동 연계, 커뮤니티 지원, 공유사무실 운영을 차례로 갖추며 교육·일자리·공동체 사업을 한 건물에서 제공하는 복합 지원 체계를 구축했습니다. 현재 1층 56do 카페, 3층 안내데스크·사무실·56do 강당, 4층 강의실·디지털강의실·소모임실·해맞이 쉼터, 5층 공유사무실·담소마루·요리실·실습실을 운영하며, 운영법인은 사회복지법인 천혜복지재단과 사단법인 월드에이드입니다. 연혁의 상세 연도별 자료는 센터 홈페이지 '센터소개 > 연혁'에서 확인하실 수 있으며, 문의는 대표전화 051-628-5060으로 하시면 됩니다. 함께 보면 좋은 안내: · 일·활동",
+    "ragSource": "rpc"
+  },
+  "rpcRequests": [
+    "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/rpc/match_documents",
+    "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/rpc/match_documents"
+  ],
+  "rpcResponses": [
+    {
+      "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/rpc/match_documents",
+      "status": 200
+    },
+    {
+      "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/rpc/match_documents",
+      "status": 200
+    }
+  ],
+  "consoleErrors": [],
+  "checks": [
+    {
+      "name": "RAG 답변이 연혁 문서를 반환",
+      "pass": true,
+      "detail": "'센터는 언제 문을 열었나요?'와 가장 가까운 센터 안내를 찾았습니다. [연혁] 오륙도인생후반전지원센터는 2023년 개관했습니다. 부산광역시 남구 이기대공원로 18(더파크이기대 101동)에 있으며, 50~60대 신중년이 인생 후반전을 스스로 설계하고 지역사회와 연결될 수 있도록 만든 신"
+    },
+    {
+      "name": "ragSource=rpc",
+      "pass": true,
+      "detail": "rpc"
+    },
+    {
+      "name": "match_documents RPC 호출 200",
+      "pass": true,
+      "detail": [
+        200,
+        200
+      ]
+    },
+    {
+      "name": "콘솔 예외 없음",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "pass": true,
+  "checkedAt": "2026-11-08T07:17:26.658Z"
+}

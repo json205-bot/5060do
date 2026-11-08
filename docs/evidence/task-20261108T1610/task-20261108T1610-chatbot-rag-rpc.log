@@ -1,0 +1,34 @@
+[build] mode=rpc ragSource=supabase
+??Next.js 16.4.5 (Turbopack)
+- Environments: .env.local
+??Running next.config.ts took 389ms
+
+  Creating an optimized production build ...
+??Compiled successfully in 4.7s
+  Running TypeScript ...
+  Finished TypeScript in 75s ...
+  Collecting page data using 6 workers ...
+  Generating static pages using 6 workers (0/5) ...
+  Generating static pages using 6 workers (1/5) 
+  Generating static pages using 6 workers (2/5) 
+  Generating static pages using 6 workers (3/5) 
+??Generating static pages using 6 workers (5/5) in 2.9s
+  Finalizing page optimization ...
+
+Route (app)
+????/
+????/_not-found
+????/classic
+????/icon.svg
+
+
+?? (Static)  prerendered as static content
+
+[postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
+[postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt
+PASS  RAG ?듬????고쁺 臾몄꽌瑜?諛섑솚
+PASS  ragSource=rpc
+PASS  match_documents RPC ?몄텧 200
+PASS  肄섏넄 ?덉쇅 ?놁쓬
+PASS chatbot-rag mode=rpc source=rpc
+evidence=\\x4\workspace\dev\5060do\docs\evidence\chatbot-rag-20261108T071549

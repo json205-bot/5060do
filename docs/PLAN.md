@@ -290,4 +290,17 @@ status: done
 | 남은 위험 | `match_documents`는 현재 프로젝트에 설치되어 있다. 향후 마이그레이션으로 사라져도 챗봇은 번들 검색으로 계속 동작한다. Vercel Production 실도메인은 여전히 미발급 |
 | 근거 | `docs/evidence/rag-rpc-20261108T044810/`, `docs/evidence/jobs-incremental-20261108T044824/`, `docs/evidence/nas-live-20261108T045641/` |
 
+## 25. 챗봇 RPC 조건부 활성화·로컬 번들 자동 동기화·NAS 일별 크론 래퍼 (2026-11-08 16:10)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 직전 과업 결정요청 3건(나·다·가 권장안)을 반영해 챗봇 지식 경로를 환경변수로 전환하고, 증분 크롤러가 로컬 번들 2종을 자동 갱신하며, NAS에서 매일 1회 실행할 수 있는 래퍼를 마련한다 |
+| 챗봇 RPC 연결 | `src/components/ChatbotWidget.tsx` — `NEXT_PUBLIC_RAG_SOURCE=supabase`일 때 `searchKnowledgeRAGRemote()`를 먼저 호출하고, 미설정·예외 시 `searchKnowledgeRAG()` 번들 검색으로 폴백. 응답에 `data-rag-source="rpc"|"bundle"`을 남겨 E2E가 경로를 식별한다. 원격 응답 대기 중 다음 질문이 오면 이전 요청은 `requestId`로 버린다 |
+| 로컬 동기화 | `scripts/crawl-incremental-jobs.mjs` — `--update-local`로 `jobs_all.json`을 병합한 뒤 `scripts/build-jobs-fallback.mjs`를 자동 호출해 `jobs_recent.json`(300건)까지 갱신. `package.json`의 `cron:jobs`는 `--update-local` 포함. `JOBS_ALL_PATH`·`JOBS_RECENT_PATH`로 경로를 바꿀 수 있어 자기검증에 사용 |
+| NAS 래퍼 | `scripts/run-daily-cron.sh` 신규 — Node.js_v22 바이너리 자동 탐색, `flock` 중복 실행 방지, 실행 전후 시각·소요·요약을 `docs/logs/cron-jobs.log`에 기록. crontab/n8n에서 하루 1회 호출 |
+| 배포 보정 | `scripts/deploy-nas.mjs` — UNC에서 실행해도 저장소 루트를 드라이브 문자로 변환해 npm 빌드가 `C:\Windows`에서 실패하지 않게 수정 |
+| 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, 챗봇 번들·RPC 모드 각 **4/4 PASS**(RPC 200 확인), `npm run cron:jobs` Exit 0(신규 0건), `--self-test` **5/5**, `verify-jobs-local-sync.mjs` **4/4**, `npm run deploy:nas` Exit 0, NAS **25/25 PASS**, NAS 래퍼 Exit 0 |
+| 남은 위험 | 신규 공고가 있으면 `src/data` 2종이 워킹트리에 변경으로 남는다(자동 커밋 없음). NAS crontab/n8n 등록은 아직 하지 않았다. Vercel Production 실도메인은 여전히 미발급 |
+| 근거 | `docs/evidence/task-20261108T1610/`, `docs/evidence/chatbot-rag-20261108T071540/`, `docs/evidence/chatbot-rag-20261108T071549/`, `docs/evidence/nas-live-20261108T071930/`, `docs/logs/cron-jobs.log` |
+
 

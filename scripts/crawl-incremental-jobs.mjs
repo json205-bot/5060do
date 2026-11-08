@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -7,10 +8,12 @@ import { toSupabaseJobRow } from "../src/lib/jobs.ts";
 // is the known-id baseline; only postings missing from it are fetched in
 // detail and upserted into Supabase. List pages are newest-first, so a page
 // with no unknown id ends that board's scan.
-const TICKET = "5060DO-20261108-1340";
+const TICKET = "5060DO-20261108-1610";
 const BASE_URL = process.env.JOBS_CRAWL_BASE_URL ?? "https://www.5060do.or.kr";
 const TABLE = "jobs";
-const LOCAL_PATH = path.resolve("src", "data", "jobs_all.json");
+const LOCAL_PATH = path.resolve(
+  process.env.JOBS_ALL_PATH ?? path.join("src", "data", "jobs_all.json"),
+);
 const MAX_PAGES = Number(process.env.JOBS_CRAWL_MAX_PAGES ?? 10);
 const MAX_NEW = Number(process.env.JOBS_CRAWL_MAX_NEW ?? 50);
 const REQUEST_TIMEOUT_MS = Number(process.env.JOBS_CRAWL_TIMEOUT_MS ?? 20_000);
@@ -278,6 +281,27 @@ async function scanBoard(theme, slug, knownIds) {
   return { pages, unknown };
 }
 
+// jobs_recent.json is a 300-row bundle built from jobs_all.json. Rebuilding it
+// in the same run keeps the offline fallback from going stale after a crawl.
+function rebuildJobsFallback() {
+  const script = path.resolve("scripts", "build-jobs-fallback.mjs");
+  console.log(`local fallback rebuild: ${script}`);
+  const env = { ...process.env, JOBS_ALL_PATH: LOCAL_PATH };
+  if (process.env.JOBS_RECENT_PATH) {
+    env.JOBS_RECENT_PATH = process.env.JOBS_RECENT_PATH;
+  }
+  const result = spawnSync(
+    process.execPath,
+    ["--disable-warning=MODULE_TYPELESS_PACKAGE_JSON", script],
+    { stdio: "inherit", env },
+  );
+  if (result.error) return { ok: false, error: result.error.message };
+  if (result.status !== 0) {
+    return { ok: false, error: `exit ${result.status ?? "null"}` };
+  }
+  return { ok: true };
+}
+
 function sortRows(rows) {
   return [...rows].sort((left, right) => {
     const leftOrder = BOARD_ORDER.indexOf(left.boardType);
@@ -393,6 +417,7 @@ async function main() {
   }
 
   let updatedLocal = false;
+  let fallbackUpdated = false;
   if (UPDATE_LOCAL && newRows.length > 0) {
     const merged = new Map(localRows.map((row) => [String(row.id), row]));
     for (const row of newRows) {
@@ -411,6 +436,13 @@ async function main() {
     await writeFile(LOCAL_PATH, `${JSON.stringify(nextRows, null, 2)}\n`, "utf8");
     updatedLocal = true;
     console.log(`local dataset updated: ${localRows.length} -> ${nextRows.length}`);
+
+    const fallback = rebuildJobsFallback();
+    if (fallback.ok) {
+      fallbackUpdated = true;
+    } else {
+      failures.push({ step: "build-jobs-fallback", error: fallback.error });
+    }
   }
 
   const region = newRows.reduce(
@@ -456,6 +488,7 @@ async function main() {
     region,
     upserted,
     updatedLocal,
+    fallbackUpdated,
     remoteTotal,
     failures,
     startedAt: startedAt.toISOString(),
@@ -470,7 +503,8 @@ async function main() {
   );
 
   console.log(
-    `new=${newRows.length} busan=${region.부산} other=${region.기타} upserted=${upserted} failures=${failures.length}`,
+    `new=${newRows.length} busan=${region.부산} other=${region.기타} upserted=${upserted} ` +
+      `local=${updatedLocal} fallback=${fallbackUpdated} failures=${failures.length}`,
   );
   console.log(`remote total=${remoteTotal ?? "n/a"} evidence=${EVIDENCE_DIR}`);
 

@@ -48,7 +48,12 @@ if (process.platform === "win32" && process.cwd().startsWith("\\\\")) {
   }
 }
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+// Resolve the checkout through the drive letter too: npm refuses to spawn from
+// a UNC path even after the process cwd was remapped above.
+let repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+if (process.platform === "win32" && repoRoot.startsWith("\\\\")) {
+  repoRoot = toDrivePath(repoRoot) ?? repoRoot;
+}
 const outDir = path.join(repoRoot, "out");
 
 function run(label, command, args, options = {}) {

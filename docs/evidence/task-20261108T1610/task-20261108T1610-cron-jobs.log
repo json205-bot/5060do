@@ -1,0 +1,27 @@
+cmd : '\\x4\workspace\dev\5060do'
+위치 줄:1 문자:1
++ cmd /d /c "Z: & cd \dev\5060do & npm run cron:jobs" 2>&1 | Tee-Object ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ('\\x4\workspace\dev\5060do':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+위의 경로를 현재 디렉터리로 하여 CMD.EXE가 실행되었습니다. UNC 경로는
+지원되지 않습니다. Windows 디렉터리를 기본으로 합니다.
+
+> 5060do@0.1.0 cron:jobs
+> node scripts/crawl-incremental-jobs.mjs --update-local
+
+(node:21764) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Z:/dev/5060do/src/lib/jobs.ts is not specif
+ied and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to Z:\dev\5060do\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+baseline rows=2034 env=Z:\common\env\supabase_5060do.env
+mode=upsert maxNew=50
+lifeWelfare(theme=7) page=1 items=20 new=0 [all-known]
+lifeFindJob(theme=8) page=1 items=20 new=0 [all-known]
+lifeVenture(theme=9) page=1 items=20 new=0 [all-known]
+lifeJobHunt(theme=10) page=1 items=20 new=0 [all-known]
+discovered=0 selected=0
+new=0 busan=0 other=0 upserted=0 local=false fallback=false failures=0
+remote total=2034 evidence=Z:\dev\5060do\docs\evidence\jobs-incremental-20261108T071248

@@ -1,0 +1,22 @@
+[run] crawl --dry-run --update-local --limit=2 maxPages=1 baseline=5
+baseline rows=5 env=Z:\common\env\supabase_5060do.env
+mode=dry-run maxNew=2
+lifeWelfare(theme=7) page=1 items=20 new=10 [max-pages]
+lifeFindJob(theme=8) page=1 items=20 new=20 [max-pages]
+lifeVenture(theme=9) page=1 items=20 new=20 [max-pages]
+lifeJobHunt(theme=10) page=1 items=20 new=20 [max-pages]
+discovered=70 selected=2 (limit hit)
+[1/2] theme=7 idx=1690 "(?먯썝遊됱궗) ?뚰씛?ъ슱湲몃줈 ?좊굹???먯썝遊됱궗?ы뻾?띾찓紐⑤━利?遺??蹂쇰윴?ъ뼱 ?먯썝遊됱궗??紐⑥쭛" 2026-04-09
+[2/2] theme=7 idx=1689 "(?먯썝遊됱궗) ?대┛?댁쭛 蹂댁쑁援먯쭅???꾨룞?숇??덈갑援먯쑁 吏꾪뻾 ?낅Т蹂댁“" 2026-04-09
+local dataset updated: 5 -> 7
+local fallback rebuild: \\x4\workspace\dev\5060do\scripts\build-jobs-fallback.mjs
+jobs_recent: rows=7/7 bytes=3116 range=2026-04-09~2026-10-14
+jobs_recent boards: {"?ы쉶怨듯뿄":7}
+new=2 busan=2 other=0 upserted=0 local=true fallback=true failures=0
+remote total=2034 evidence=\\x4\workspace\dev\5060do\docs\evidence\jobs-incremental-20261108T072055
+PASS  ?щ·??醫낅즺 肄붾뱶 0
+PASS  jobs_all.json 5 -> 7
+PASS  jobs_recent.json ?먮룞 ?앹꽦
+PASS  濡쒓렇??local=true fallback=true
+PASS jobs-local-sync
+evidence=\\x4\workspace\dev\5060do\docs\evidence\jobs-incremental-20261108T072055-local-sync

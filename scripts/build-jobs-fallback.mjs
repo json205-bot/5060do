@@ -5,8 +5,12 @@ import path from "node:path";
 // heavy lazy chunk to pull when Supabase is unreachable, so this script keeps
 // only the newest postings in a separate bundle-sized file. The full dataset
 // stays the source of truth for seeding Supabase and can still be rebuilt.
-const SOURCE_PATH = path.resolve("src", "data", "jobs_all.json");
-const TARGET_PATH = path.resolve("src", "data", "jobs_recent.json");
+const SOURCE_PATH = path.resolve(
+  process.env.JOBS_ALL_PATH ?? path.join("src", "data", "jobs_all.json"),
+);
+const TARGET_PATH = path.resolve(
+  process.env.JOBS_RECENT_PATH ?? path.join("src", "data", "jobs_recent.json"),
+);
 const RECENT_LIMIT = Number(process.env.JOBS_RECENT_LIMIT ?? 300);
 const MAX_BYTES = Number(process.env.JOBS_RECENT_MAX_BYTES ?? 300 * 1024);
 

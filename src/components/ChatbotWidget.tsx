@@ -4,7 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { MessageCircle, Phone, Send, X } from "lucide-react";
 import knowledgeData from "@/data/center_knowledge.json";
 import type { Program, ProgramCounts } from "@/lib/programs";
-import { searchKnowledgeRAG, type RagMatch } from "@/lib/rag";
+import {
+  searchKnowledgeRAG,
+  searchKnowledgeRAGRemote,
+  type RagMatch,
+  type RagSearchOutcome,
+} from "@/lib/rag";
 
 type KnowledgeEntry = {
   id: string;
@@ -25,6 +30,7 @@ type Message = {
   role: "user" | "bot";
   text: string;
   action?: { href: string; label: string; external?: boolean };
+  ragSource?: RagSearchOutcome["source"];
 };
 
 const QUICK_QUESTIONS = [
@@ -258,7 +264,11 @@ function findProgram(
 
 // The keyword rules above answer the common questions. Anything else is passed
 // to the vector search so a paraphrase still finds the right center guide.
-function ragKnowledgeReply(question: string, matches: RagMatch[]): Reply {
+function ragKnowledgeReply(
+  question: string,
+  matches: RagMatch[],
+  source: RagSearchOutcome["source"],
+): Reply {
   const [top, ...rest] = matches;
   const excerpt =
     top.content.length > 700
@@ -276,10 +286,11 @@ function ragKnowledgeReply(question: string, matches: RagMatch[]): Reply {
     action: top.sourceUrl
       ? { href: top.sourceUrl, label: "관련 안내 보기", external: true }
       : undefined,
+    ragSource: source,
   };
 }
 
-function buildReply(question: string, data: ChatData): Reply {
+function keywordReply(question: string, data: ChatData): Reply | null {
   const normalized = question.replace(/\s+/g, " ").trim();
   const has = (...keys: string[]) =>
     keys.some((key) => normalized.includes(key));
@@ -307,8 +318,46 @@ function buildReply(question: string, data: ChatData): Reply {
   const matched = findProgram(normalized, data.programs);
   if (matched) return programReply(matched.program, matched.term);
 
-  const ragMatches = searchKnowledgeRAG(normalized, { topK: 3 });
-  if (ragMatches.length > 0) return ragKnowledgeReply(normalized, ragMatches);
+  return null;
+}
+
+const RAG_RPC_TIMEOUT_MS = 2500;
+// Static exports cannot read server env at runtime, so the source is fixed at
+// build time. The bundle stays the default because it works offline.
+const USE_RAG_RPC = process.env.NEXT_PUBLIC_RAG_SOURCE === "supabase";
+
+async function searchKnowledgeForReply(
+  question: string,
+): Promise<RagSearchOutcome> {
+  if (USE_RAG_RPC) {
+    try {
+      return await searchKnowledgeRAGRemote(
+        question,
+        { topK: 3 },
+        { timeoutMs: RAG_RPC_TIMEOUT_MS },
+      );
+    } catch {
+      // searchKnowledgeRAGRemote already guards failures; keep the UI safe if
+      // an unexpected error escapes the guard.
+    }
+  }
+  return {
+    matches: searchKnowledgeRAG(question, { topK: 3 }),
+    source: "bundle",
+    reason: USE_RAG_RPC ? "remote-call-failed" : "bundle-default",
+    rpcRows: 0,
+  };
+}
+
+async function buildReply(question: string, data: ChatData): Promise<Reply> {
+  const normalized = question.replace(/\s+/g, " ").trim();
+  const direct = keywordReply(normalized, data);
+  if (direct) return direct;
+
+  const outcome = await searchKnowledgeForReply(normalized);
+  if (outcome.matches.length > 0) {
+    return ragKnowledgeReply(normalized, outcome.matches, outcome.source);
+  }
 
   return {
     text: `죄송합니다. 질문을 정확히 이해하지 못했습니다.\n\n'무료 강좌', '수강신청 방법', '센터 위치', '상담원 전화'처럼 짧게 물어보시거나, 아래 전화번호로 문의해 주세요.`,
@@ -346,6 +395,7 @@ export default function ChatbotWidget({
   const inputRef = useRef<HTMLInputElement>(null);
   const replyTimerRef = useRef<number | null>(null);
   const messageIdRef = useRef(1);
+  const requestIdRef = useRef(0);
 
   const closePanel = useCallback(() => {
     setOpen(false);
@@ -366,9 +416,18 @@ export default function ChatbotWidget({
     if (replyTimerRef.current !== null) {
       window.clearTimeout(replyTimerRef.current);
     }
+    const requestId = ++requestIdRef.current;
 
-    replyTimerRef.current = window.setTimeout(() => {
-      const reply = buildReply(trimmed, { programs, activePrograms, counts });
+    replyTimerRef.current = window.setTimeout(async () => {
+      const reply = await buildReply(trimmed, {
+        programs,
+        activePrograms,
+        counts,
+      }).catch(() => ({
+        text: `죄송합니다. 답변을 준비하지 못했습니다.\n\n아래 전화번호로 문의해 주세요.`,
+        action: { href: phoneHref, label: `${phone} 전화 연결` },
+      }));
+      if (requestId !== requestIdRef.current) return;
       setTyping(false);
       setMessages((current) => [
         ...current,
@@ -504,6 +563,7 @@ export default function ChatbotWidget({
                     <div
                       data-testid="chatbot-message"
                       data-role={message.role}
+                      data-rag-source={message.ragSource}
                       className={
                         message.role === "user"
                           ? "max-w-[85%] rounded-2xl rounded-br-md bg-brand-700 px-4 py-3 text-white"

@@ -1,0 +1,14 @@
+node : (node:21996) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://x4/workspace/dev/5060do/src/lib/jobs.
+ts is not specified and it doesn't parse as CommonJS.
+위치 줄:1 문자:1
++ node scripts/crawl-incremental-jobs.mjs --self-test 2>&1 | Tee-Object ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:21996) [M...se as CommonJS.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\x4\workspace\dev\5060do\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+baseline rows=2034 env=Z:\common\env\supabase_5060do.env
+self-test idx=2728 theme=10 title="(誘쇨컙) ?뚮갑?쒖꽕?먭? 愿由?吏곸썝 (~12.28)" date=2026-10-29 content=19chars region=遺??self-test checks={"titleMatch":true,"dateMatch":true,"contentPresent":true,"regionValid":true,"sourceUrlMatch":true} pass=true
+evidence=\\x4\workspace\dev\5060do\docs\evidence\jobs-incremental-20261108T071241

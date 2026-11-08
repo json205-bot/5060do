@@ -1,0 +1,73 @@
+[?덈궡] UNC ?묒뾽 寃쎈줈瑜??쒕씪?대툕 寃쎈줈濡?蹂?? Z:\dev\5060do
+[?뺣낫] ?ъ씠??5060do, basePath /5060do
+[?뺣낫] 寃利????http://100.83.116.15:8780/5060do/
+
+[?ㅽ뻾] ?뺤쟻 ?대낫?닿린 鍮뚮뱶
+[紐낅졊] npm run build 
+
+> 5060do@0.1.0 build
+> node scripts/build-jobs-fallback.mjs && next build && node scripts/postbuild-static-rsc.mjs
+
+jobs_recent: rows=300/2034 bytes=140976 range=2026-08-27~2026-11-03
+jobs_recent boards: {"痍⑥뾽吏??:20,"?쇱옄由?:278,"?ы쉶怨듯뿄":2}
+??Next.js 16.4.5 (Turbopack)
+- Environments: .env.local
+??Running next.config.ts took 458ms
+
+  Creating an optimized production build ...
+??Compiled successfully in 7.5s
+  Running TypeScript ...
+  Finished TypeScript in 77s ...
+  Collecting page data using 6 workers ...
+  Generating static pages using 6 workers (0/5) ...
+  Generating static pages using 6 workers (1/5) 
+  Generating static pages using 6 workers (2/5) 
+  Generating static pages using 6 workers (3/5) 
+??Generating static pages using 6 workers (5/5) in 2.7s
+  Finalizing page optimization ...
+
+Route (app)
+????/
+????/_not-found
+????/classic
+????/icon.svg
+
+
+?? (Static)  prerendered as static content
+
+[postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
+[postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt
+[寃?? basePath 臾닿껐??root=19/0 classic=16/0
+
+[?ㅽ뻾] NAS www ?숆린??[紐낅졊] ssh -i C:\Users\bot\.ssh\maintain_bot_ed25519 -p 2233 -o BatchMode=yes -o StrictHostKeyChecking=accept-new bot@100.83.116.15 sh /volume1/workspace/common/scripts/deploy_www.sh /volume1/workspace/dev/5060do/out 5060do
+deployed: /volume3/www/5060do (38 files)
+url: http://100.83.116.15:8780/5060do/
+
+[?ㅽ뻾] NAS ?ъ씠??紐⑸줉 媛깆떊
+[紐낅졊] ssh -i C:\Users\bot\.ssh\maintain_bot_ed25519 -p 2233 -o BatchMode=yes -o StrictHostKeyChecking=accept-new bot@100.83.116.15 sh /volume1/workspace/common/scripts/www_index.sh
+written: /volume3/www/index.html (38 sites)
+
+[?ㅽ뻾] NAS ?댁쁺 諛고룷 寃利?[紐낅졊] C:\Program Files\nodejs\node.exe Z:\dev\5060do\scripts\verify-nas-live.mjs --url http://100.83.116.15:8780/5060do/
+PASS  /5060do/ HTTP 200
+PASS  /5060do/ HTML 蹂몃Ц ?섏떊
+PASS  /5060do/classic/ HTTP 200
+PASS  /5060do/classic/ HTML 蹂몃Ц ?섏떊
+PASS  /5060do/ HTML ??/5060do/_next/ ?먯궛 李몄“
+PASS  /5060do/ HTML 猷⑦듃 /_next/ ?꾩텧 0嫄?PASS  /5060do/classic/ HTML ??/5060do/_next/ ?먯궛 李몄“
+PASS  /5060do/classic/ HTML 猷⑦듃 /_next/ ?꾩텧 0嫄?PASS  李몄“ ?먯궛 ?꾨? HTTP 200
+PASS  梨꾩슜?뺣낫 ?섑뙆踰좎씠???ㅻ뜲?댄꽣 諛붿씤??PASS  梨꾩슜?뺣낫 ?ㅼ떆媛??뚯뒪 ?ъ슜
+PASS  梨꾩슜?뺣낫 ?뱀뀡쨌?대옒??留곹겕 ?뚮뜑留?PASS  媛濡??ㅽ겕濡??놁쓬(1280px)
+PASS  ?대옒???붾㈃ ?ㅻ뜑 ?뚮뜑留?PASS  ?대옒??GNB 8媛?硫붾돱
+PASS  媛濡??ㅽ겕濡??놁쓬(?대옒??1280px)
+PASS  紐⑤컮??390px) 媛濡??ㅽ겕濡??놁쓬
+PASS  紐⑤컮??390px) 梨꾩슜?뺣낫 移대뱶 12嫄??곸링
+PASS  紐⑤컮??390px) 吏곸쥌쨌吏??移??곗튂쨌?ㅽ겕濡??숈옉
+PASS  紐⑤컮??390px) GNB ?꾨쾭嫄?硫붾돱 ?닿린쨌?リ린
+PASS  ?쒕툝由?768px) 媛濡??ㅽ겕濡??놁쓬
+PASS  ?쒕툝由?768px) ?꾨줈洹몃옩 移대뱶 2??洹몃━??PASS  ?쒕툝由?768px) ?ㅻ뜑 硫붾돱 3??ぉ ?뺥빀
+PASS  ?쒕툝由?768px) ?섎떒 紐⑤컮??硫붾돱 ?④?
+PASS  釉뚮씪?곗? 肄섏넄 ?ㅻ쪟 0嫄?
+PASS (25/25)
+evidence=Z:\dev\5060do\docs\evidence\nas-live-20261108T071930
+
+[?꾨즺] 鍮뚮뱶 쨌 諛고룷 쨌 寃利??먰겢由??뚯씠?꾨씪?몄씠 ?앸궗?듬땲??

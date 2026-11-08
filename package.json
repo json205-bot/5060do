@@ -19,7 +19,7 @@
     "data:jobs": "node scripts/build-jobs-fallback.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seed-supabase-jobs.mjs",
     "data:jobs:recent": "node scripts/build-jobs-fallback.mjs",
     "data:embeddings": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seed-embeddings.mjs",
-    "cron:jobs": "node scripts/crawl-incremental-jobs.mjs",
+    "cron:jobs": "node scripts/crawl-incremental-jobs.mjs --update-local",
     "push:github": "node scripts/sync-github.mjs"
   },
   "dependencies": {

@@ -50,3 +50,7 @@ next-env.d.ts
 
 # graphify knowledge graph output
 /graphify-out/
+
+# scheduled cron outputs (runtime logs and per-run evidence)
+/docs/logs/cron-jobs.log
+/docs/evidence/jobs-incremental-*/
