@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://100.83.116.15:8780/5060do/",
   "classicUrl": "http://100.83.116.15:8780/5060do/classic/",
-  "checkedAt": "2026-11-08T12:37:49.323Z",
+  "checkedAt": "2026-11-08T12:58:37.790Z",
   "checks": [
     {
       "name": "390px 카드 수 1열",
@@ -992,6 +992,162 @@
       "detail": true
     },
     {
+      "name": "768px 채용정보 카드 로드",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "768px 채용 상세 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "768px 채용 상세 모달 뷰포트 안",
+      "pass": true,
+      "detail": {
+        "top": 203.9,
+        "bottom": 820.1
+      }
+    },
+    {
+      "name": "768px 채용 상세 닫기 48px 이상 + 화면 안",
+      "pass": true,
+      "detail": {
+        "w": 54,
+        "h": 54
+      }
+    },
+    {
+      "name": "768px 채용 원문 링크 56px CTA",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "768px 채용 상세 모든 글자 14px 이상",
+      "pass": true,
+      "detail": {
+        "count": 0,
+        "violations": []
+      }
+    },
+    {
+      "name": "768px 채용 상세 모든 터치 타깃 48x48px 이상",
+      "pass": true,
+      "detail": {
+        "count": 0,
+        "violations": []
+      }
+    },
+    {
+      "name": "768px 채용 상세 모든 글자 대비 4.5:1 이상",
+      "pass": true,
+      "detail": {
+        "count": 0,
+        "violations": []
+      }
+    },
+    {
+      "name": "768px 채용 상세 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "measure": false,
+        "audit": false
+      }
+    },
+    {
+      "name": "768px 채용 상세 Esc 닫기",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "768px 채용 상세 오버레이 클릭 닫기",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "768px 채용 상세 닫기 버튼 클릭",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 채용정보 카드 로드",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 채용 상세 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 채용 상세 모달 뷰포트 안",
+      "pass": true,
+      "detail": {
+        "top": 141.9,
+        "bottom": 758.1
+      }
+    },
+    {
+      "name": "1280px 채용 상세 닫기 48px 이상 + 화면 안",
+      "pass": true,
+      "detail": {
+        "w": 54,
+        "h": 54
+      }
+    },
+    {
+      "name": "1280px 채용 원문 링크 56px CTA",
+      "pass": true,
+      "detail": 56
+    },
+    {
+      "name": "1280px 채용 상세 모든 글자 14px 이상",
+      "pass": true,
+      "detail": {
+        "count": 0,
+        "violations": []
+      }
+    },
+    {
+      "name": "1280px 채용 상세 모든 터치 타깃 48x48px 이상",
+      "pass": true,
+      "detail": {
+        "count": 0,
+        "violations": []
+      }
+    },
+    {
+      "name": "1280px 채용 상세 모든 글자 대비 4.5:1 이상",
+      "pass": true,
+      "detail": {
+        "count": 0,
+        "violations": []
+      }
+    },
+    {
+      "name": "1280px 채용 상세 가로 스크롤 없음",
+      "pass": true,
+      "detail": {
+        "measure": false,
+        "audit": false
+      }
+    },
+    {
+      "name": "1280px 채용 상세 Esc 닫기",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 채용 상세 오버레이 클릭 닫기",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 채용 상세 닫기 버튼 클릭",
+      "pass": true,
+      "detail": true
+    },
+    {
       "name": "콘솔 오류 0건",
       "pass": true,
       "detail": []
@@ -1543,7 +1699,9 @@
     "docs/evidence/styleguide-20261107/mobile-390-chatbot-open.png",
     "docs/evidence/styleguide-20261107/mobile-390-drawer-open.png",
     "docs/evidence/styleguide-20261107/mobile-390-modal-open.png",
-    "docs/evidence/styleguide-20261107/mobile-390-job-modal-open.png"
+    "docs/evidence/styleguide-20261107/mobile-390-job-modal-open.png",
+    "docs/evidence/styleguide-20261107/tablet-768-job-modal-open.png",
+    "docs/evidence/styleguide-20261107/desktop-1280-job-modal-open.png"
   ],
   "console": [],
   "classicChatbot": {
@@ -1938,6 +2096,107 @@
       "horizontalOverflow": false
     }
   },
+  "jobModals": [
+    {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 900,
+      "mobile": true,
+      "expectedColumns": 1,
+      "ready": true,
+      "modal": {
+        "visible": true,
+        "width": 390,
+        "modalTop": 114,
+        "modalBottom": 900,
+        "modalInViewport": true,
+        "close": {
+          "w": 54,
+          "h": 54
+        },
+        "closeInViewport": true,
+        "sourceHeight": 56,
+        "horizontalOverflow": false
+      },
+      "audit": {
+        "fontViolations": [],
+        "fontViolationCount": 0,
+        "contrastViolations": [],
+        "contrastViolationCount": 0,
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "bodyContrast": 14.5,
+        "horizontalOverflow": false
+      },
+      "screenshot": "docs/evidence/styleguide-20261107/mobile-390-job-modal-open.png"
+    },
+    {
+      "name": "tablet-768",
+      "width": 768,
+      "height": 1024,
+      "mobile": false,
+      "expectedColumns": 2,
+      "ready": true,
+      "modal": {
+        "visible": true,
+        "width": 714,
+        "modalTop": 203.9,
+        "modalBottom": 820.1,
+        "modalInViewport": true,
+        "close": {
+          "w": 54,
+          "h": 54
+        },
+        "closeInViewport": true,
+        "sourceHeight": 56,
+        "horizontalOverflow": false
+      },
+      "audit": {
+        "fontViolations": [],
+        "fontViolationCount": 0,
+        "contrastViolations": [],
+        "contrastViolationCount": 0,
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "bodyContrast": 14.5,
+        "horizontalOverflow": false
+      },
+      "screenshot": "docs/evidence/styleguide-20261107/tablet-768-job-modal-open.png"
+    },
+    {
+      "name": "desktop-1280",
+      "width": 1280,
+      "height": 900,
+      "mobile": false,
+      "expectedColumns": 3,
+      "ready": true,
+      "modal": {
+        "visible": true,
+        "width": 756,
+        "modalTop": 141.9,
+        "modalBottom": 758.1,
+        "modalInViewport": true,
+        "close": {
+          "w": 54,
+          "h": 54
+        },
+        "closeInViewport": true,
+        "sourceHeight": 56,
+        "horizontalOverflow": false
+      },
+      "audit": {
+        "fontViolations": [],
+        "fontViolationCount": 0,
+        "contrastViolations": [],
+        "contrastViolationCount": 0,
+        "smallTargets": [],
+        "smallTargetCount": 0,
+        "bodyContrast": 14.5,
+        "horizontalOverflow": false
+      },
+      "screenshot": "docs/evidence/styleguide-20261107/desktop-1280-job-modal-open.png"
+    }
+  ],
   "jobsReady": true,
   "jobModalLayer": {
     "visible": true,
@@ -1964,8 +2223,8 @@
     }
   },
   "summary": {
-    "total": 135,
-    "passed": 135,
+    "total": 159,
+    "passed": 159,
     "failed": 0,
     "verdict": "PASS"
   }

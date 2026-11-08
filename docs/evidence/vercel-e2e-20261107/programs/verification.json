@@ -2,7 +2,7 @@
   "baseUrl": "http://127.0.0.1:3102/",
   "basePath": "",
   "baseOrigin": "http://127.0.0.1:3102",
-  "checkedAt": "2026-11-08T12:34:53.970Z",
+  "checkedAt": "2026-11-08T12:57:28.036Z",
   "checks": [
     {
       "name": "초기 목록·카운트 도착",
@@ -82,7 +82,7 @@
       "name": "초기 목록(GET) gzip 전송량 30KB 미만",
       "pass": true,
       "detail": {
-        "listTransfer": 2901,
+        "listTransfer": 2899,
         "countTransfer": 0
       }
     },
@@ -90,7 +90,7 @@
       "name": "초기 REST 총 전송량 30KB 미만",
       "pass": true,
       "detail": {
-        "payloadTransfer": 2901,
+        "payloadTransfer": 2899,
         "baselineRawBytes": 267043
       }
     },
@@ -1330,7 +1330,7 @@
       "name": "수파베이스 응답 지연 시 5초 타임아웃 폴백",
       "pass": true,
       "detail": {
-        "elapsedMs": 5235,
+        "elapsedMs": 5221,
         "source": "local",
         "chipTotal": 47
       }
@@ -1422,7 +1422,7 @@
   "payload": {
     "entries": [
       {
-        "requestId": "0A432AAEB823C96E6BD71263944614BE",
+        "requestId": "CDAC74EAF7E2144887CBD28F03DDC81D",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id",
         "method": "OPTIONS",
         "status": 200,
@@ -1430,7 +1430,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "95C9E2CDB229483AB5D8012D986FDC7A",
+        "requestId": "0501D5931ECA6B18CDF140ADBF49A8CB",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%A4%91",
         "method": "OPTIONS",
         "status": 200,
@@ -1438,7 +1438,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "5CB84A3C59E26679BE43525E9529CAFA",
+        "requestId": "40DE03D0C20A064B94D293D63812747C",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%98%88%EC%A0%95",
         "method": "OPTIONS",
         "status": 200,
@@ -1446,7 +1446,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "760ECB89DF74F155F70837457F256E68",
+        "requestId": "CEA30D583C32F55312421F3F3BEEB170",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%8C%80%EA%B8%B0%EC%A0%91%EC%88%98",
         "method": "OPTIONS",
         "status": 200,
@@ -1454,7 +1454,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "E83A9AAE58E2CBBC48F139815B341A8D",
+        "requestId": "404D2F88922C9B84129D10EB2943A426",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%A7%88%EA%B0%90",
         "method": "OPTIONS",
         "status": 200,
@@ -1462,7 +1462,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "13200.31",
+        "requestId": "7104.31",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id",
         "method": "HEAD",
         "status": 200,
@@ -1470,7 +1470,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "13200.32",
+        "requestId": "7104.32",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%A4%91",
         "method": "HEAD",
         "status": 200,
@@ -1478,7 +1478,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "13200.33",
+        "requestId": "7104.33",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EC%A0%91%EC%88%98%EC%98%88%EC%A0%95",
         "method": "HEAD",
         "status": 200,
@@ -1486,7 +1486,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "13200.34",
+        "requestId": "7104.34",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%8C%80%EA%B8%B0%EC%A0%91%EC%88%98",
         "method": "HEAD",
         "status": 200,
@@ -1494,7 +1494,7 @@
         "rawBytes": 0
       },
       {
-        "requestId": "13200.35",
+        "requestId": "7104.35",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id&status=eq.%EB%A7%88%EA%B0%90",
         "method": "HEAD",
         "status": 200,
@@ -1502,15 +1502,15 @@
         "rawBytes": 0
       },
       {
-        "requestId": "13200.44",
+        "requestId": "7104.45",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id%2Ctitle%2Ccategory%2Ctarget%2Ccapacity%2Cenrolled%2Cfee%2Cedu_period%2Capply_period%2Clocation%2Cstatus%2Cstatus_order%2Csummary%2Ccreated_at&order=status_order.asc%2Cid.desc&offset=0&limit=30",
         "method": "GET",
         "status": 200,
-        "encodedDataLength": 2901,
+        "encodedDataLength": 2899,
         "rawBytes": 12239
       },
       {
-        "requestId": "33479EF2E40D624D47176A318816CA5E",
+        "requestId": "25041F2B69E5356017F7556ADC41714A",
         "url": "https://aljizecqcdlqmjnkelah.supabase.co/rest/v1/programs?select=id%2Ctitle%2Ccategory%2Ctarget%2Ccapacity%2Cenrolled%2Cfee%2Cedu_period%2Capply_period%2Clocation%2Cstatus%2Cstatus_order%2Csummary%2Ccreated_at&order=status_order.asc%2Cid.desc&offset=0&limit=30",
         "method": "OPTIONS",
         "status": 200,
@@ -1518,9 +1518,9 @@
         "rawBytes": 0
       }
     ],
-    "listTransfer": 2901,
+    "listTransfer": 2899,
     "countTransfer": 0,
-    "transfer": 2901,
+    "transfer": 2899,
     "listRawBytes": 12239,
     "baselineRawBytes": 267043
   },
@@ -17220,7 +17220,7 @@
     }
   ],
   "timeoutGuard": {
-    "elapsedMs": 5235,
+    "elapsedMs": 5221,
     "source": "local",
     "chipTotal": 47
   },

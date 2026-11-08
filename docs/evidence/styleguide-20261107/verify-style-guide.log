@@ -1,90 +1,161 @@
-PASS  390px 카드 열 수 1
+PASS  390px 카드 수 1열
 PASS  390px 가로 스크롤 없음
 PASS  390px 카드 CTA 높이 52~60px
-PASS  390px 카드 곡률 24px
+PASS  390px 카드 모서리 24px
 PASS  390px 카드 패딩 24px
-PASS  390px 카드 본문 18px
-PASS  390px 본문 명도비 7:1 이상
-PASS  390px 카드 설명 명도비 7:1 이상
+PASS  390px 카드 제목 18px 이상
+PASS  390px 본문 대비 7:1 이상
+PASS  390px 카드 요약 대비 7:1 이상
 PASS  390px 상태 칩 높이 52~56px
-PASS  390px 상태 칩 명도비 4.5:1 이상
+PASS  390px 상태 칩 대비 4.5:1 이상
 PASS  390px 헤더 72px
-PASS  390px 히어로 CTA 56px
-PASS  390px 하단 탭바 64px
+PASS  390px 대표 CTA 56px
+PASS  390px 모든 글자 14px 이상
+PASS  390px 모든 터치 타깃 48x48px 이상
+PASS  390px 모든 글자 대비 4.5:1 이상
+PASS  390px 하단 메뉴 64px
 PASS  390px 탭 5개
 PASS  390px 탭 터치 48x48 이상
-PASS  390px 탭 라벨 13px bold
-PASS  390px 하단 탭바 표시
-PASS  412px 카드 열 수 1
-PASS  412px 가로 스크롤 없음
-PASS  412px 카드 CTA 높이 52~60px
-PASS  412px 카드 곡률 24px
-PASS  412px 카드 패딩 24px
-PASS  412px 카드 본문 18px
-PASS  412px 본문 명도비 7:1 이상
-PASS  412px 카드 설명 명도비 7:1 이상
-PASS  412px 상태 칩 높이 52~56px
-PASS  412px 상태 칩 명도비 4.5:1 이상
-PASS  412px 헤더 72px
-PASS  412px 히어로 CTA 56px
-PASS  412px 하단 탭바 64px
-PASS  412px 탭 5개
-PASS  412px 탭 터치 48x48 이상
-PASS  412px 탭 라벨 13px bold
-PASS  412px 하단 탭바 표시
-PASS  768px 카드 열 수 2
+PASS  390px 탭 라벨 14px 이상 bold
+PASS  390px 하단 메뉴 표시
+PASS  390px 클래식 가로 스크롤 없음
+PASS  390px 클래식 모든 글자 14px 이상
+PASS  390px 클래식 모든 터치 타깃 48x48px 이상
+PASS  390px 클래식 모든 글자 대비 4.5:1 이상
+PASS  390px 클래식 본문 대비 7:1 이상
+PASS  390px 클래식 챗봇 버튼 표시·48x48px 이상
+PASS  390px 클래식 챗봇 패널 표시·뷰포트 안
+PASS  390px 클래식 챗봇 닫기 48px 이상 + 화면 안
+PASS  390px 클래식 챗봇 모든 글자 14px 이상
+PASS  390px 클래식 챗봇 모든 터치 타깃 48x48px 이상
+PASS  390px 클래식 챗봇 가로 스크롤 없음
+PASS  390px 클래식 챗봇 Esc 닫기
+PASS  768px 카드 수 2열
 PASS  768px 가로 스크롤 없음
 PASS  768px 카드 CTA 높이 52~60px
-PASS  768px 카드 곡률 24px
+PASS  768px 카드 모서리 24px
 PASS  768px 카드 패딩 24px
-PASS  768px 카드 본문 18px
-PASS  768px 본문 명도비 7:1 이상
-PASS  768px 카드 설명 명도비 7:1 이상
+PASS  768px 카드 제목 18px 이상
+PASS  768px 본문 대비 7:1 이상
+PASS  768px 카드 요약 대비 7:1 이상
 PASS  768px 상태 칩 높이 52~56px
-PASS  768px 상태 칩 명도비 4.5:1 이상
+PASS  768px 상태 칩 대비 4.5:1 이상
 PASS  768px 헤더 72px
-PASS  768px 히어로 CTA 56px
-PASS  768px 하단 탭바 숨김
-PASS  820px 카드 열 수 2
-PASS  820px 가로 스크롤 없음
-PASS  820px 카드 CTA 높이 52~60px
-PASS  820px 카드 곡률 24px
-PASS  820px 카드 패딩 24px
-PASS  820px 카드 본문 18px
-PASS  820px 본문 명도비 7:1 이상
-PASS  820px 카드 설명 명도비 7:1 이상
-PASS  820px 상태 칩 높이 52~56px
-PASS  820px 상태 칩 명도비 4.5:1 이상
-PASS  820px 헤더 72px
-PASS  820px 히어로 CTA 56px
-PASS  820px 하단 탭바 숨김
-PASS  1280px 카드 열 수 3
+PASS  768px 대표 CTA 56px
+PASS  768px 모든 글자 14px 이상
+PASS  768px 모든 터치 타깃 48x48px 이상
+PASS  768px 모든 글자 대비 4.5:1 이상
+PASS  768px 하단 메뉴 숨김
+PASS  768px 클래식 가로 스크롤 없음
+PASS  768px 클래식 모든 글자 14px 이상
+PASS  768px 클래식 모든 터치 타깃 48x48px 이상
+PASS  768px 클래식 모든 글자 대비 4.5:1 이상
+PASS  768px 클래식 본문 대비 7:1 이상
+PASS  768px 클래식 챗봇 버튼 표시·48x48px 이상
+PASS  1280px 카드 수 3열
 PASS  1280px 가로 스크롤 없음
 PASS  1280px 카드 CTA 높이 52~60px
-PASS  1280px 카드 곡률 24px
+PASS  1280px 카드 모서리 24px
 PASS  1280px 카드 패딩 24px
-PASS  1280px 카드 본문 18px
-PASS  1280px 본문 명도비 7:1 이상
-PASS  1280px 카드 설명 명도비 7:1 이상
+PASS  1280px 카드 제목 18px 이상
+PASS  1280px 본문 대비 7:1 이상
+PASS  1280px 카드 요약 대비 7:1 이상
 PASS  1280px 상태 칩 높이 52~56px
-PASS  1280px 상태 칩 명도비 4.5:1 이상
+PASS  1280px 상태 칩 대비 4.5:1 이상
 PASS  1280px 헤더 72px
-PASS  1280px 히어로 CTA 56px
-PASS  1280px 하단 탭바 숨김
-PASS  데스크톱 카드형 47개
-PASS  390px 목록형 표 숨김
-PASS  390px 목록형 행 카드 표시
+PASS  1280px 대표 CTA 56px
+PASS  1280px 모든 글자 14px 이상
+PASS  1280px 모든 터치 타깃 48x48px 이상
+PASS  1280px 모든 글자 대비 4.5:1 이상
+PASS  1280px 하단 메뉴 숨김
+PASS  데스크톱 카드 30개(페이지 크기)
+PASS  1280px 클래식 가로 스크롤 없음
+PASS  1280px 클래식 모든 글자 14px 이상
+PASS  1280px 클래식 모든 터치 타깃 48x48px 이상
+PASS  1280px 클래식 모든 글자 대비 4.5:1 이상
+PASS  1280px 클래식 본문 대비 7:1 이상
+PASS  1280px 클래식 챗봇 버튼 표시·48x48px 이상
+PASS  클래식 GNB 8개 메뉴
+PASS  390px 목록형 표 표시
+PASS  390px 목록형 목 카드 표시
 PASS  390px 목록형 가로 스크롤 없음
 PASS  390px 상세 모달 표시
-PASS  390px 모달 신청 버튼 56px
+PASS  390px 신청 버튼 56px
 PASS  390px 모달 가로 스크롤 없음
 PASS  390px 신청 폼 표시
-PASS  390px 성명 입력 52px
+PASS  390px 이름 입력 52px
 PASS  390px 연락처 입력 52px
 PASS  390px 입력 글자 18px (자동 줌 차단)
 PASS  390px 결제 버튼 56px
-PASS  390px 폼 라벨 18px
+PASS  390px 라벨 18px
 PASS  390px 폼 가로 스크롤 없음
-PASS  콘솔 에러 0건
+PASS  390px 챗봇 패널 표시
+PASS  390px 챗봇 패널 뷰포트 안
+PASS  390px 챗봇 헤더 sticky 고정
+PASS  390px 챗봇 닫기 48px 이상 + 화면 안
+PASS  390px 챗봇 퀵 질문 48x48px 이상
+PASS  390px 챗봇 입력창 52px · 글자 14px 이상
+PASS  390px 챗봇 보내기 48x48px 이상
+PASS  390px 챗봇 메시지 글자 14px 이상
+PASS  390px 챗봇 모든 글자 14px 이상
+PASS  390px 챗봇 모든 터치 타깃 48x48px 이상
+PASS  390px 챗봇 모든 글자 대비 4.5:1 이상
+PASS  390px 챗봇 가로 스크롤 없음
+PASS  390px 챗봇 Esc 닫기
+PASS  390px 챗봇 오버레이 클릭 닫기
+PASS  390px 전체 메뉴 드로어 표시
+PASS  390px 드로어 뷰포트 안
+PASS  390px 드로어 닫기 48px 이상 + 화면 안
+PASS  390px 드로어 바로가기 3개
+PASS  390px 드로어 링크 48x48px 이상
+PASS  390px 드로어 모든 글자 14px 이상
+PASS  390px 드로어 모든 터치 타깃 48x48px 이상
+PASS  390px 드로어 모든 글자 대비 4.5:1 이상
+PASS  390px 드로어 가로 스크롤 없음
+PASS  390px 열린 상세 모달 표시
+PASS  390px 열린 상세 모달 뷰포트 안
+PASS  390px 상세 모달 닫기 48px 이상 + 화면 안
+PASS  390px 열린 상세 모달 신청 버튼 56px
+PASS  390px 열린 상세 모달 모든 글자 14px 이상
+PASS  390px 열린 상세 모달 모든 터치 타깃 48x48px 이상
+PASS  390px 열린 상세 모달 모든 글자 대비 4.5:1 이상
+PASS  390px 열린 상세 모달 가로 스크롤 없음
+PASS  390px 채용정보 카드 로드
+PASS  390px 채용 상세 모달 표시
+PASS  390px 채용 상세 모달 뷰포트 안
+PASS  390px 채용 상세 닫기 48px 이상 + 화면 안
+PASS  390px 채용 원문 링크 56px CTA
+PASS  390px 채용 상세 모든 글자 14px 이상
+PASS  390px 채용 상세 모든 터치 타깃 48x48px 이상
+PASS  390px 채용 상세 모든 글자 대비 4.5:1 이상
+PASS  390px 채용 상세 가로 스크롤 없음
+PASS  390px 채용 상세 Esc 닫기
+PASS  390px 채용 상세 오버레이 클릭 닫기
+PASS  390px 채용 상세 닫기 버튼 클릭
+PASS  768px 채용정보 카드 로드
+PASS  768px 채용 상세 모달 표시
+PASS  768px 채용 상세 모달 뷰포트 안
+PASS  768px 채용 상세 닫기 48px 이상 + 화면 안
+PASS  768px 채용 원문 링크 56px CTA
+PASS  768px 채용 상세 모든 글자 14px 이상
+PASS  768px 채용 상세 모든 터치 타깃 48x48px 이상
+PASS  768px 채용 상세 모든 글자 대비 4.5:1 이상
+PASS  768px 채용 상세 가로 스크롤 없음
+PASS  768px 채용 상세 Esc 닫기
+PASS  768px 채용 상세 오버레이 클릭 닫기
+PASS  768px 채용 상세 닫기 버튼 클릭
+PASS  1280px 채용정보 카드 로드
+PASS  1280px 채용 상세 모달 표시
+PASS  1280px 채용 상세 모달 뷰포트 안
+PASS  1280px 채용 상세 닫기 48px 이상 + 화면 안
+PASS  1280px 채용 원문 링크 56px CTA
+PASS  1280px 채용 상세 모든 글자 14px 이상
+PASS  1280px 채용 상세 모든 터치 타깃 48x48px 이상
+PASS  1280px 채용 상세 모든 글자 대비 4.5:1 이상
+PASS  1280px 채용 상세 가로 스크롤 없음
+PASS  1280px 채용 상세 Esc 닫기
+PASS  1280px 채용 상세 오버레이 클릭 닫기
+PASS  1280px 채용 상세 닫기 버튼 클릭
+PASS  콘솔 오류 0건
 
-PASS (88/88)
+PASS (159/159)

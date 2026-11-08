@@ -1060,22 +1060,11 @@ async function main() {
       await screenshot(cdp, sessionId, "mobile-390-modal-open.png"),
     );
 
-    // Job detail modal (TASK 5060DO-20261108-2145): the newest opened layer.
+    // Job detail modal (TASK 5060DO-20261108-2200): audit the opened layer at
+    // every viewport so tablet and desktop keep the 48px close target, the 56px
+    // source CTA, the 14px text floor and zero horizontal scroll.
     await evaluate(cdp, sessionId, click("detail-modal-close"));
     await sleep(400);
-    await evaluate(
-      cdp,
-      sessionId,
-      `document.querySelector('#jobs').scrollIntoView({ block: 'start', behavior: 'instant' })`,
-    );
-    const jobsReady = await waitForCondition(
-      cdp,
-      sessionId,
-      `document.querySelectorAll('[data-testid="job-card"]').length > 0`,
-      20000,
-    );
-    results.jobsReady = jobsReady;
-    check("390px 채용정보 카드 로드", jobsReady === true, jobsReady);
 
     const openFirstJob = `(() => {
       const card = document.querySelector('[data-testid="job-card"]');
@@ -1085,92 +1074,144 @@ async function main() {
     })()`;
     const jobModalOpenExpr = `Boolean(document.querySelector('[data-testid="job-detail-modal"]'))`;
 
-    const jobOpened = await evaluate(cdp, sessionId, openFirstJob);
-    await sleep(600);
-    const jobModal = await evaluate(cdp, sessionId, JOB_MODAL_MEASURE);
-    const jobAudit = await evaluate(
-      cdp,
-      sessionId,
-      layerAudit('[data-testid="job-detail-modal"]'),
-    );
-    results.jobModalLayer = { ...jobModal, audit: jobAudit };
-    check("390px 채용 상세 모달 표시", jobOpened === true && jobModal.visible === true, jobModal.visible);
-    check(
-      "390px 채용 상세 모달 뷰포트 안",
-      jobModal.modalInViewport === true,
-      { top: jobModal.modalTop, bottom: jobModal.modalBottom },
-    );
-    check(
-      "390px 채용 상세 닫기 48px 이상 + 화면 안",
-      jobModal.close?.w >= 48 && jobModal.close?.h >= 48 && jobModal.closeInViewport,
-      jobModal.close,
-    );
-    check(
-      "390px 채용 원문 링크 56px CTA",
-      jobModal.sourceHeight === 56,
-      jobModal.sourceHeight,
-    );
-    check(
-      "390px 채용 상세 모든 글자 14px 이상",
-      jobAudit.fontViolationCount === 0,
-      { count: jobAudit.fontViolationCount, violations: jobAudit.fontViolations },
-    );
-    check(
-      "390px 채용 상세 모든 터치 타깃 48x48px 이상",
-      jobAudit.smallTargetCount === 0,
-      { count: jobAudit.smallTargetCount, violations: jobAudit.smallTargets },
-    );
-    check(
-      "390px 채용 상세 모든 글자 대비 4.5:1 이상",
-      jobAudit.contrastViolationCount === 0,
-      { count: jobAudit.contrastViolationCount, violations: jobAudit.contrastViolations },
-    );
-    check(
-      "390px 채용 상세 가로 스크롤 없음",
-      !jobModal.horizontalOverflow && !jobAudit.horizontalOverflow,
-      { measure: jobModal.horizontalOverflow, audit: jobAudit.horizontalOverflow },
-    );
-    results.screenshots.push(
-      await screenshot(cdp, sessionId, "mobile-390-job-modal-open.png"),
-    );
+    results.jobModals = [];
+    for (const viewport of viewports) {
+      await cdp.send(
+        "Emulation.setDeviceMetricsOverride",
+        { width: viewport.width, height: viewport.height, deviceScaleFactor: 1, mobile: viewport.mobile },
+        sessionId,
+      );
+      const jobPageLoaded = cdp.once("Page.loadEventFired");
+      await cdp.send("Page.navigate", { url: BASE_URL }, sessionId);
+      await jobPageLoaded;
+      await sleep(1400);
+      await evaluate(
+        cdp,
+        sessionId,
+        `document.querySelector('#jobs').scrollIntoView({ block: 'start', behavior: 'instant' })`,
+      );
+      const jobsReady = await waitForCondition(
+        cdp,
+        sessionId,
+        `document.querySelectorAll('[data-testid="job-card"]').length > 0`,
+        20000,
+      );
+      const jobLabel = `${viewport.width}px`;
+      check(`${jobLabel} 채용정보 카드 로드`, jobsReady === true, jobsReady);
 
-    await cdp.send(
-      "Input.dispatchKeyEvent",
-      { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
-      sessionId,
-    );
-    await cdp.send(
-      "Input.dispatchKeyEvent",
-      { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
-      sessionId,
-    );
-    await sleep(300);
-    const jobEscClosed = !(await evaluate(cdp, sessionId, jobModalOpenExpr));
-    check("390px 채용 상세 Esc 닫기", jobEscClosed === true, jobEscClosed);
+      const jobOpened = await evaluate(cdp, sessionId, openFirstJob);
+      await sleep(600);
+      const jobModal = await evaluate(cdp, sessionId, JOB_MODAL_MEASURE);
+      const jobAudit = await evaluate(
+        cdp,
+        sessionId,
+        layerAudit('[data-testid="job-detail-modal"]'),
+      );
+      const jobScreenshot = await screenshot(
+        cdp,
+        sessionId,
+        `${viewport.name}-job-modal-open.png`,
+      );
+      results.jobModals.push({
+        ...viewport,
+        ready: jobsReady,
+        modal: jobModal,
+        audit: jobAudit,
+        screenshot: jobScreenshot,
+      });
+      results.screenshots.push(jobScreenshot);
+      if (viewport.width === 390) {
+        results.jobsReady = jobsReady;
+        results.jobModalLayer = { ...jobModal, audit: jobAudit };
+      }
 
-    await evaluate(cdp, sessionId, openFirstJob);
-    await sleep(400);
-    const jobOverlayClicked = await evaluate(
-      cdp,
-      sessionId,
-      `(() => {
-        const modal = document.querySelector('[data-testid="job-detail-modal"]');
-        if (!modal) return false;
-        modal.parentElement.click();
-        return true;
-      })()`,
-    );
-    await sleep(300);
-    const jobOverlayClosed =
-      jobOverlayClicked && !(await evaluate(cdp, sessionId, jobModalOpenExpr));
-    check("390px 채용 상세 오버레이 클릭 닫기", jobOverlayClosed === true, jobOverlayClosed);
+      check(
+        `${jobLabel} 채용 상세 모달 표시`,
+        jobOpened === true && jobModal.visible === true,
+        jobModal.visible,
+      );
+      check(
+        `${jobLabel} 채용 상세 모달 뷰포트 안`,
+        jobModal.modalInViewport === true,
+        { top: jobModal.modalTop, bottom: jobModal.modalBottom },
+      );
+      check(
+        `${jobLabel} 채용 상세 닫기 48px 이상 + 화면 안`,
+        jobModal.close?.w >= 48 && jobModal.close?.h >= 48 && jobModal.closeInViewport,
+        jobModal.close,
+      );
+      check(
+        `${jobLabel} 채용 원문 링크 56px CTA`,
+        jobModal.sourceHeight === 56,
+        jobModal.sourceHeight,
+      );
+      check(
+        `${jobLabel} 채용 상세 모든 글자 14px 이상`,
+        jobAudit.fontViolationCount === 0,
+        { count: jobAudit.fontViolationCount, violations: jobAudit.fontViolations },
+      );
+      check(
+        `${jobLabel} 채용 상세 모든 터치 타깃 48x48px 이상`,
+        jobAudit.smallTargetCount === 0,
+        { count: jobAudit.smallTargetCount, violations: jobAudit.smallTargets },
+      );
+      check(
+        `${jobLabel} 채용 상세 모든 글자 대비 4.5:1 이상`,
+        jobAudit.contrastViolationCount === 0,
+        { count: jobAudit.contrastViolationCount, violations: jobAudit.contrastViolations },
+      );
+      check(
+        `${jobLabel} 채용 상세 가로 스크롤 없음`,
+        !jobModal.horizontalOverflow && !jobAudit.horizontalOverflow,
+        { measure: jobModal.horizontalOverflow, audit: jobAudit.horizontalOverflow },
+      );
 
-    await evaluate(cdp, sessionId, openFirstJob);
-    await sleep(400);
-    await evaluate(cdp, sessionId, click("job-detail-close"));
-    await sleep(300);
-    const jobButtonClosed = !(await evaluate(cdp, sessionId, jobModalOpenExpr));
-    check("390px 채용 상세 닫기 버튼 클릭", jobButtonClosed === true, jobButtonClosed);
+      await cdp.send(
+        "Input.dispatchKeyEvent",
+        { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+        sessionId,
+      );
+      await cdp.send(
+        "Input.dispatchKeyEvent",
+        { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+        sessionId,
+      );
+      await sleep(300);
+      const jobEscClosed = !(await evaluate(cdp, sessionId, jobModalOpenExpr));
+      check(`${jobLabel} 채용 상세 Esc 닫기`, jobEscClosed === true, jobEscClosed);
+
+      await evaluate(cdp, sessionId, openFirstJob);
+      await sleep(400);
+      const jobOverlayClicked = await evaluate(
+        cdp,
+        sessionId,
+        `(() => {
+          const modal = document.querySelector('[data-testid="job-detail-modal"]');
+          if (!modal) return false;
+          modal.parentElement.click();
+          return true;
+        })()`,
+      );
+      await sleep(300);
+      const jobOverlayClosed =
+        jobOverlayClicked && !(await evaluate(cdp, sessionId, jobModalOpenExpr));
+      check(
+        `${jobLabel} 채용 상세 오버레이 클릭 닫기`,
+        jobOverlayClosed === true,
+        jobOverlayClosed,
+      );
+
+      await evaluate(cdp, sessionId, openFirstJob);
+      await sleep(400);
+      await evaluate(cdp, sessionId, click("job-detail-close"));
+      await sleep(300);
+      const jobButtonClosed = !(await evaluate(cdp, sessionId, jobModalOpenExpr));
+      check(
+        `${jobLabel} 채용 상세 닫기 버튼 클릭`,
+        jobButtonClosed === true,
+        jobButtonClosed,
+      );
+    }
 
     check("콘솔 오류 0건", results.console.length === 0, results.console);
   } finally {
