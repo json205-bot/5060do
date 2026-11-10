@@ -14,7 +14,7 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ChangeEvent } from "react";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import VersionSwitcher from "@/components/version-switcher";
 import { usePrograms } from "@/hooks/usePrograms";
@@ -63,6 +63,13 @@ export default function ClassicPage() {
     const length = classicHeroSlides.length;
     setSlideIndex(((next % length) + length) % length);
   }, []);
+
+  const handleFamilySite = (event: ChangeEvent<HTMLSelectElement>) => {
+    const href = event.currentTarget.value;
+    if (!href) return;
+    window.open(href, "_blank", "noopener,noreferrer");
+    event.currentTarget.value = "";
+  };
 
   useEffect(() => {
     if (paused) return;
@@ -395,7 +402,7 @@ export default function ClassicPage() {
                 <div className="flex items-center justify-between gap-3 border-t border-white/15 pt-3">
                   <dt className="text-sky-200">메뉴 구성</dt>
                   <dd className="font-bold text-white">
-                    8대 메뉴 · {classicSubmenuCount}개 세부 메뉴
+                    {classicNav.length}대 메뉴 · {classicSubmenuCount}개 세부 메뉴
                   </dd>
                 </div>
               </dl>
@@ -717,26 +724,119 @@ export default function ClassicPage() {
         </section>
       </main>
 
-      <footer className="border-t border-slate-200 bg-classic-900 text-sky-100">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-8 md:px-6">
-          <Image
-            src={withBasePath("/assets/logo_footer.png")}
-            alt="오륙도인생후반전지원센터"
-            width={194}
-            height={36}
-            className="h-9 w-auto self-start"
-          />
-          <p className="text-lg font-bold text-white">{CLASSIC_CENTER.name}</p>
-          <p className="text-sm">
-            대표전화 {CLASSIC_CENTER.phone} · {CLASSIC_CENTER.hours}
-          </p>
-          <p className="text-xs text-sky-200/80">
-            본 화면은 원본 사이트의 메뉴 구조를 보존한 반응형 시안입니다. 각
-            메뉴는 원본 사이트의 해당 페이지로 연결됩니다.
-          </p>
-          <p className="text-xs text-sky-100">
-            © 2026 오륙도인생후반전지원센터
-          </p>
+      <footer
+        data-testid="classic-footer"
+        className="border-t border-white/10 bg-classic-900 text-sky-100"
+      >
+        <div className="mx-auto w-full max-w-6xl px-4 pb-28 pt-10 md:px-6 lg:pb-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+            <div className="min-w-0">
+              <Image
+                src={withBasePath("/assets/logo_footer.png")}
+                alt="오륙도인생후반전지원센터"
+                width={194}
+                height={36}
+                className="h-9 w-auto"
+              />
+              <p className="mt-4 text-lg font-bold text-white">
+                {CLASSIC_CENTER.name}
+              </p>
+              <dl className="mt-4 grid gap-1 text-sm leading-relaxed">
+                <div className="flex flex-wrap items-start gap-x-2">
+                  <dt className="shrink-0 font-bold text-sky-200">주소</dt>
+                  <dd>{CLASSIC_CENTER.address}</dd>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-2">
+                  <dt className="shrink-0 font-bold text-sky-200">대표전화</dt>
+                  <dd>
+                    <a
+                      href={`tel:${CLASSIC_CENTER.phone.replace(/-/g, "")}`}
+                      data-testid="classic-footer-tel"
+                      className="inline-flex touch-target items-center font-bold text-white underline underline-offset-4 hover:text-sky-200"
+                    >
+                      {CLASSIC_CENTER.phone}
+                    </a>
+                  </dd>
+                  <dt className="shrink-0 font-bold text-sky-200">팩스</dt>
+                  <dd className="font-semibold">{CLASSIC_CENTER.fax}</dd>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-2">
+                  <dt className="shrink-0 font-bold text-sky-200">이메일</dt>
+                  <dd>
+                    <a
+                      href={`mailto:${CLASSIC_CENTER.email}`}
+                      className="inline-flex touch-target items-center text-white underline underline-offset-4 hover:text-sky-200"
+                    >
+                      {CLASSIC_CENTER.email}
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-2">
+                  <dt className="shrink-0 font-bold text-sky-200">오시는 길</dt>
+                  <dd>
+                    <a
+                      href={CLASSIC_CENTER.locationHref}
+                      data-testid="classic-footer-location"
+                      className="inline-flex touch-target items-center font-bold text-white underline underline-offset-4 hover:text-sky-200"
+                    >
+                      오시는 길 안내 보기
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <div className="flex w-full flex-col gap-4 lg:w-auto lg:items-end">
+              <div className="w-full lg:w-72">
+                <label
+                  htmlFor="classic-family-site"
+                  className="block text-sm font-bold text-sky-100"
+                >
+                  패밀리 사이트
+                </label>
+                <select
+                  id="classic-family-site"
+                  data-testid="classic-family-site"
+                  defaultValue=""
+                  onChange={handleFamilySite}
+                  className="mt-2 h-12 w-full rounded-lg border-2 border-white/40 bg-white px-3 text-sm font-semibold text-slate-900 focus:border-sky-300 focus:outline-none"
+                >
+                  <option value="">패밀리 사이트 선택</option>
+                  {CLASSIC_CENTER.familySites.map((site) => (
+                    <option key={site.href} value={site.href}>
+                      {site.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <ul className="flex flex-wrap items-center gap-x-3 lg:justify-end">
+                {CLASSIC_CENTER.policyLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className="inline-flex touch-target items-center text-sm font-semibold text-sky-100 underline underline-offset-4 hover:text-white"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-1 border-t border-white/15 pt-5 text-sm text-sky-200">
+            <p>
+              사업자등록번호 {CLASSIC_CENTER.businessNumber} · 대표자{" "}
+              {CLASSIC_CENTER.representative}
+            </p>
+            <p className="text-sky-200/90">
+              본 화면은 원본 사이트의 메뉴 구조를 보존한 반응형 시안입니다. 각
+              메뉴는 원본 사이트의 해당 페이지로 연결됩니다.
+            </p>
+            <p data-testid="classic-copyright" className="font-semibold">
+              © 2026 {CLASSIC_CENTER.name} All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
 

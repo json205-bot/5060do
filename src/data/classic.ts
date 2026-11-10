@@ -12,26 +12,26 @@ export type ClassicNavGroup = {
 
 const ORIGIN = "https://www.5060do.or.kr";
 
+// Six top-level menus restored from the official portal IA. Sub-links still
+// point at the original pages so nothing has to be rebuilt in this phase.
 export const classicNav: ClassicNavGroup[] = [
   {
     label: "센터소개",
     href: `${ORIGIN}/subLifeTwist/vision`,
-    description: "기관 정체성과 시설 안내",
+    description: "기관 정체성과 운영 체계 안내",
     children: [
       { label: "인사말", href: `${ORIGIN}/subLifeTwist/greeting` },
       { label: "연혁", href: `${ORIGIN}/subLifeTwist/history` },
       { label: "비전/미션", href: `${ORIGIN}/subLifeTwist/vision` },
       { label: "운영법인", href: `${ORIGIN}/subLifeTwist/corporate` },
       { label: "조직도", href: `${ORIGIN}/subLifeTwist/organization` },
-      { label: "시설안내", href: `${ORIGIN}/subLifeTwist/facility` },
-      { label: "대관신청", href: `${ORIGIN}/convention/index` },
-      { label: "오시는길", href: `${ORIGIN}/subLifeTwist/location` },
+      { label: "오시는 길", href: `${ORIGIN}/subLifeTwist/location` },
     ],
   },
   {
-    label: "사업안내",
+    label: "생애설계",
     href: `${ORIGIN}/subLifeTwist/lifePlanAssay`,
-    description: "생애설계부터 커뮤니티까지",
+    description: "생애설계진단부터 일·활동까지",
     children: [
       { label: "생애설계진단/상담", href: `${ORIGIN}/subLifeTwist/lifePlanAssay` },
       { label: "인생설계", href: `${ORIGIN}/subLifeTwist/lifeTimePlan` },
@@ -40,34 +40,17 @@ export const classicNav: ClassicNavGroup[] = [
     ],
   },
   {
-    label: "교육프로그램",
+    label: "교육/강좌",
     href: `${ORIGIN}/education/lifeEduList`,
-    description: "프로그램 신청과 안내",
+    description: "프로그램 신청과 추천 강좌",
     children: [
       { label: "프로그램신청", href: `${ORIGIN}/education/lifeEduList` },
       { label: "프로그램신청방법", href: `${ORIGIN}/education/lifeEduWay` },
+      { label: "이달의 추천강의", href: `${ORIGIN}/education/lifeEduList_reco` },
     ],
   },
   {
-    label: "커뮤니티",
-    href: `${ORIGIN}/board/lifeCommunity`,
-    description: "커뮤니티 소개와 참여",
-    children: [
-      { label: "커뮤니티소개", href: `${ORIGIN}/board/lifeCommunity` },
-      { label: "커뮤니티참여방법", href: `${ORIGIN}/subLifeTwist/lifeSocalEntry` },
-    ],
-  },
-  {
-    label: "공유사무실",
-    href: `${ORIGIN}/board/lifeOffice`,
-    description: "공유사무실 안내와 신청",
-    children: [
-      { label: "공유사무실안내", href: `${ORIGIN}/board/lifeOffice` },
-      { label: "공유사무실참여방법", href: `${ORIGIN}/subLifeTwist/lifeOfficeEntry` },
-    ],
-  },
-  {
-    label: "일자리정보",
+    label: "일자리/사회공헌",
     href: `${ORIGIN}/board/lifeWelfare`,
     description: "채용·창업·사회공헌 정보",
     children: [
@@ -78,24 +61,26 @@ export const classicNav: ClassicNavGroup[] = [
     ],
   },
   {
-    label: "알림마당",
-    href: `${ORIGIN}/board/lifeNotice`,
-    description: "공지사항과 센터 소식",
+    label: "커뮤니티",
+    href: `${ORIGIN}/board/lifeCommunity`,
+    description: "커뮤니티 참여와 센터 소식",
     children: [
+      { label: "커뮤니티소개", href: `${ORIGIN}/board/lifeCommunity` },
+      { label: "커뮤니티참여방법", href: `${ORIGIN}/subLifeTwist/lifeSocalEntry` },
       { label: "공지사항", href: `${ORIGIN}/board/lifeNotice` },
       { label: "센터소식", href: `${ORIGIN}/board/lifeNews` },
-      { label: "자료실", href: `${ORIGIN}/board/lifeReference` },
-      { label: "포토갤러리", href: `${ORIGIN}/board/lifePhoto` },
       { label: "FAQ", href: `${ORIGIN}/board/lifeInquiry` },
-      { label: "1:1문의", href: `${ORIGIN}/board/lifeOneToOne` },
     ],
   },
   {
-    label: "이달의 추천강의",
-    href: `${ORIGIN}/education/lifeEduList_reco`,
-    description: "이달의 추천 교육과정",
+    label: "시설/대관",
+    href: `${ORIGIN}/subLifeTwist/facility`,
+    description: "층별 시설 안내와 대관 신청",
     children: [
-      { label: "이달의 추천강의", href: `${ORIGIN}/education/lifeEduList_reco` },
+      { label: "시설안내", href: `${ORIGIN}/subLifeTwist/facility` },
+      { label: "대관신청", href: `${ORIGIN}/convention/index` },
+      { label: "공유사무실안내", href: `${ORIGIN}/board/lifeOffice` },
+      { label: "오시는 길", href: `${ORIGIN}/subLifeTwist/location` },
     ],
   },
 ];
@@ -286,13 +271,35 @@ export const classicFacilities: ClassicFacility[] = [
   },
 ];
 
+export type ClassicFamilySite = {
+  label: string;
+  href: string;
+};
+
+// Values come from the official footer markup so the restored footer does not
+// invent contact details.
 export const CLASSIC_CENTER = {
   name: "오륙도인생후반전지원센터",
   tagline: "오륙십대가 행복한 도시",
   phone: "051-628-5060",
+  fax: "051-628-5064",
+  email: "5060do@naver.com",
+  address: "부산광역시 남구 이기대공원로 18 더파크이기대 101동",
+  businessNumber: "619-82-71998",
+  representative: "황보경",
   hours: "평일 09:00 ~ 18:00",
   lunch: "점심시간 12:00 ~ 13:00",
   facilityHref: `${ORIGIN}/subLifeTwist/facility`,
+  locationHref: `${ORIGIN}/subLifeTwist/location`,
   mainHref: `${ORIGIN}/index/main`,
   searchAction: `${ORIGIN}/board/search`,
+  policyLinks: [
+    { label: "이용약관", href: `${ORIGIN}/index/policy` },
+    { label: "개인정보처리방침", href: `${ORIGIN}/index/private` },
+  ] as ClassicNavLink[],
+  familySites: [
+    { label: "오륙도인생후반전지원센터", href: `${ORIGIN}/index/main` },
+    { label: "센터 블로그", href: "https://blog.naver.com/5060do" },
+    { label: "센터 인스타그램", href: "https://www.instagram.com/5060do_" },
+  ] as ClassicFamilySite[],
 };

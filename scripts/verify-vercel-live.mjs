@@ -539,7 +539,7 @@ async function main() {
         }))()`,
       );
       check("클래식 화면 헤더 렌더링", classicState.header, classicState);
-      check("클래식 GNB 8개 메뉴", classicState.gnbItems === 8, {
+      check("클래식 GNB 6개 메뉴", classicState.gnbItems === 6, {
         gnbItems: classicState.gnbItems,
       });
       check("클래식 히어로 제목 표시", classicState.heroTitle.length > 0, {

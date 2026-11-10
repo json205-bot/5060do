@@ -508,6 +508,68 @@ const DRAWER_MEASURE = `(() => {
   };
 })()`;
 
+// Restored classic footer (TASK 5060DO-20261110-1255): the address, fax,
+// copyright and family-site select must be visible and reachable at every
+// viewport, not just on desktop.
+const FOOTER_MEASURE = `(() => {
+  const round = (value) => Math.round(value * 10) / 10;
+  const box = (el) => el ? { w: round(el.getBoundingClientRect().width), h: round(el.getBoundingClientRect().height) } : null;
+  const footer = document.querySelector('[data-testid="classic-footer"]');
+  if (!footer) return { visible: false };
+  const text = (footer.textContent || '').replace(/\\s+/g, ' ');
+  const select = footer.querySelector('[data-testid="classic-family-site"]');
+  const logo = document.querySelector('[data-testid="classic-header"] a[aria-label="원본 메뉴형 홈으로 이동"]');
+  return {
+    visible: true,
+    hasAddress: text.includes('부산광역시 남구 이기대공원로 18'),
+    hasFax: text.includes('051-628-5064'),
+    hasCopyright: text.includes('All rights reserved'),
+    hasBusinessNumber: text.includes('619-82-71998'),
+    logo: box(logo),
+    tel: box(footer.querySelector('[data-testid="classic-footer-tel"]')),
+    email: box(footer.querySelector('a[href^="mailto:"]')),
+    location: box(footer.querySelector('[data-testid="classic-footer-location"]')),
+    policies: Array.from(footer.querySelectorAll('ul a[href]')).map(box),
+    select: select
+      ? { ...box(select), optionCount: select.options.length }
+      : null,
+    horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  };
+})()`;
+
+const CLASSIC_DRAWER_GROUPS = `(() => {
+  const drawer = document.querySelector('[data-testid="classic-drawer"]');
+  if (!drawer) return { visible: false, count: 0, labels: [] };
+  const items = Array.from(drawer.querySelectorAll('button[data-testid^="classic-accordion-"]'));
+  return {
+    visible: true,
+    count: items.length,
+    labels: items.map((el) => (el.textContent || '').replace(/\\s+/g, ' ').trim()),
+  };
+})()`;
+
+const CLASSIC_MEGA = `(() => {
+  const mega = document.querySelector('[data-testid="classic-mega-menu"]');
+  if (!mega) return { visible: false };
+  const style = getComputedStyle(mega);
+  const rect = mega.getBoundingClientRect();
+  const groupButtons = Array.from(mega.querySelectorAll('ul button'));
+  const links = Array.from(mega.querySelectorAll('a[href]'));
+  return {
+    visible: style.display !== 'none' && rect.height > 1,
+    groupCount: groupButtons.length,
+    linkCount: links.length,
+    minLinkHeight: links.length ? Math.min(...links.map((el) => el.getBoundingClientRect().height)) : null,
+  };
+})()`;
+
+const CLASSIC_GNB_LABELS = `(() => {
+  const items = Array.from(document.querySelectorAll('[data-testid^="classic-gnb-item-"]'));
+  return items.map((el) => (el.textContent || '').replace(/\\s+/g, ' ').trim());
+})()`;
+
+const CLASSIC_MENU_LABELS = ["센터소개", "생애설계", "교육/강좌", "일자리/사회공헌", "커뮤니티", "시설/대관"];
+
 const click = (testId) => `(() => {
   const el = document.querySelector('[data-testid="${testId}"]');
   if (!el) return false;
@@ -686,6 +748,44 @@ async function main() {
       });
       check(`${label} 클래식 본문 대비 7:1 이상`, classicAudit.bodyContrast >= 7, classicAudit.bodyContrast);
 
+      const footer = await evaluate(cdp, sessionId, FOOTER_MEASURE);
+      results.classic[results.classic.length - 1].footer = footer;
+      check(`${label} 클래식 푸터 주소·팩스 표시`, footer.visible && footer.hasAddress && footer.hasFax, {
+        address: footer.hasAddress,
+        fax: footer.hasFax,
+      });
+      check(
+        `${label} 클래식 푸터 저작권·사업자번호 표시`,
+        footer.hasCopyright && footer.hasBusinessNumber,
+        { copyright: footer.hasCopyright, businessNumber: footer.hasBusinessNumber },
+      );
+      check(
+        `${label} 클래식 푸터 연락처 링크 48x48px 이상`,
+        [footer.tel, footer.email, footer.location].every(
+          (target) => target && target.w >= 48 && target.h >= 48,
+        ),
+        { tel: footer.tel, email: footer.email, location: footer.location },
+      );
+      check(
+        `${label} 클래식 패밀리 사이트 셀렉트 48px · 옵션 4개`,
+        Boolean(footer.select) &&
+          footer.select.h >= 48 &&
+          footer.select.w >= 48 &&
+          footer.select.optionCount === 4,
+        footer.select,
+      );
+      check(
+        `${label} 클래식 푸터 정책 링크 48x48px 이상`,
+        footer.policies.length === 2 &&
+          footer.policies.every((target) => target.w >= 48 && target.h >= 48),
+        footer.policies,
+      );
+      check(
+        `${label} 클래식 헤더 로고 링크 48x48px 이상`,
+        Boolean(footer.logo) && footer.logo.w >= 48 && footer.logo.h >= 48,
+        footer.logo,
+      );
+
       const classicChatbot = await evaluate(
         cdp,
         sessionId,
@@ -776,6 +876,33 @@ async function main() {
           `Boolean(document.querySelector('[data-testid="chatbot-panel"]'))`,
         ));
         check("390px 클래식 챗봇 Esc 닫기", classicChatClosed === true, classicChatClosed);
+
+        await evaluate(cdp, sessionId, click("classic-menu-button"));
+        await sleep(600);
+        const classicDrawer = await evaluate(cdp, sessionId, CLASSIC_DRAWER_GROUPS);
+        results.classicDrawer = classicDrawer;
+        check(
+          "390px 클래식 드로어 대메뉴 6개",
+          classicDrawer.visible === true && classicDrawer.count === 6,
+          { visible: classicDrawer.visible, count: classicDrawer.count },
+        );
+        check(
+          "390px 클래식 드로어 대메뉴 이름 일치",
+          classicDrawer.labels.length === CLASSIC_MENU_LABELS.length &&
+            CLASSIC_MENU_LABELS.every((label, index) => classicDrawer.labels[index] === label),
+          classicDrawer.labels,
+        );
+        await cdp.send(
+          "Input.dispatchKeyEvent",
+          { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+          sessionId,
+        );
+        await cdp.send(
+          "Input.dispatchKeyEvent",
+          { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 },
+          sessionId,
+        );
+        await sleep(400);
       }
 
       if (viewport.width === 1280) {
@@ -784,7 +911,51 @@ async function main() {
           sessionId,
           `document.querySelectorAll('[data-testid^="classic-gnb-item-"]').length`,
         );
-        check("클래식 GNB 8개 메뉴", gnb === 8, gnb);
+        check("클래식 GNB 6개 메뉴", gnb === 6, gnb);
+
+        const gnbLabels = await evaluate(cdp, sessionId, CLASSIC_GNB_LABELS);
+        check(
+          "클래식 GNB 메뉴 이름 일치",
+          gnbLabels.length === CLASSIC_MENU_LABELS.length &&
+            CLASSIC_MENU_LABELS.every((label, index) => gnbLabels[index] === label),
+          gnbLabels,
+        );
+
+        const gnbPoint = await evaluate(
+          cdp,
+          sessionId,
+          `(() => {
+            const el = document.querySelector('[data-testid="classic-gnb-item-0"]');
+            if (!el) return null;
+            const rect = el.getBoundingClientRect();
+            return {
+              x: Math.round(rect.left + rect.width / 2),
+              y: Math.round(rect.top + rect.height / 2),
+            };
+          })()`,
+        );
+        const megaOpened = Boolean(gnbPoint);
+        if (gnbPoint) {
+          await cdp.send(
+            "Input.dispatchMouseEvent",
+            { type: "mouseMoved", x: gnbPoint.x, y: gnbPoint.y },
+            sessionId,
+          );
+        }
+        await sleep(600);
+        const mega = await evaluate(cdp, sessionId, CLASSIC_MEGA);
+        results.classic[results.classic.length - 1].mega = mega;
+        check(
+          "클래식 GNB 하위 메뉴 열림",
+          megaOpened === true && mega.visible === true && mega.linkCount > 0,
+          { opened: megaOpened, ...mega },
+        );
+        check("클래식 GNB 하위 메뉴 대분류 6개", mega.groupCount === 6, mega.groupCount);
+        check(
+          "클래식 GNB 하위 링크 48px 이상",
+          mega.minLinkHeight >= 48,
+          mega.minLinkHeight,
+        );
       }
     }
 
