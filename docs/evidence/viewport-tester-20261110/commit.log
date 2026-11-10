@@ -1,0 +1,14 @@
+﻿[master 9af39d4] feat: add multi-device responsive viewport tester dashboard
+ 13 files changed, 2717 insertions(+)
+ create mode 100644 docs/evidence/viewport-tester-20261110/build.log
+ create mode 100644 docs/evidence/viewport-tester-20261110/lint.log
+ create mode 100644 docs/evidence/viewport-tester-20261110/test-vercel.log
+ create mode 100644 docs/evidence/viewport-tester-20261110/typecheck.log
+ create mode 100644 docs/evidence/viewport-tester-20261110/verification.json
+ create mode 100644 docs/evidence/viewport-tester-20261110/verify.log
+ create mode 100644 docs/evidence/viewport-tester-20261110/viewport-tester-fold.png
+ create mode 100644 docs/evidence/viewport-tester-20261110/viewport-tester-tablet.png
+ create mode 100644 docs/evidence/viewport-tester-20261110/viewport-tester-top.png
+ create mode 100644 "docs/logs/2026 11 10 1247 \353\241\234\352\267\270 5060do \353\251\200\355\213\260 \353\267\260\355\217\254\355\212\270 \355\205\214\354\212\244\355\204\260 \353\214\200\354\213\234\353\263\264\353\223\234 \352\265\254\355\230\204.md"
+ create mode 100644 scripts/verify-viewport-tester.mjs
+ create mode 100644 src/app/tools/viewport-tester/page.tsx

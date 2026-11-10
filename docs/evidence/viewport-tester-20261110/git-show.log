@@ -1,0 +1,15 @@
+﻿9af39d4 feat: add multi-device responsive viewport tester dashboard
+ docs/PLAN.md                                       |  12 +
+ docs/evidence/viewport-tester-20261110/build.log   |  35 ++
+ docs/evidence/viewport-tester-20261110/lint.log    |   5 +
+ .../viewport-tester-20261110/test-vercel.log       | 122 ++++
+ .../viewport-tester-20261110/typecheck.log         |   5 +
+ .../viewport-tester-20261110/verification.json     | 696 ++++++++++++++++++++
+ docs/evidence/viewport-tester-20261110/verify.log  | 698 +++++++++++++++++++++
+ .../viewport-tester-fold.png                       | Bin 0 -> 173778 bytes
+ .../viewport-tester-tablet.png                     | Bin 0 -> 226784 bytes
+ .../viewport-tester-top.png                        | Bin 0 -> 141797 bytes
+ ...63\264\353\223\234 \352\265\254\355\230\204.md" |  44 ++
+ scripts/verify-viewport-tester.mjs                 | 531 ++++++++++++++++
+ src/app/tools/viewport-tester/page.tsx             | 569 +++++++++++++++++
+ 13 files changed, 2717 insertions(+)
