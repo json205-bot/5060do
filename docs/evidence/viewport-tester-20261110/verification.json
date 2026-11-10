@@ -1,0 +1,696 @@
+{
+  "pageUrl": "http://127.0.0.1:3102/5060do/tools/viewport-tester/",
+  "checkedAt": "2026-11-10T03:53:04.378Z",
+  "checks": [
+    {
+      "name": "페이지 제목",
+      "pass": true,
+      "detail": "멀티 뷰포트 테스터"
+    },
+    {
+      "name": "디바이스 프레임 8개",
+      "pass": true,
+      "detail": 8
+    },
+    {
+      "name": "iframe 8개",
+      "pass": true,
+      "detail": 8
+    },
+    {
+      "name": "8개 iframe 모두 동일 출처 로드",
+      "pass": true,
+      "detail": [
+        {
+          "src": "/5060do/",
+          "loaded": true
+        },
+        {
+          "src": "/5060do/",
+          "loaded": true
+        },
+        {
+          "src": "/5060do/",
+          "loaded": true
+        },
+        {
+          "src": "/5060do/",
+          "loaded": true
+        },
+        {
+          "src": "/5060do/",
+          "loaded": true
+        },
+        {
+          "src": "/5060do/",
+          "loaded": true
+        },
+        {
+          "src": "/5060do/",
+          "loaded": true
+        },
+        {
+          "src": "/5060do/",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "프레임 사양 phone-portrait",
+      "pass": true,
+      "detail": {
+        "id": "phone-portrait",
+        "width": 390,
+        "height": 844,
+        "orientation": "portrait",
+        "renderedWidth": 251,
+        "renderedHeight": 523,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "프레임 사양 phone-landscape",
+      "pass": true,
+      "detail": {
+        "id": "phone-landscape",
+        "width": 844,
+        "height": 390,
+        "orientation": "landscape",
+        "renderedWidth": 523,
+        "renderedHeight": 251,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "프레임 사양 tablet-portrait",
+      "pass": true,
+      "detail": {
+        "id": "tablet-portrait",
+        "width": 820,
+        "height": 1180,
+        "orientation": "portrait",
+        "renderedWidth": 514,
+        "renderedHeight": 730,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "프레임 사양 tablet-landscape",
+      "pass": true,
+      "detail": {
+        "id": "tablet-landscape",
+        "width": 1180,
+        "height": 820,
+        "orientation": "landscape",
+        "renderedWidth": 730,
+        "renderedHeight": 514,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "프레임 사양 fold-cover-portrait",
+      "pass": true,
+      "detail": {
+        "id": "fold-cover-portrait",
+        "width": 416,
+        "height": 968,
+        "orientation": "portrait",
+        "renderedWidth": 264,
+        "renderedHeight": 595,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "프레임 사양 fold-cover-landscape",
+      "pass": true,
+      "detail": {
+        "id": "fold-cover-landscape",
+        "width": 968,
+        "height": 416,
+        "orientation": "landscape",
+        "renderedWidth": 595,
+        "renderedHeight": 264,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "프레임 사양 fold-main-portrait",
+      "pass": true,
+      "detail": {
+        "id": "fold-main-portrait",
+        "width": 892,
+        "height": 1076,
+        "orientation": "portrait",
+        "renderedWidth": 550,
+        "renderedHeight": 660,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "프레임 사양 fold-main-landscape",
+      "pass": true,
+      "detail": {
+        "id": "fold-main-landscape",
+        "width": 1076,
+        "height": 892,
+        "orientation": "landscape",
+        "renderedWidth": 660,
+        "renderedHeight": 550,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "섹션별 프레임 수 2·2·4",
+      "pass": true,
+      "detail": [
+        {
+          "key": "mobile",
+          "exists": true,
+          "heading": "스마트폰",
+          "frameCount": 2
+        },
+        {
+          "key": "tablet",
+          "exists": true,
+          "heading": "태블릿",
+          "frameCount": 2
+        },
+        {
+          "key": "fold",
+          "exists": true,
+          "heading": "갤럭시 폴드",
+          "frameCount": 4
+        }
+      ]
+    },
+    {
+      "name": "빠른 네비게이션 3개",
+      "pass": true,
+      "detail": [
+        {
+          "testId": "quick-nav-mobile",
+          "href": "#mobile"
+        },
+        {
+          "testId": "quick-nav-tablet",
+          "href": "#tablet"
+        },
+        {
+          "testId": "quick-nav-fold",
+          "href": "#fold"
+        }
+      ]
+    },
+    {
+      "name": "슬라이더 범위 40~100",
+      "pass": true,
+      "detail": {
+        "min": "40",
+        "max": "100"
+      }
+    },
+    {
+      "name": "기본 배율 60%",
+      "pass": true,
+      "detail": "60%"
+    },
+    {
+      "name": "가로 오버플로 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "배율 40% 적용",
+      "pass": true,
+      "detail": {
+        "scaleValue": "40%",
+        "firstFrame": {
+          "id": "phone-portrait",
+          "width": 390,
+          "height": 844,
+          "orientation": "portrait",
+          "renderedWidth": 167,
+          "renderedHeight": 349,
+          "transform": "matrix(0.4, 0, 0, 0.4, 0, 0)"
+        }
+      }
+    },
+    {
+      "name": "배율 100% 적용",
+      "pass": true,
+      "detail": {
+        "scaleValue": "100%",
+        "firstFrame": {
+          "id": "phone-portrait",
+          "width": 390,
+          "height": 844,
+          "orientation": "portrait",
+          "renderedWidth": 418,
+          "renderedHeight": 872,
+          "transform": "matrix(1, 0, 0, 1, 0, 0)"
+        }
+      }
+    },
+    {
+      "name": "URL 적용 후 8개 iframe 갱신",
+      "pass": true,
+      "detail": {
+        "inputSet": true,
+        "appliedUrl": "적용 URL /5060do/classic/",
+        "iframes": [
+          {
+            "src": "/5060do/classic/",
+            "loaded": true,
+            "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true,
+            "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true,
+            "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true,
+            "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true,
+            "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true,
+            "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true,
+            "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true,
+            "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+          }
+        ]
+      }
+    },
+    {
+      "name": "전체 새로고침 후 8개 재로드",
+      "pass": true,
+      "detail": {
+        "iframes": [
+          {
+            "src": "/5060do/classic/",
+            "loaded": true
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true
+          },
+          {
+            "src": "/5060do/classic/",
+            "loaded": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "개별 회전 토글 844×390",
+      "pass": true,
+      "detail": {
+        "id": "phone-portrait",
+        "width": 844,
+        "height": 390,
+        "orientation": "landscape",
+        "renderedWidth": 523,
+        "renderedHeight": 251,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    },
+    {
+      "name": "빠른 네비게이션 폴드 점프",
+      "pass": true,
+      "detail": {
+        "hash": "#fold",
+        "scrollY": 1498,
+        "foldTop": 198,
+        "headerBottom": 192
+      }
+    },
+    {
+      "name": "교차 출처 안내 표시",
+      "pass": true,
+      "detail": {
+        "note": "교차 출처 대상입니다. 대상 서버의 X-Frame-Options 또는 CSP frame-ancestors가 iframe 삽입을 허용해야 미리보기가 표시됩니다.",
+        "appliedUrl": "적용 URL https://example.com/"
+      }
+    }
+  ],
+  "console": [],
+  "initial": {
+    "title": "멀티 뷰포트 테스터",
+    "frameCount": 8,
+    "frames": [
+      {
+        "id": "phone-portrait",
+        "width": 390,
+        "height": 844,
+        "orientation": "portrait",
+        "renderedWidth": 251,
+        "renderedHeight": 523,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      },
+      {
+        "id": "phone-landscape",
+        "width": 844,
+        "height": 390,
+        "orientation": "landscape",
+        "renderedWidth": 523,
+        "renderedHeight": 251,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      },
+      {
+        "id": "tablet-portrait",
+        "width": 820,
+        "height": 1180,
+        "orientation": "portrait",
+        "renderedWidth": 514,
+        "renderedHeight": 730,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      },
+      {
+        "id": "tablet-landscape",
+        "width": 1180,
+        "height": 820,
+        "orientation": "landscape",
+        "renderedWidth": 730,
+        "renderedHeight": 514,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      },
+      {
+        "id": "fold-cover-portrait",
+        "width": 416,
+        "height": 968,
+        "orientation": "portrait",
+        "renderedWidth": 264,
+        "renderedHeight": 595,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      },
+      {
+        "id": "fold-cover-landscape",
+        "width": 968,
+        "height": 416,
+        "orientation": "landscape",
+        "renderedWidth": 595,
+        "renderedHeight": 264,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      },
+      {
+        "id": "fold-main-portrait",
+        "width": 892,
+        "height": 1076,
+        "orientation": "portrait",
+        "renderedWidth": 550,
+        "renderedHeight": 660,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      },
+      {
+        "id": "fold-main-landscape",
+        "width": 1076,
+        "height": 892,
+        "orientation": "landscape",
+        "renderedWidth": 660,
+        "renderedHeight": 550,
+        "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+      }
+    ],
+    "iframeCount": 8,
+    "iframes": [
+      {
+        "title": "스마트폰 세로 390×844 미리보기",
+        "src": "/5060do/",
+        "clientWidth": 390,
+        "clientHeight": 844,
+        "loaded": true,
+        "documentTitle": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "title": "스마트폰 가로 844×390 미리보기",
+        "src": "/5060do/",
+        "clientWidth": 844,
+        "clientHeight": 390,
+        "loaded": true,
+        "documentTitle": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "title": "태블릿 세로 820×1180 미리보기",
+        "src": "/5060do/",
+        "clientWidth": 820,
+        "clientHeight": 1180,
+        "loaded": true,
+        "documentTitle": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "title": "태블릿 가로 1180×820 미리보기",
+        "src": "/5060do/",
+        "clientWidth": 1180,
+        "clientHeight": 820,
+        "loaded": true,
+        "documentTitle": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "title": "폴드 커버 세로 416×968 미리보기",
+        "src": "/5060do/",
+        "clientWidth": 416,
+        "clientHeight": 968,
+        "loaded": true,
+        "documentTitle": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "title": "폴드 커버 가로 968×416 미리보기",
+        "src": "/5060do/",
+        "clientWidth": 968,
+        "clientHeight": 416,
+        "loaded": true,
+        "documentTitle": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "title": "폴드 메인 세로 892×1076 미리보기",
+        "src": "/5060do/",
+        "clientWidth": 892,
+        "clientHeight": 1076,
+        "loaded": true,
+        "documentTitle": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "title": "폴드 메인 가로 1076×892 미리보기",
+        "src": "/5060do/",
+        "clientWidth": 1076,
+        "clientHeight": 892,
+        "loaded": true,
+        "documentTitle": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      }
+    ],
+    "scaleValue": "60%",
+    "sliderMin": "40",
+    "sliderMax": "100",
+    "sliderValue": "60",
+    "appliedUrl": "적용 URL /5060do/",
+    "quickNav": [
+      {
+        "testId": "quick-nav-mobile",
+        "href": "#mobile"
+      },
+      {
+        "testId": "quick-nav-tablet",
+        "href": "#tablet"
+      },
+      {
+        "testId": "quick-nav-fold",
+        "href": "#fold"
+      }
+    ],
+    "sections": [
+      {
+        "key": "mobile",
+        "exists": true,
+        "heading": "스마트폰",
+        "frameCount": 2
+      },
+      {
+        "key": "tablet",
+        "exists": true,
+        "heading": "태블릿",
+        "frameCount": 2
+      },
+      {
+        "key": "fold",
+        "exists": true,
+        "heading": "갤럭시 폴드",
+        "frameCount": 4
+      }
+    ],
+    "horizontalOverflow": false,
+    "scrollHeight": 3936
+  },
+  "screenshots": [
+    "docs\\evidence\\viewport-tester-20261110\\viewport-tester-top.png",
+    "docs\\evidence\\viewport-tester-20261110\\viewport-tester-fold.png",
+    "docs\\evidence\\viewport-tester-20261110\\viewport-tester-tablet.png"
+  ],
+  "scaledDown": {
+    "scaleValue": "40%",
+    "firstFrame": {
+      "id": "phone-portrait",
+      "width": 390,
+      "height": 844,
+      "orientation": "portrait",
+      "renderedWidth": 167,
+      "renderedHeight": 349,
+      "transform": "matrix(0.4, 0, 0, 0.4, 0, 0)"
+    }
+  },
+  "scaledUp": {
+    "scaleValue": "100%",
+    "firstFrame": {
+      "id": "phone-portrait",
+      "width": 390,
+      "height": 844,
+      "orientation": "portrait",
+      "renderedWidth": 418,
+      "renderedHeight": 872,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    }
+  },
+  "afterApply": {
+    "inputSet": true,
+    "appliedUrl": "적용 URL /5060do/classic/",
+    "iframes": [
+      {
+        "src": "/5060do/classic/",
+        "loaded": true,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true,
+        "title": "오륙도인생후반전지원센터 | 교육 프로그램 신청"
+      }
+    ]
+  },
+  "afterRefresh": {
+    "iframes": [
+      {
+        "src": "/5060do/classic/",
+        "loaded": true
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true
+      },
+      {
+        "src": "/5060do/classic/",
+        "loaded": true
+      }
+    ]
+  },
+  "rotated": {
+    "id": "phone-portrait",
+    "width": 844,
+    "height": 390,
+    "orientation": "landscape",
+    "renderedWidth": 523,
+    "renderedHeight": 251,
+    "transform": "matrix(0.6, 0, 0, 0.6, 0, 0)"
+  },
+  "anchor": {
+    "hash": "#fold",
+    "scrollY": 1498,
+    "foldTop": 198,
+    "headerBottom": 192
+  },
+  "crossOrigin": {
+    "note": "교차 출처 대상입니다. 대상 서버의 X-Frame-Options 또는 CSP frame-ancestors가 iframe 삽입을 허용해야 미리보기가 표시됩니다.",
+    "appliedUrl": "적용 URL https://example.com/"
+  },
+  "pageErrors": [],
+  "passed": 24,
+  "total": 24
+}

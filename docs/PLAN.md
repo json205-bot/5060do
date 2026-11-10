@@ -315,3 +315,15 @@ status: done
 | 회귀 검증 | typecheck Exit 0, lint Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, `node scripts/verify-chatbot-rag.mjs --mode=rpc --build` **4/4 PASS** |
 | 남은 위험 | NAS에는 crontab이 없어 Synology 작업 스케줄러/n8n 등록이 필요하다. NAS에 GitHub 자격 증명이 없어 미러 푸시는 워크스테이션에서 수행해야 한다. Windows `core.autocrlf`와 NAS 체크아웃 차이로 데이터 JSON이 CRLF로 커밋된 이력이 1건 생겼다(내용 동일) |
 | 근거 | `docs/evidence/task-20261108T1715/`, `docs/evidence/nas-live-20261108T080800/`, `docs/logs/cron-jobs.log` |
+
+## 27. 모바일·태블릿·갤럭시 폴드 멀티 뷰포트 테스터 대시보드 (2026-11-10 12:34)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 데스크탑에서 스마트폰 2종·태블릿 2종·갤럭시 폴드 4종, 총 8개 뷰포트를 세로 스크롤 한 화면에서 동시에 검증하는 개발용 대시보드를 기존 프로젝트에 통합한다 |
+| 화면 | `src/app/tools/viewport-tester/page.tsx` ? 상단 고정 컨트롤 바(URL 입력·적용·전체 새로고침·40~100% 배율 슬라이더·섹션 앵커), 3개 섹션 8개 베젤 프레임(노치·홈 인디케이터 포함, 기기별 회전 토글·해상도 뱃지·새 창 링크), iframe 제약 안내 패널 |
+| URL 처리 | 상대 경로(`/5060do/`)는 동일 출처로 로드, 도메인만 입력하면 `https://` 자동 보정, `localhost`는 `http://` 자동 보정. 교차 출처 적용 시 X-Frame-Options·CSP `frame-ancestors` 안내를 표시한다 |
+| 검증 도구 | `scripts/verify-viewport-tester.mjs` 신규 ? `out/`을 `/5060do` 접두사로 서빙하는 정적 서버와 헤드리스 Chrome CDP로 8개 프레임·iframe 로드·배율·URL 적용·새로고침·개별 회전·앵커 점프·교차 출처 안내를 자동 확인 |
+| 검증 | typecheck Exit 0, lint Exit 0, `npm run build` Exit 0(라우트 `/tools/viewport-tester` 정적 생성), `node scripts/verify-viewport-tester.mjs` **24/24 PASS** |
+| 남은 위험 | 외부 사이트는 대상 서버가 iframe 삽입을 허용해야만 미리보기가 보인다. 8개 iframe이 같은 페이지를 각각 로드하므로 실제 데이터 조회가 있는 페이지에서는 네트워크·메모리 사용량이 늘어난다. 개발용 도구라 공개 내비게이션에는 연결하지 않았다 |
+| 근거 | `docs/evidence/viewport-tester-20261110/` (typecheck.log, lint.log, build.log, verify.log, verification.json, 화면 캡처 3장) |

@@ -1,0 +1,35 @@
+﻿
+> 5060do@0.1.0 build
+> node scripts/build-jobs-fallback.mjs && next build && node scripts/postbuild-static-rsc.mjs
+
+jobs_recent: rows=300/2034 bytes=140976 range=2026-08-27~2026-11-03
+jobs_recent boards: {"취업지원":20,"일자리":278,"사회공헌":2}
+▲ Next.js 16.4.5 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 371ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.8s
+  Running TypeScript ...
+  Finished TypeScript in 66s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/6) ...
+  Generating static pages using 7 workers (1/6) 
+  Generating static pages using 7 workers (2/6) 
+  Generating static pages using 7 workers (4/6) 
+✓ Generating static pages using 7 workers (6/6) in 2.7s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /classic
+├ ○ /icon.svg
+└ ○ /tools/viewport-tester
+
+
+○  (Static)  prerendered as static content
+
+[postbuild] classic\__next.classic.__PAGE__.txt <- classic\__next.classic\__PAGE__.txt
+[postbuild] _not-found\__next._not-found.__PAGE__.txt <- _not-found\__next._not-found\__PAGE__.txt
+EXIT=0
