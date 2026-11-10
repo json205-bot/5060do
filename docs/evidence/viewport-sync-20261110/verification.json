@@ -1,0 +1,247 @@
+{
+  "childUrl": "http://127.0.0.1:3112/5060do/",
+  "harnessUrl": "http://127.0.0.1:3113/harness.html",
+  "checkedAt": "2026-11-10T07:11:28.389Z",
+  "checks": [
+    {
+      "name": "cross-origin iframe 안에서 실행",
+      "pass": true,
+      "detail": {
+        "href": "http://127.0.0.1:3112/5060do/",
+        "embedded": true,
+        "readyState": "complete",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "scrollHeight": 19224,
+        "clientHeight": 844,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "스크롤 가능한 문서 높이",
+      "pass": true,
+      "detail": {
+        "scrollHeight": 19224,
+        "clientHeight": 844
+      }
+    },
+    {
+      "name": "frame:ready 수신 (source/href)",
+      "pass": true,
+      "detail": {
+        "type": "frame:ready",
+        "href": "http://127.0.0.1:3112/5060do/",
+        "url": null,
+        "scroll": null,
+        "at": 1794294689004
+      }
+    },
+    {
+      "name": "frame:scroll 송신 (진행률 0.6)",
+      "pass": true,
+      "detail": {
+        "message": {
+          "type": "frame:scroll",
+          "href": null,
+          "url": null,
+          "scroll": 0.6,
+          "at": 1794294691393
+        },
+        "child": {
+          "max": 18380,
+          "top": 11028,
+          "ratio": 0.6
+        }
+      }
+    },
+    {
+      "name": "parent:scroll 수신 후 0.25 반영",
+      "pass": true,
+      "detail": {
+        "ratio": 0.25,
+        "scrollTop": 4595,
+        "max": 18380
+      }
+    },
+    {
+      "name": "수신 스크롤 재송신 없음 (루프 방지)",
+      "pass": true,
+      "detail": {
+        "before": 1,
+        "after": 1
+      }
+    },
+    {
+      "name": "pushState 이동을 frame:navigate로 송신",
+      "pass": true,
+      "detail": {
+        "type": "frame:navigate",
+        "href": null,
+        "url": "http://127.0.0.1:3112/5060do/classic/",
+        "scroll": null,
+        "at": 1794294693221
+      }
+    },
+    {
+      "name": "라우트 변경 시 frame:ready도 송신",
+      "pass": true,
+      "detail": {
+        "type": "frame:ready",
+        "href": "http://127.0.0.1:3112/5060do/classic/",
+        "url": null,
+        "scroll": null,
+        "at": 1794294693221
+      }
+    },
+    {
+      "name": "popstate 이동을 frame:navigate로 송신",
+      "pass": true,
+      "detail": {
+        "type": "frame:navigate",
+        "href": null,
+        "url": "http://127.0.0.1:3112/5060do/",
+        "scroll": null,
+        "at": 1794294693736
+      }
+    },
+    {
+      "name": "문서 이동 후 frame:ready 재수신",
+      "pass": true,
+      "detail": {
+        "type": "frame:ready",
+        "href": "http://127.0.0.1:3112/5060do/classic/",
+        "url": null,
+        "scroll": null,
+        "at": 1794294694524
+      }
+    },
+    {
+      "name": "iframe 밖에서는 리스너 비활성화",
+      "pass": true,
+      "detail": {
+        "state": {
+          "href": "http://127.0.0.1:3112/5060do/",
+          "embedded": false
+        },
+        "messageCount": 0
+      }
+    }
+  ],
+  "console": [],
+  "childState": {
+    "href": "http://127.0.0.1:3112/5060do/",
+    "embedded": true,
+    "readyState": "complete",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "scrollHeight": 19224,
+    "clientHeight": 844,
+    "scrollTop": 0
+  },
+  "initialMessages": [
+    {
+      "type": "frame:ready",
+      "href": "http://127.0.0.1:3112/5060do/",
+      "url": null,
+      "scroll": null,
+      "at": 1794294688899
+    },
+    {
+      "type": "frame:ready",
+      "href": "http://127.0.0.1:3112/5060do/",
+      "url": null,
+      "scroll": null,
+      "at": 1794294689004
+    }
+  ],
+  "scrollMessages": [
+    {
+      "type": "frame:scroll",
+      "href": null,
+      "url": null,
+      "scroll": 0.6,
+      "at": 1794294691393
+    }
+  ],
+  "parentScroll": {
+    "posted": true,
+    "child": {
+      "ratio": 0.25,
+      "scrollTop": 4595,
+      "max": 18380
+    },
+    "outboundBefore": 1,
+    "outboundAfter": 1
+  },
+  "pushState": {
+    "href": "http://127.0.0.1:3112/5060do/classic/",
+    "messages": [
+      {
+        "type": "frame:ready",
+        "href": "http://127.0.0.1:3112/5060do/classic/",
+        "url": null,
+        "scroll": null,
+        "at": 1794294693221
+      },
+      {
+        "type": "frame:navigate",
+        "href": null,
+        "url": "http://127.0.0.1:3112/5060do/classic/",
+        "scroll": null,
+        "at": 1794294693221
+      }
+    ]
+  },
+  "popState": {
+    "backHref": true,
+    "messages": [
+      {
+        "type": "frame:ready",
+        "href": "http://127.0.0.1:3112/5060do/",
+        "url": null,
+        "scroll": null,
+        "at": 1794294693736
+      },
+      {
+        "type": "frame:navigate",
+        "href": null,
+        "url": "http://127.0.0.1:3112/5060do/",
+        "scroll": null,
+        "at": 1794294693736
+      }
+    ]
+  },
+  "reloadNavigation": [
+    {
+      "type": "frame:ready",
+      "href": "http://127.0.0.1:3112/5060do/classic/",
+      "url": null,
+      "scroll": null,
+      "at": 1794294694411
+    },
+    {
+      "type": "frame:ready",
+      "href": "http://127.0.0.1:3112/5060do/classic/",
+      "url": null,
+      "scroll": null,
+      "at": 1794294694524
+    }
+  ],
+  "topLevel": {
+    "seen": [],
+    "state": {
+      "href": "http://127.0.0.1:3112/5060do/",
+      "embedded": false
+    }
+  },
+  "screenshots": [
+    "docs\\evidence\\viewport-sync-20261110\\viewport-sync-harness.png"
+  ],
+  "pageErrors": [],
+  "passed": 11,
+  "total": 11
+}

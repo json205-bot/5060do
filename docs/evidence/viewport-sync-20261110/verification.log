@@ -1,0 +1,43 @@
+5060DO-20261110-1430 5060do viewport sync listener verification
+checked_at: 2026-11-10 16:11 KST
+work_dir: Z:\dev\5060do
+
+[1] typecheck
+command: node node_modules/typescript/bin/tsc --noEmit
+exit: 0
+
+[2] lint
+command: node node_modules/eslint/bin/eslint.js
+exit: 0
+
+[3] production build (basePath /5060do)
+command: node scripts/build-jobs-fallback.mjs
+exit: 0
+command: node node_modules/next/dist/bin/next build
+exit: 0
+command: node scripts/postbuild-static-rsc.mjs
+exit: 0
+
+[4] vercel E2E
+command: node scripts/test-vercel.mjs
+exit: 0
+result: PASS (80/80), basePath "", buildExit 0, verifyExit 0
+
+[5] viewport sync E2E
+command: node scripts/verify-viewport-sync.mjs
+exit: 0
+result: PASS (11/11)
+checks:
+- cross-origin iframe 안에서 실행: PASS
+- 스크롤 가능한 문서 높이: PASS
+- frame:ready 수신 (source/href): PASS
+- frame:scroll 송신 (진행률 0.6): PASS
+- parent:scroll 수신 후 0.25 반영: PASS
+- 수신 스크롤 재송신 없음 (루프 방지): PASS (before 1 / after 1)
+- pushState 이동을 frame:navigate로 송신: PASS
+- 라우트 변경 시 frame:ready도 송신: PASS
+- popstate 이동을 frame:navigate로 송신: PASS
+- 문서 이동 후 frame:ready 재수신: PASS
+- iframe 밖에서는 리스너 비활성화: PASS (messageCount 0)
+artifact: docs/evidence/viewport-sync-20261110/verification.json
+screenshot: docs/evidence/viewport-sync-20261110/viewport-sync-harness.png

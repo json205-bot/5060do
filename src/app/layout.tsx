@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import ViewportSyncHelper from "@/components/ViewportSyncHelper";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="min-h-screen bg-canvas text-ink antialiased">
+        <ViewportSyncHelper />
         {children}
       </body>
     </html>
