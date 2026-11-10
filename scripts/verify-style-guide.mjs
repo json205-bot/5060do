@@ -568,7 +568,7 @@ const CLASSIC_GNB_LABELS = `(() => {
   return items.map((el) => (el.textContent || '').replace(/\\s+/g, ' ').trim());
 })()`;
 
-const CLASSIC_MENU_LABELS = ["센터소개", "생애설계", "교육/강좌", "일자리/사회공헌", "커뮤니티", "시설/대관"];
+const CLASSIC_MENU_LABELS = ["센터소개", "생애설계", "교육/강좌", "일자리/사회공헌", "커뮤니티", "공유사무실", "시설/대관", "알림마당"];
 
 const click = (testId) => `(() => {
   const el = document.querySelector('[data-testid="${testId}"]');
@@ -882,8 +882,8 @@ async function main() {
         const classicDrawer = await evaluate(cdp, sessionId, CLASSIC_DRAWER_GROUPS);
         results.classicDrawer = classicDrawer;
         check(
-          "390px 클래식 드로어 대메뉴 6개",
-          classicDrawer.visible === true && classicDrawer.count === 6,
+          "390px 클래식 드로어 대메뉴 8개",
+          classicDrawer.visible === true && classicDrawer.count === 8,
           { visible: classicDrawer.visible, count: classicDrawer.count },
         );
         check(
@@ -911,7 +911,7 @@ async function main() {
           sessionId,
           `document.querySelectorAll('[data-testid^="classic-gnb-item-"]').length`,
         );
-        check("클래식 GNB 6개 메뉴", gnb === 6, gnb);
+        check("클래식 GNB 8개 메뉴", gnb === 8, gnb);
 
         const gnbLabels = await evaluate(cdp, sessionId, CLASSIC_GNB_LABELS);
         check(
@@ -950,7 +950,7 @@ async function main() {
           megaOpened === true && mega.visible === true && mega.linkCount > 0,
           { opened: megaOpened, ...mega },
         );
-        check("클래식 GNB 하위 메뉴 대분류 6개", mega.groupCount === 6, mega.groupCount);
+        check("클래식 GNB 하위 메뉴 대분류 8개", mega.groupCount === 8, mega.groupCount);
         check(
           "클래식 GNB 하위 링크 48px 이상",
           mega.minLinkHeight >= 48,

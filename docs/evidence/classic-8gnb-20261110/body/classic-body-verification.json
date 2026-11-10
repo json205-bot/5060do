@@ -1,0 +1,294 @@
+{
+  "checks": [
+    {
+      "name": "390px 퀵서비스 6개",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "390px 퀵서비스 아이콘 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "390px 퀵서비스 터치 56px 이상",
+      "pass": true,
+      "detail": 173
+    },
+    {
+      "name": "390px 강좌 카드 4개 이상",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "390px 비주얼 배너 이미지 로드",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "390px 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "390px 강좌 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "390px 강좌 모달 닫기 48px",
+      "pass": true,
+      "detail": {
+        "w": 54,
+        "h": 54
+      }
+    },
+    {
+      "name": "390px 강좌 원본 CTA 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "390px 강좌 모달 글자 14px 이상",
+      "pass": true,
+      "detail": 16.02
+    },
+    {
+      "name": "390px 강좌 모달 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "390px 채용 속보 카드 로드",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "390px 채용 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "390px 채용 모달 닫기 48px",
+      "pass": true,
+      "detail": {
+        "w": 54,
+        "h": 54
+      }
+    },
+    {
+      "name": "390px 채용 원문 CTA 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "390px 채용 모달 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "390px 포토 소식 탭 전환",
+      "pass": true,
+      "detail": {
+        "selected": true,
+        "cards": 4
+      }
+    },
+    {
+      "name": "768px 퀵서비스 6개",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "768px 퀵서비스 아이콘 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "768px 퀵서비스 터치 56px 이상",
+      "pass": true,
+      "detail": 173
+    },
+    {
+      "name": "768px 강좌 카드 4개 이상",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "768px 비주얼 배너 이미지 로드",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "768px 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "768px 강좌 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "768px 강좌 모달 닫기 48px",
+      "pass": true,
+      "detail": {
+        "w": 54,
+        "h": 54
+      }
+    },
+    {
+      "name": "768px 강좌 원본 CTA 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "768px 강좌 모달 글자 14px 이상",
+      "pass": true,
+      "detail": 16.02
+    },
+    {
+      "name": "768px 강좌 모달 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "768px 채용 속보 카드 로드",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "768px 채용 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "768px 채용 모달 닫기 48px",
+      "pass": true,
+      "detail": {
+        "w": 54,
+        "h": 54
+      }
+    },
+    {
+      "name": "768px 채용 원문 CTA 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "768px 채용 모달 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "768px 포토 소식 탭 전환",
+      "pass": true,
+      "detail": {
+        "selected": true,
+        "cards": 4
+      }
+    },
+    {
+      "name": "1280px 퀵서비스 6개",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "1280px 퀵서비스 아이콘 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "1280px 퀵서비스 터치 56px 이상",
+      "pass": true,
+      "detail": 173
+    },
+    {
+      "name": "1280px 강좌 카드 4개 이상",
+      "pass": true,
+      "detail": 6
+    },
+    {
+      "name": "1280px 비주얼 배너 이미지 로드",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "1280px 강좌 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 강좌 모달 닫기 48px",
+      "pass": true,
+      "detail": {
+        "w": 54,
+        "h": 54
+      }
+    },
+    {
+      "name": "1280px 강좌 원본 CTA 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "1280px 강좌 모달 글자 14px 이상",
+      "pass": true,
+      "detail": 16.02
+    },
+    {
+      "name": "1280px 강좌 모달 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "1280px 채용 속보 카드 로드",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 채용 모달 표시",
+      "pass": true,
+      "detail": true
+    },
+    {
+      "name": "1280px 채용 모달 닫기 48px",
+      "pass": true,
+      "detail": {
+        "w": 54,
+        "h": 54
+      }
+    },
+    {
+      "name": "1280px 채용 원문 CTA 56px",
+      "pass": true,
+      "detail": 63
+    },
+    {
+      "name": "1280px 채용 모달 가로 스크롤 없음",
+      "pass": true,
+      "detail": false
+    },
+    {
+      "name": "1280px 포토 소식 탭 전환",
+      "pass": true,
+      "detail": {
+        "selected": true,
+        "cards": 4
+      }
+    }
+  ],
+  "baseUrl": "http://100.83.116.15:8780/5060do/",
+  "classicUrl": "http://100.83.116.15:8780/5060do/classic/",
+  "summary": {
+    "total": 51,
+    "passed": 51,
+    "failed": 0,
+    "verdict": "PASS"
+  }
+}

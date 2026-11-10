@@ -423,7 +423,7 @@ async function main() {
       }))()`,
     );
     check("클래식 화면 헤더 렌더링", classicState.header, classicState);
-    check("클래식 GNB 6개 메뉴", classicState.gnbItems === 6, {
+    check("클래식 GNB 8개 메뉴", classicState.gnbItems === 8, {
       gnbItems: classicState.gnbItems,
     });
     check("가로 스크롤 없음(클래식 1280px)", classicState.overflow === false, {

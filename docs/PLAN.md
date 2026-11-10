@@ -327,3 +327,15 @@ status: done
 | 검증 | typecheck Exit 0, lint Exit 0, `npm run build` Exit 0(라우트 `/tools/viewport-tester` 정적 생성), `node scripts/verify-viewport-tester.mjs` **24/24 PASS** |
 | 남은 위험 | 외부 사이트는 대상 서버가 iframe 삽입을 허용해야만 미리보기가 보인다. 8개 iframe이 같은 페이지를 각각 로드하므로 실제 데이터 조회가 있는 페이지에서는 네트워크·메모리 사용량이 늘어난다. 개발용 도구라 공개 내비게이션에는 연결하지 않았다 |
 | 근거 | `docs/evidence/viewport-tester-20261110/` (typecheck.log, lint.log, build.log, verify.log, verification.json, 화면 캡처 3장) |
+
+## 28. 원본 8대 GNB 복귀·포털 메인 본문 복원 (2026-11-10 14:15)
+
+| 항목 | 내용 |
+|---|---|
+| 목표 | 1단계에서 복원한 헤더·푸터 위에 원본 8대 GNB(센터소개·생애설계·교육/강좌·일자리/사회공헌·커뮤니티·공유사무실·시설/대관·알림마당)와 포털 메인 본문(비주얼 배너·퀵서비스·강좌·채용·알림마당)을 복원하고 시니어 스타일가이드를 유지한다 |
+| GNB | `src/data/classic.ts` `classicNav` 8개 대분류·30개 세부 링크. 데스크톱 GNB·메가 메뉴·390px 드로어 아코디언이 같은 데이터를 사용. 패밀리 사이트 3종은 그대로 유지 |
+| 메인 본문 | `src/app/classic/page.tsx` ? 원본 배너 3종(데스크톱 1152×437·모바일 437×437) 슬라이더 카드, 56px 아이콘 퀵서비스 6종, Supabase 연동 활성 강좌 카드 6개(상태 배지·일정·상세 모달), 신중년 채용 속보 4건(채용 상세 모달), 공지사항·포토 소식 탭 |
+| 검증기 | `scripts/verify-style-guide.mjs` `CLASSIC_MENU_LABELS` 8개·드로어/메가/ GNB 기대값 6→8, `verify-nas-live.mjs`·`verify-vercel-live.mjs` GNB 기대값 8 동기화 |
+| 검증 | typecheck Exit 0, lint Exit 0, build Exit 0, `node scripts/test-vercel.mjs` **80/80 PASS**, `node scripts/verify-style-guide.mjs` **183/183 PASS**(NAS 실서버), `verify-nas-live.mjs` **25/25 PASS**, 본문 상호작용 51/51 PASS |
+| 남은 위험 | 배너 이미지는 원본 사이트 이미지를 내려받아 `public/assets/`에 포함했다(약 1.6MB). 배너 안의 원본 이미지 문구와 오버레이 캡션이 겹쳐 보일 수 있다. 채용·강좌 카드는 Supabase 응답이 없으면 로컬 폴백 데이터로 표시된다 |
+| 근거 | `docs/evidence/classic-8gnb-20261110/` (styleguide/, body/), `docs/evidence/nas-live-20261110T060415/`, `docs/logs/2026 11 10 1415 로그 5060do 원본 8대 GNB 복귀 및 메인 본문 복원.md` |

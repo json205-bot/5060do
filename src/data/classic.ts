@@ -12,8 +12,8 @@ export type ClassicNavGroup = {
 
 const ORIGIN = "https://www.5060do.or.kr";
 
-// Six top-level menus restored from the official portal IA. Sub-links still
-// point at the original pages so nothing has to be rebuilt in this phase.
+// Eight top-level menus restored from the official portal IA (decision 2026-11-10).
+// Sub-links still point at the original pages so nothing has to be rebuilt.
 export const classicNav: ClassicNavGroup[] = [
   {
     label: "센터소개",
@@ -63,13 +63,19 @@ export const classicNav: ClassicNavGroup[] = [
   {
     label: "커뮤니티",
     href: `${ORIGIN}/board/lifeCommunity`,
-    description: "커뮤니티 참여와 센터 소식",
+    description: "커뮤니티 참여와 소통",
     children: [
       { label: "커뮤니티소개", href: `${ORIGIN}/board/lifeCommunity` },
       { label: "커뮤니티참여방법", href: `${ORIGIN}/subLifeTwist/lifeSocalEntry` },
-      { label: "공지사항", href: `${ORIGIN}/board/lifeNotice` },
-      { label: "센터소식", href: `${ORIGIN}/board/lifeNews` },
-      { label: "FAQ", href: `${ORIGIN}/board/lifeInquiry` },
+    ],
+  },
+  {
+    label: "공유사무실",
+    href: `${ORIGIN}/board/lifeOffice`,
+    description: "공유사무실 안내와 참여 방법",
+    children: [
+      { label: "공유사무실안내", href: `${ORIGIN}/board/lifeOffice` },
+      { label: "공유사무실참여방법", href: `${ORIGIN}/subLifeTwist/lifeOfficeEntry` },
     ],
   },
   {
@@ -79,8 +85,20 @@ export const classicNav: ClassicNavGroup[] = [
     children: [
       { label: "시설안내", href: `${ORIGIN}/subLifeTwist/facility` },
       { label: "대관신청", href: `${ORIGIN}/convention/index` },
-      { label: "공유사무실안내", href: `${ORIGIN}/board/lifeOffice` },
       { label: "오시는 길", href: `${ORIGIN}/subLifeTwist/location` },
+    ],
+  },
+  {
+    label: "알림마당",
+    href: `${ORIGIN}/board/lifeNotice`,
+    description: "공지사항과 센터 소식",
+    children: [
+      { label: "공지사항", href: `${ORIGIN}/board/lifeNotice` },
+      { label: "센터소식", href: `${ORIGIN}/board/lifeNews` },
+      { label: "자료실", href: `${ORIGIN}/board/lifeReference` },
+      { label: "포토갤러리", href: `${ORIGIN}/board/lifePhoto` },
+      { label: "FAQ", href: `${ORIGIN}/board/lifeInquiry` },
+      { label: "1:1문의", href: `${ORIGIN}/board/lifeOneToOne` },
     ],
   },
 ];
@@ -98,6 +116,7 @@ export type ClassicHeroSlide = {
   secondary: { label: string; href: string };
   statLabel: string;
   statValue: string;
+  image: { desktop: string; mobile: string; alt: string };
 };
 
 export const classicHeroSlides: ClassicHeroSlide[] = [
@@ -110,6 +129,11 @@ export const classicHeroSlides: ClassicHeroSlide[] = [
     secondary: { label: "수강신청 방법", href: `${ORIGIN}/education/lifeEduWay` },
     statLabel: "2026 겨울학기",
     statValue: "모집 중",
+    image: {
+      desktop: "/assets/classic-banner-01.png",
+      mobile: "/assets/classic-banner-01-m.png",
+      alt: "2026 겨울학기 수강생 모집 안내 배너",
+    },
   },
   {
     badge: "센터 소개",
@@ -120,6 +144,11 @@ export const classicHeroSlides: ClassicHeroSlide[] = [
     secondary: { label: "오시는 길", href: `${ORIGIN}/subLifeTwist/location` },
     statLabel: "지원 영역",
     statValue: "4개 사업",
+    image: {
+      desktop: "/assets/classic-banner-02.jpg",
+      mobile: "/assets/classic-banner-02-m.jpg",
+      alt: "오륙도인생후반전지원센터 소개 배너",
+    },
   },
   {
     badge: "일자리정보",
@@ -130,6 +159,11 @@ export const classicHeroSlides: ClassicHeroSlide[] = [
     secondary: { label: "공공/민간일자리", href: `${ORIGIN}/board/lifeJobHunt` },
     statLabel: "일자리 채널",
     statValue: "4개 게시판",
+    image: {
+      desktop: "/assets/classic-banner-03.jpg",
+      mobile: "/assets/classic-banner-03-m.jpg",
+      alt: "신중년 일자리 정보 안내 배너",
+    },
   },
 ];
 
@@ -208,37 +242,87 @@ export const classicJobs: ClassicNavLink[] = [
   { label: "사회공헌 활동", href: `${ORIGIN}/board/lifeWelfare` },
 ];
 
-export type ClassicShortcut = {
+export type ClassicQuickService = {
+  key: string;
   label: string;
   description: string;
   href: string;
+  icon: "consult" | "course" | "job" | "office" | "notice" | "location";
 };
 
-export const classicShortcuts: ClassicShortcut[] = [
+// Senior quick-service shortcuts mirror the original portal sidebar: each one
+// is a 56px icon tile with a short label, ordered by how often it is used.
+export const classicQuickServices: ClassicQuickService[] = [
   {
+    key: "consult",
     label: "상담신청",
     description: "생애설계진단/상담",
     href: `${ORIGIN}/subLifeTwist/lifePlanAssay`,
+    icon: "consult",
   },
   {
-    label: "채용정보",
+    key: "course",
+    label: "이달의 강좌",
+    description: "추천 교육과정",
+    href: `${ORIGIN}/education/lifeEduList_reco`,
+    icon: "course",
+  },
+  {
+    key: "job",
+    label: "신중년 일자리",
     description: "취업 지원 게시판",
     href: `${ORIGIN}/board/lifeFindJob`,
+    icon: "job",
   },
   {
-    label: "공유사무실",
+    key: "office",
+    label: "공유오피스 대관",
     description: "공유사무실 안내",
     href: `${ORIGIN}/board/lifeOffice`,
+    icon: "office",
   },
   {
-    label: "블로그",
-    description: "센터 소식 구독",
-    href: "https://blog.naver.com/5060do",
+    key: "notice",
+    label: "공지사항",
+    description: "센터 알림마당",
+    href: `${ORIGIN}/board/lifeNotice`,
+    icon: "notice",
   },
   {
-    label: "인스타그램",
-    description: "현장 사진 보기",
-    href: "https://www.instagram.com/5060do_",
+    key: "location",
+    label: "오시는 길",
+    description: "찾아오시는 길",
+    href: `${ORIGIN}/subLifeTwist/location`,
+    icon: "location",
+  },
+];
+
+export type ClassicPhoto = {
+  title: string;
+  date: string;
+  album: string;
+};
+
+export const classicPhotos: ClassicPhoto[] = [
+  {
+    title: "2026 겨울학기 개강 준비 현장",
+    date: "2026-11-06",
+    album: "교육 현장",
+  },
+  {
+    title: "신중년 일자리 상담 데이",
+    date: "2026-10-30",
+    album: "일자리",
+  },
+  {
+    title: "모두의 인문학 가죽공예 수업",
+    date: "2026-10-18",
+    album: "평생학습",
+  },
+  {
+    title: "공유사무실 입주기업 간담회",
+    date: "2026-10-09",
+    album: "공유사무실",
   },
 ];
 

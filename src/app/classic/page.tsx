@@ -4,21 +4,39 @@ import Image from "next/image";
 import {
   ArrowRight,
   ArrowUpRight,
+  Briefcase,
+  Building2,
+  CalendarDays,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   Clock,
+  GraduationCap,
   MapPin,
+  Megaphone,
   Menu,
+  MessagesSquare,
   Phone,
   Search,
+  Users,
+  Wallet,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState, type ChangeEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import VersionSwitcher from "@/components/version-switcher";
+import { useJobs } from "@/hooks/useJobs";
 import { usePrograms } from "@/hooks/usePrograms";
 import { withBasePath } from "@/lib/basePath";
+import type { Job } from "@/lib/jobs";
+import type { Program, ProgramStatus } from "@/lib/programs";
 import {
   CLASSIC_CENTER,
   classicFacilities,
@@ -26,12 +44,37 @@ import {
   classicJobs,
   classicNav,
   classicNotices,
-  classicProgramTabs,
-  classicShortcuts,
-  classicSubmenuCount,
+  classicPhotos,
+  classicQuickServices,
 } from "@/data/classic";
 
 const heroAutoplayMs = 5200;
+
+const quickServiceIcons = {
+  consult: MessagesSquare,
+  course: GraduationCap,
+  job: Briefcase,
+  office: Building2,
+  notice: Megaphone,
+  location: MapPin,
+} as const;
+
+const programBadgeStyles: Record<ProgramStatus, string> = {
+  접수중: "bg-emerald-100 text-emerald-900",
+  접수예정: "bg-sky-100 text-sky-900",
+  대기접수: "bg-amber-100 text-amber-900",
+  마감: "bg-slate-200 text-slate-800",
+};
+
+const programActionLabels: Record<ProgramStatus, string> = {
+  접수중: "상세보기",
+  접수예정: "접수예정",
+  대기접수: "대기신청",
+  마감: "모집 마감",
+};
+
+const formatFee = (fee: number) =>
+  fee > 0 ? `${fee.toLocaleString("ko-KR")}원` : "무료";
 
 export default function ClassicPage() {
   const [openGroup, setOpenGroup] = useState<number | null>(null);
@@ -40,24 +83,42 @@ export default function ClassicPage() {
   const [mobileGroup, setMobileGroup] = useState<number | null>(0);
   const [slideIndex, setSlideIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [activeTab, setActiveTab] = useState(classicProgramTabs[0].key);
+  const [noticeTab, setNoticeTab] = useState<"notice" | "photo">("notice");
+  const [selectedProgramId, setSelectedProgramId] = useState<number | null>(null);
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
   const drawerTriggerRef = useRef<HTMLButtonElement>(null);
   const savedOverflowRef = useRef("");
 
   const slide = classicHeroSlides[slideIndex];
-  const activePrograms =
-    classicProgramTabs.find((tab) => tab.key === activeTab) ??
-    classicProgramTabs[0];
   // Same live snapshot as the modern screen so both chat widgets answer with
   // identical course data.
   const {
+    programs,
     overview: chatbotOverview,
     activePrograms: chatbotActivePrograms,
     counts: chatbotCounts,
     loadActivePrograms,
   } = usePrograms("전체");
+  const { jobs } = useJobs({ boardType: "전체", region: "전체", query: "" });
+
+  const featuredPrograms = useMemo(() => {
+    const openPrograms = programs.filter((program) => program.status !== "마감");
+    return (openPrograms.length >= 4 ? openPrograms : programs).slice(0, 6);
+  }, [programs]);
+
+  const selectedProgram = useMemo<Program | null>(
+    () => programs.find((program) => program.id === selectedProgramId) ?? null,
+    [programs, selectedProgramId],
+  );
+
+  const selectedJob = useMemo<Job | null>(
+    () => jobs.find((job) => job.id === selectedJobId) ?? null,
+    [jobs, selectedJobId],
+  );
+
+  const featuredJobs = jobs.slice(0, 4);
 
   const goToSlide = useCallback((next: number) => {
     const length = classicHeroSlides.length;
@@ -105,6 +166,17 @@ export default function ClassicPage() {
       trigger?.focus();
     };
   }, [mobileOpen]);
+
+  useEffect(() => {
+    if (selectedProgramId === null && selectedJobId === null) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setSelectedProgramId(null);
+      setSelectedJobId(null);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [selectedProgramId, selectedJobId]);
 
   return (
     <div className="flex min-h-screen flex-col bg-classic-100 text-slate-900">
@@ -333,7 +405,7 @@ export default function ClassicPage() {
         <section
           data-testid="classic-hero"
           aria-label="비주얼 롤링 영역"
-          className="relative overflow-hidden bg-classic-800 text-white"
+          className="relative overflow-hidden bg-classic-900 text-white"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onFocus={() => setPaused(true)}
@@ -341,13 +413,13 @@ export default function ClassicPage() {
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-32 -top-24 size-[420px] rounded-full bg-sky-500/15 blur-3xl"
+            className="pointer-events-none absolute -right-32 -top-24 z-0 size-[420px] rounded-full bg-sky-500/15 blur-3xl"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -bottom-40 -left-24 size-[380px] rounded-full bg-amber-400/10 blur-3xl"
+            className="pointer-events-none absolute -bottom-40 -left-24 z-0 size-[380px] rounded-full bg-amber-400/10 blur-3xl"
           />
-          <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 md:px-6 md:py-16 lg:grid-cols-[1.55fr_1fr] lg:items-center">
+          <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 md:px-6 md:py-16 lg:grid-cols-[1.55fr_1fr] lg:items-center">
             <div>
               <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-bold text-sky-100">
                 {slide.badge}
@@ -364,14 +436,14 @@ export default function ClassicPage() {
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <a
                   href={slide.primary.href}
-                  className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-accent-500 px-6 text-lg font-bold text-classic-800 transition-colors hover:bg-accent-400"
+                  className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-accent-500 px-6 text-lg font-bold text-classic-900 transition-colors hover:bg-accent-400"
                 >
                   {slide.primary.label}
                   <ArrowRight aria-hidden className="size-5" />
                 </a>
                 <a
                   href={slide.secondary.href}
-                  className="flex min-h-14 items-center justify-center gap-2 rounded-lg border-2 border-white/40 px-6 text-lg font-semibold text-white transition-colors hover:bg-white/10"
+                  className="flex min-h-14 items-center justify-center gap-2 rounded-lg border-2 border-white/50 px-6 text-lg font-semibold text-white transition-colors hover:bg-white/10"
                 >
                   {slide.secondary.label}
                   <ArrowUpRight aria-hidden className="size-5" />
@@ -379,37 +451,48 @@ export default function ClassicPage() {
               </div>
             </div>
 
-            <div className="hidden rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur-sm lg:block">
-              <p className="text-sm font-semibold text-sky-200">
-                {slide.statLabel}
-              </p>
-              <p className="mt-1 text-4xl font-black text-white">
-                {slide.statValue}
-              </p>
-              <dl className="mt-6 grid gap-3 text-sm">
-                <div className="flex items-center justify-between gap-3 border-t border-white/15 pt-3">
-                  <dt className="text-sky-200">상담전화</dt>
-                  <dd className="font-bold text-white">
-                    {CLASSIC_CENTER.phone}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3 border-t border-white/15 pt-3">
-                  <dt className="text-sky-200">운영시간</dt>
-                  <dd className="font-bold text-white">
-                    {CLASSIC_CENTER.hours}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3 border-t border-white/15 pt-3">
-                  <dt className="text-sky-200">메뉴 구성</dt>
-                  <dd className="font-bold text-white">
-                    {classicNav.length}대 메뉴 · {classicSubmenuCount}개 세부 메뉴
-                  </dd>
-                </div>
-              </dl>
-            </div>
+            <a
+              href={slide.primary.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${slide.badge} 자세히 보기`}
+              className="group relative block overflow-hidden rounded-2xl border border-white/20 bg-classic-800 shadow-lg"
+            >
+              <span className="relative block aspect-square w-full lg:aspect-[1152/437]">
+                <Image
+                  src={withBasePath(slide.image.desktop)}
+                  alt={slide.image.alt}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 430px, 100vw"
+                  className="hidden object-cover lg:block"
+                />
+                <Image
+                  src={withBasePath(slide.image.mobile)}
+                  alt={slide.image.alt}
+                  fill
+                  priority
+                  sizes="100vw"
+                  className="object-cover lg:hidden"
+                />
+              </span>
+              <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-classic-900/95 to-transparent p-4">
+                <span>
+                  <span className="block text-sm font-semibold text-sky-200">
+                    {slide.statLabel}
+                  </span>
+                  <span className="block text-2xl font-black text-white">
+                    {slide.statValue}
+                  </span>
+                </span>
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/15 text-white">
+                  <ArrowUpRight aria-hidden className="size-5" />
+                </span>
+              </span>
+            </a>
           </div>
 
-          <div className="relative mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 pb-6 md:px-6">
+          <div className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 pb-6 md:px-6">
             <div className="flex items-center gap-2">
               {classicHeroSlides.map((item, index) => (
                 <button
@@ -454,6 +537,60 @@ export default function ClassicPage() {
         </section>
 
         <section
+          aria-labelledby="classic-quick-heading"
+          className="border-b border-slate-200 bg-white"
+        >
+          <div className="mx-auto w-full max-w-6xl px-4 py-10 md:px-6">
+            <div className="flex flex-col gap-1">
+              <p className="text-sm font-bold text-classic-700">
+                자주 찾는 서비스
+              </p>
+              <h2
+                id="classic-quick-heading"
+                className="text-2xl font-bold text-slate-900"
+              >
+                바로가기
+              </h2>
+            </div>
+            <ul
+              data-testid="classic-quick-services"
+              className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6"
+            >
+              {classicQuickServices.map((service) => {
+                const Icon = quickServiceIcons[service.icon];
+                return (
+                  <li key={service.key} className="flex">
+                    <a
+                      href={service.href}
+                      target={service.href.startsWith("http") ? "_blank" : undefined}
+                      rel={
+                        service.href.startsWith("http")
+                          ? "noreferrer"
+                          : undefined
+                      }
+                      data-testid={`classic-quick-${service.key}`}
+                      className="group flex w-full flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-center transition-all hover:-translate-y-0.5 hover:border-classic-700/40 hover:shadow-md"
+                    >
+                      <span className="flex size-14 items-center justify-center rounded-2xl bg-classic-50 text-classic-700 transition-colors group-hover:bg-classic-700 group-hover:text-white">
+                        <Icon aria-hidden className="size-7" />
+                      </span>
+                      <span className="flex flex-col gap-1">
+                        <span className="text-base font-bold text-slate-900">
+                          {service.label}
+                        </span>
+                        <span className="text-sm text-slate-600">
+                          {service.description}
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+
+        <section
           aria-labelledby="classic-program-heading"
           className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6"
         >
@@ -466,8 +603,11 @@ export default function ClassicPage() {
                 id="classic-program-heading"
                 className="mt-1 text-2xl font-bold text-slate-900 md:text-3xl"
               >
-                교육 프로그램
+                교육/강좌
               </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                현재 신청 가능한 강좌를 실시간으로 안내합니다.
+              </p>
             </div>
             <a
               href="https://www.5060do.or.kr/education/lifeEduList"
@@ -478,68 +618,68 @@ export default function ClassicPage() {
             </a>
           </div>
 
-          <div
-            role="tablist"
-            aria-label="프로그램 분류"
-            className="mt-5 flex flex-wrap gap-2 border-b border-slate-200"
-          >
-            {classicProgramTabs.map((tab) => {
-              const isActive = tab.key === activeTab;
-              return (
-                <button
-                  key={tab.key}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  data-testid={`classic-tab-${tab.key}`}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`-mb-px min-h-12 border-b-2 px-5 text-base font-bold transition-colors ${
-                    isActive
-                      ? "border-classic-700 text-classic-700"
-                      : "border-transparent text-slate-600 hover:text-classic-700"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-
           <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {activePrograms.items.map((item, index) => (
-              <li key={`${activePrograms.key}-${item.label}`}>
-                <a
-                  href={item.href}
-                  className="group flex h-full flex-col justify-between gap-6 rounded-xl border border-slate-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-classic-700/40 hover:shadow-md"
+            {featuredPrograms.map((program) => (
+              <li key={program.id} className="flex">
+                <button
+                  type="button"
+                  data-testid="classic-program-card"
+                  data-status={program.status}
+                  aria-haspopup="dialog"
+                  onClick={() => setSelectedProgramId(program.id)}
+                  className="group flex w-full flex-col rounded-2xl border border-slate-200 bg-white p-5 text-left transition-all hover:-translate-y-0.5 hover:border-classic-700/40 hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="text-sm font-black tabular-nums text-classic-500">
-                      {String(index + 1).padStart(2, "0")}
+                  <span className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-classic-50 px-3 py-1 text-sm font-bold text-classic-700">
+                      {program.category}
                     </span>
-                    <ArrowUpRight
-                      aria-hidden
-                      className="size-5 shrink-0 text-slate-300 transition-colors group-hover:text-classic-700"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold leading-snug text-slate-900">
-                      {item.label}
-                    </h3>
-                    <p className="mt-2 text-sm text-slate-600">
-                      {activePrograms.label} · 자세히 보기
-                    </p>
-                  </div>
-                </a>
+                    <span
+                      className={`rounded-full px-3 py-1 text-sm font-bold ${programBadgeStyles[program.status]}`}
+                    >
+                      {program.status}
+                    </span>
+                  </span>
+                  <span className="mt-3 text-lg font-bold leading-snug text-slate-900">
+                    {program.title}
+                  </span>
+                  <span className="mt-3 flex flex-col gap-2 text-sm text-slate-700">
+                    <span className="inline-flex items-start gap-2">
+                      <CalendarDays
+                        aria-hidden
+                        className="mt-0.5 size-4 shrink-0 text-classic-600"
+                      />
+                      {program.eduPeriod}
+                    </span>
+                    <span className="inline-flex items-start gap-2">
+                      <MapPin
+                        aria-hidden
+                        className="mt-0.5 size-4 shrink-0 text-classic-600"
+                      />
+                      {program.location}
+                    </span>
+                    <span className="inline-flex items-start gap-2">
+                      <Wallet
+                        aria-hidden
+                        className="mt-0.5 size-4 shrink-0 text-classic-600"
+                      />
+                      {formatFee(program.fee)}
+                    </span>
+                  </span>
+                  <span className="mt-4 flex min-h-12 items-center justify-center gap-1 rounded-xl bg-classic-700 text-base font-bold text-white transition-colors group-hover:bg-classic-800">
+                    {programActionLabels[program.status]}
+                    <ChevronRight aria-hidden className="size-4" />
+                  </span>
+                </button>
               </li>
             ))}
           </ul>
         </section>
 
         <section className="border-y border-slate-200 bg-white">
-          <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 md:px-6 lg:grid-cols-2">
+          <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 md:px-6 lg:grid-cols-[1.05fr_1fr]">
             <div>
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="text-2xl font-bold text-slate-900">새로운 소식</h2>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h2 className="text-2xl font-bold text-slate-900">알림마당</h2>
                 <a
                   href="https://www.5060do.or.kr/board/lifeNotice"
                   className="inline-flex touch-target items-center text-sm font-bold text-classic-700 hover:underline"
@@ -547,32 +687,98 @@ export default function ClassicPage() {
                   더보기
                 </a>
               </div>
-              <ul className="mt-4 divide-y divide-slate-200 border-t border-slate-200">
-                {classicNotices.map((notice) => (
-                  <li key={notice.title}>
-                    <a
-                      href="https://www.5060do.or.kr/board/lifeNotice"
-                      className="flex min-h-16 flex-col justify-center gap-1 py-3 transition-colors hover:text-classic-700 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
-                    >
-                      <span className="flex items-start gap-3">
-                        <span className="mt-0.5 shrink-0 rounded bg-classic-50 px-2 py-0.5 text-xs font-bold text-classic-700">
-                          {notice.tag}
+              <div
+                role="tablist"
+                aria-label="알림마당 분류"
+                className="mt-4 flex flex-wrap gap-2 border-b border-slate-200"
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={noticeTab === "notice"}
+                  data-testid="classic-notice-tab"
+                  onClick={() => setNoticeTab("notice")}
+                  className={`-mb-px min-h-12 border-b-2 px-5 text-base font-bold transition-colors ${
+                    noticeTab === "notice"
+                      ? "border-classic-700 text-classic-700"
+                      : "border-transparent text-slate-600 hover:text-classic-700"
+                  }`}
+                >
+                  공지사항
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={noticeTab === "photo"}
+                  data-testid="classic-photo-tab"
+                  onClick={() => setNoticeTab("photo")}
+                  className={`-mb-px min-h-12 border-b-2 px-5 text-base font-bold transition-colors ${
+                    noticeTab === "photo"
+                      ? "border-classic-700 text-classic-700"
+                      : "border-transparent text-slate-600 hover:text-classic-700"
+                  }`}
+                >
+                  포토 소식
+                </button>
+              </div>
+
+              {noticeTab === "notice" ? (
+                <ul className="mt-2 divide-y divide-slate-200">
+                  {classicNotices.map((notice) => (
+                    <li key={notice.title}>
+                      <a
+                        href="https://www.5060do.or.kr/board/lifeNotice"
+                        className="flex min-h-16 flex-col justify-center gap-1 py-3 transition-colors hover:text-classic-700 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                      >
+                        <span className="flex items-start gap-3">
+                          <span className="mt-0.5 shrink-0 rounded bg-classic-50 px-2 py-0.5 text-xs font-bold text-classic-700">
+                            {notice.tag}
+                          </span>
+                          <span className="text-base font-semibold leading-snug text-slate-800">
+                            {notice.title}
+                          </span>
                         </span>
-                        <span className="text-base font-semibold leading-snug text-slate-800">
-                          {notice.title}
+                        <span className="shrink-0 pl-12 text-sm text-slate-600 sm:pl-0">
+                          {notice.date}
                         </span>
-                      </span>
-                      <span className="shrink-0 pl-12 text-sm text-slate-600 sm:pl-0">
-                        {notice.date}
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {classicPhotos.map((photo) => (
+                    <li key={photo.title}>
+                      <a
+                        href="https://www.5060do.or.kr/board/lifePhoto"
+                        className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:-translate-y-0.5 hover:border-classic-700/40 hover:shadow-md"
+                      >
+                        <span
+                          aria-hidden
+                          className="flex h-24 items-center justify-center bg-gradient-to-br from-classic-500 to-classic-800 text-white"
+                        >
+                          <Megaphone className="size-8" />
+                        </span>
+                        <span className="flex flex-1 flex-col gap-1 p-4">
+                          <span className="text-sm font-bold text-classic-700">
+                            {photo.album}
+                          </span>
+                          <span className="text-base font-semibold leading-snug text-slate-900">
+                            {photo.title}
+                          </span>
+                          <span className="mt-auto text-sm text-slate-600">
+                            {photo.date}
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div>
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-2xl font-bold text-slate-900">일자리정보</h2>
                 <a
                   href="https://www.5060do.or.kr/board/lifeFindJob"
@@ -581,63 +787,70 @@ export default function ClassicPage() {
                   더보기
                 </a>
               </div>
-              <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {classicJobs.map((job) => (
-                  <li key={job.href}>
-                    <a
-                      href={job.href}
-                      className="flex min-h-20 flex-col justify-between gap-2 rounded-xl bg-classic-100 p-4 transition-colors hover:bg-classic-50"
-                    >
-                      <span className="text-base font-bold text-slate-800">
-                        {job.label}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-classic-700">
-                        게시판 바로가기
-                        <ArrowRight aria-hidden className="size-4" />
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-2 text-sm text-slate-600">
+                신중년 채용 속보를 실시간으로 확인하세요.
+              </p>
+              {featuredJobs.length > 0 ? (
+                <ul className="mt-4 flex flex-col gap-2">
+                  {featuredJobs.map((job) => (
+                    <li key={job.id}>
+                      <button
+                        type="button"
+                        data-testid="classic-job-card"
+                        aria-haspopup="dialog"
+                        onClick={() => setSelectedJobId(job.id)}
+                        className="flex w-full flex-col gap-2 rounded-xl border border-slate-200 bg-white px-4 py-4 text-left transition-colors hover:border-classic-700/40 hover:bg-classic-50"
+                      >
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-lg bg-classic-50 px-2.5 py-1 text-sm font-bold text-classic-700">
+                            {job.boardType}
+                          </span>
+                          <span className="text-base font-semibold text-slate-900">
+                            {job.title}
+                          </span>
+                        </span>
+                        <span className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                          <span className="inline-flex items-center gap-1">
+                            <CalendarDays
+                              aria-hidden
+                              className="size-4 text-classic-600"
+                            />
+                            {job.date}
+                          </span>
+                          <span className="inline-flex items-center gap-1">
+                            <MapPin
+                              aria-hidden
+                              className="size-4 text-classic-600"
+                            />
+                            {job.region === "부산" ? "부산" : "기타 지역"}
+                          </span>
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {classicJobs.map((job) => (
+                    <li key={job.href}>
+                      <a
+                        href={job.href}
+                        className="flex min-h-20 flex-col justify-between gap-2 rounded-xl bg-classic-100 p-4 transition-colors hover:bg-classic-50"
+                      >
+                        <span className="text-base font-bold text-slate-800">
+                          {job.label}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-sm font-semibold text-classic-700">
+                          게시판 바로가기
+                          <ArrowRight aria-hidden className="size-4" />
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
-        </section>
-
-        <section
-          aria-labelledby="classic-shortcut-heading"
-          className="mx-auto w-full max-w-6xl px-4 py-12 md:px-6"
-        >
-          <h2
-            id="classic-shortcut-heading"
-            className="text-2xl font-bold text-slate-900"
-          >
-            바로가기
-          </h2>
-          <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {classicShortcuts.map((shortcut) => (
-              <li key={shortcut.label}>
-                <a
-                  href={shortcut.href}
-                  target={shortcut.href.startsWith("http") ? "_blank" : undefined}
-                  rel={
-                    shortcut.href.startsWith("http") ? "noreferrer" : undefined
-                  }
-                  className="flex h-full flex-col justify-between gap-6 rounded-xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-classic-700/40 hover:shadow-md"
-                >
-                  <span className="text-base font-bold text-slate-900">
-                    {shortcut.label}
-                  </span>
-                  <span className="inline-flex items-center justify-between gap-2 text-xs font-semibold text-slate-600">
-                    {shortcut.description}
-                    <ArrowUpRight
-                      aria-hidden
-                      className="size-4 shrink-0 text-classic-700"
-                    />
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
         </section>
 
         <section className="bg-classic-700 text-white">
@@ -839,6 +1052,217 @@ export default function ClassicPage() {
           </div>
         </div>
       </footer>
+
+      {selectedProgram && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 p-0 sm:items-center sm:p-6"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setSelectedProgramId(null);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="classic-program-dialog-title"
+            data-testid="classic-program-modal"
+            className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-3xl sm:p-7"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-classic-50 px-3 py-1 text-sm font-bold text-classic-700">
+                    {selectedProgram.category}
+                  </span>
+                  <span
+                    className={`rounded-full px-3 py-1 text-sm font-bold ${programBadgeStyles[selectedProgram.status]}`}
+                  >
+                    {selectedProgram.status}
+                  </span>
+                </div>
+                <h2
+                  id="classic-program-dialog-title"
+                  className="mt-3 text-2xl font-bold leading-snug text-slate-900"
+                >
+                  {selectedProgram.title}
+                </h2>
+              </div>
+              <button
+                type="button"
+                data-testid="classic-program-close"
+                onClick={() => setSelectedProgramId(null)}
+                aria-label="강좌 상세 창 닫기"
+                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200"
+              >
+                <X aria-hidden className="size-6" />
+              </button>
+            </div>
+
+            {selectedProgram.summary && (
+              <p className="mt-4 text-base leading-relaxed text-slate-800">
+                {selectedProgram.summary}
+              </p>
+            )}
+
+            <dl className="mt-5 grid grid-cols-1 gap-3 rounded-2xl bg-classic-100 p-4 text-base sm:grid-cols-2">
+              <div className="flex items-start gap-2">
+                <CalendarDays
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-classic-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-700">
+                    교육기간
+                  </dt>
+                  <dd className="font-semibold text-slate-900">
+                    {selectedProgram.eduPeriod || "정보 없음"}
+                  </dd>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <MapPin
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-classic-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-700">장소</dt>
+                  <dd className="font-semibold text-slate-900">
+                    {selectedProgram.location || "정보 없음"}
+                  </dd>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <Wallet
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-classic-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-700">
+                    수강료
+                  </dt>
+                  <dd className="font-semibold text-slate-900">
+                    {formatFee(selectedProgram.fee)}
+                  </dd>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <Users
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-classic-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-700">정원</dt>
+                  <dd className="font-semibold text-slate-900">
+                    {selectedProgram.capacity}명
+                    {selectedProgram.enrolled === undefined
+                      ? ""
+                      : ` · 신청 ${selectedProgram.enrolled}명`}
+                  </dd>
+                </div>
+              </div>
+            </dl>
+
+            <a
+              href={selectedProgram.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-classic-700 px-6 text-lg font-bold text-white transition-colors hover:bg-classic-800"
+            >
+              원본에서 신청하기
+              <ArrowUpRight aria-hidden className="size-5" />
+            </a>
+          </div>
+        </div>
+      )}
+
+      {selectedJob && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/60 p-0 sm:items-center sm:p-6"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setSelectedJobId(null);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="classic-job-dialog-title"
+            data-testid="job-detail-modal"
+            className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-3xl sm:p-7"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-classic-50 px-3 py-1 text-sm font-bold text-classic-700">
+                    {selectedJob.boardType}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-800">
+                    {selectedJob.region === "부산" ? "부산" : "기타 지역"}
+                  </span>
+                </div>
+                <h2
+                  id="classic-job-dialog-title"
+                  className="mt-3 text-2xl font-bold leading-snug text-slate-900"
+                >
+                  {selectedJob.title}
+                </h2>
+              </div>
+              <button
+                type="button"
+                data-testid="job-detail-close"
+                onClick={() => setSelectedJobId(null)}
+                aria-label="채용정보 상세 창 닫기"
+                className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200"
+              >
+                <X aria-hidden className="size-6" />
+              </button>
+            </div>
+
+            <dl className="mt-5 grid grid-cols-1 gap-3 rounded-2xl bg-classic-100 p-4 text-base sm:grid-cols-2">
+              <div className="flex items-start gap-2">
+                <CalendarDays
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-classic-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-700">등록일</dt>
+                  <dd className="font-semibold text-slate-900">
+                    {selectedJob.date || "정보 없음"}
+                  </dd>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <MapPin
+                  aria-hidden
+                  className="mt-0.5 size-5 shrink-0 text-classic-600"
+                />
+                <div>
+                  <dt className="text-sm font-semibold text-slate-700">지역</dt>
+                  <dd className="font-semibold text-slate-900">
+                    {selectedJob.region === "부산" ? "부산" : "기타 지역"}
+                  </dd>
+                </div>
+              </div>
+            </dl>
+
+            <div className="mt-5 rounded-2xl border border-slate-200 p-4">
+              <h3 className="text-base font-bold text-slate-900">공고 내용</h3>
+              <div className="mt-2 whitespace-pre-line text-base leading-relaxed text-slate-800">
+                {selectedJob.content || "상세 내용은 원문 게시판에서 확인하세요."}
+              </div>
+            </div>
+
+            <a
+              href={selectedJob.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              data-testid="job-source-link"
+              className="mt-5 flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-classic-700 px-6 text-lg font-bold text-white transition-colors hover:bg-classic-800"
+            >
+              원문 게시판에서 보기
+              <ArrowUpRight aria-hidden className="size-5" />
+            </a>
+          </div>
+        </div>
+      )}
 
       <ChatbotWidget
         programs={chatbotOverview}
